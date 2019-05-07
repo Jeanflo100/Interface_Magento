@@ -30,7 +30,7 @@ public class StageService {
 	}
 
 	public static void initPrimaryStage(Stage primaryStage) {
-		primaryStage.setTitle("Contact App");
+		primaryStage.setTitle("Ecofish Products");
 		primaryStage.setScene(new Scene(StageServiceHolder.INSTANCE.mainLayout));
 		primaryStage.setResizable(false);
 		primaryStage.show();

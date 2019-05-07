@@ -7,11 +7,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 
-public class NameValueFactory
+public class PriceValueFactory
 		implements Callback<TableColumn.CellDataFeatures<Product, String>, ObservableValue<String>> {
 
 	@Override
 	public ObservableValue<String> call(CellDataFeatures<Product, String> cellData) {
-		return new SimpleStringProperty(cellData.getValue().getName());
+		return new SimpleStringProperty(cellData.getValue().getPrice().toString());
 	}
 }
