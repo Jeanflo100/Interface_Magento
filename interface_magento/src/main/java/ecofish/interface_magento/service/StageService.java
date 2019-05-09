@@ -37,6 +37,7 @@ public class StageService {
 		primaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
 		primaryStage.setScene(new Scene(StageServiceHolder.INSTANCE.mainLayout));
 		primaryStage.setResizable(false);
+		primaryStage.show();
 		StageServiceHolder.INSTANCE.primaryStage = primaryStage;
 	}
 

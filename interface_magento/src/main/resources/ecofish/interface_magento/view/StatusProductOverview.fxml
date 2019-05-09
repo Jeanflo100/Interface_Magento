@@ -5,26 +5,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="690.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
    <children>
-      <Label layoutX="345.0" layoutY="517.0" text="CATEGORY :">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="categoryComboBox" layoutX="311.0" layoutY="538.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
-      <Label layoutX="357.0" layoutY="585.0" text="FAMILY :">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <ComboBox fx:id="familyComboBox" layoutX="311.0" layoutY="607.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
-      <TableView fx:id="inactiveProductTable" layoutX="36.0" layoutY="34.0" prefHeight="466.0" prefWidth="308.0">
+      <TableView fx:id="inactiveProductTable" layoutX="36.0" layoutY="34.0" prefHeight="460.0" prefWidth="312.0">
          <columns>
-            <TableColumn prefWidth="541.0" text="Inactive products">
+            <TableColumn prefWidth="312.0" text="Inactive products">
                <columns>
                   <TableColumn fx:id="nameInactiveProductColumn" prefWidth="190.0" sortable="false" text="Name" />
                   <TableColumn fx:id="qualityInactiveProductColumn" prefWidth="60.0" sortable="false" text="Quality" />
@@ -33,10 +23,9 @@
             </TableColumn>
          </columns>
       </TableView>
-      <Button fx:id="updatePriceButton" layoutX="532.0" layoutY="517.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" prefHeight="43.0" prefWidth="94.0" text="Update prices" />
-      <TableView fx:id="activeProductTable" layoutX="425.0" layoutY="34.0" prefHeight="466.0" prefWidth="308.0">
+      <TableView fx:id="activeProductTable" layoutX="425.0" layoutY="34.0" prefHeight="460.0" prefWidth="312.0">
          <columns>
-            <TableColumn prefWidth="541.0" text="Active products">
+            <TableColumn prefWidth="312.0" text="Active products">
                <columns>
                   <TableColumn fx:id="nameActiveProductColumn" prefWidth="190.0" sortable="false" text="Name" />
                   <TableColumn fx:id="qualityActiveProductColumn" prefWidth="60.0" sortable="false" text="Quality" />
@@ -45,7 +34,30 @@
             </TableColumn>
          </columns>
       </TableView>
-      <Button fx:id="leftToRightButton" layoutX="351.0" layoutY="242.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="&gt;&gt;&gt;&gt;&gt;&gt;" />
-      <Button fx:id="rightToLeftButton" layoutX="351.0" layoutY="289.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="&lt;&lt;&lt;&lt;&lt;&lt;" />
+      <Button fx:id="leftToRightButton" layoutX="352.0" layoutY="242.0" mnemonicParsing="false" onAction="#handleLeftToRightButton" prefHeight="25.0" prefWidth="69.0" text="&gt;&gt;&gt;&gt;&gt;&gt;" />
+      <Button fx:id="rightToLeftButton" layoutX="352.0" layoutY="288.0" mnemonicParsing="false" onAction="#handleRightToLeftButton" prefHeight="25.0" prefWidth="69.0" text="&lt;&lt;&lt;&lt;&lt;&lt;" />
+      <Label layoutX="346.0" layoutY="508.0" text="CATEGORY :">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="529.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="528.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/black-cross.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="358.0" layoutY="563.0" text="FAMILY :">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="585.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="584.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/black-cross.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="updatePriceButton" layoutX="532.0" layoutY="508.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" prefHeight="43.0" prefWidth="94.0" text="Update prices" />
    </children>
 </AnchorPane>

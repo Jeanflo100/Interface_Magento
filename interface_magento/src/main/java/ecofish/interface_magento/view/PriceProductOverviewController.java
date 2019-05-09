@@ -162,7 +162,7 @@ public class PriceProductOverviewController{
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("actualPrice"));
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("newPrice"));
-		this.productTable.setPlaceholder(new Label("No category and/or family selected"));
+		this.productTable.setPlaceholder(new Label("No active products"));
 		this.productTable.refresh();
 		
 		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
@@ -238,9 +238,7 @@ public class PriceProductOverviewController{
 		System.out.println("update productTable");
 		this.currentFamily = family;
 		this.productTable.setItems(ProductService.getProducts(this.currentCategory, this.currentFamily));
-		if (this.productTable.getItems().isEmpty() == false) {
-			this.productTable.getSelectionModel().select(0);
-		}
+		if (this.productTable.getItems().isEmpty() == false) this.productTable.getSelectionModel().select(0);
 		this.productTable.requestFocus();
 		this.productTable.refresh();
 	}

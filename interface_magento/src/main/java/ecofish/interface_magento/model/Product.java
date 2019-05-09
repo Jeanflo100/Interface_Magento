@@ -8,21 +8,24 @@ public class Product{
 	private String size;
 	private Double newPrice;
 	private Double actualPrice;
+	private Boolean active;
 	
 	public Product() {
-		name = "";
-		quality = "";
-		size = "";
-		actualPrice = null;
-		newPrice = null;
+		this.name = "";
+		this.quality = "";
+		this.size = "";
+		this.actualPrice = null;
+		this.newPrice = null;
+		this.active = true;
 	}
 	
-	public Product(String name, String quality, String size, double actualPrice) {
+	public Product(String name, String quality, String size, Double actualPrice, Boolean active) {
 		this.name = name;
 		this.quality = quality;
 		this.size = size;
 		this.actualPrice = actualPrice;
 		this.newPrice = null;
+		this.active = active;
 	}
 	
 	public void setName(String name) {
@@ -45,6 +48,10 @@ public class Product{
 		this.actualPrice = actualPrice;
 	}
 	
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -63,6 +70,10 @@ public class Product{
 	
 	public Double getActualPrice() {
 		return actualPrice;
+	}
+	
+	public Boolean getActive() {
+		return active;
 	}
 	
 	@Override

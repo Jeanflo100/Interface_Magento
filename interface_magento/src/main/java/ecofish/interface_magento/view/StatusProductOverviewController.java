@@ -2,31 +2,19 @@ package ecofish.interface_magento.view;
 
 
 
-import java.util.Optional;
-import java.util.function.UnaryOperator;
-
 import ecofish.interface_magento.model.Product;
-import ecofish.interface_magento.util.NameValueFactory;
-import ecofish.interface_magento.util.ActualPriceValueFactory;
-import ecofish.interface_magento.util.QualityValueFactory;
-import ecofish.interface_magento.util.SizeValueFactory;
-import ecofish.interface_magento.service.CategoryService;
-import ecofish.interface_magento.service.FamilyService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.ViewService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.text.Text;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.control.Label;
 
 public class StatusProductOverviewController{
@@ -125,7 +113,9 @@ public class StatusProductOverviewController{
 	
 	private String urlChangePhoto;*/
 	
-	//private boolean newPerson;
+	private Product currentInactiveProduct;
+	
+	private Product currentActiveProduct;
 	
 	@FXML
 	private void handleUpdatePriceButton() {
@@ -133,12 +123,19 @@ public class StatusProductOverviewController{
 		StageService.showView(ViewService.getView("PriceProductOverview"));
 	}
 	
-	/*@FXML
-	private void test1() {
-		System.out.println("test1");
+	@FXML
+	private void handleLeftToRightButton() {
+		System.out.println("LeftToRight Button");
+		if (currentInactiveProduct != null) ProductService.updateStatusProduct(currentInactiveProduct);
 	}
 	
 	@FXML
+	private void handleRightToLeftButton() {
+		System.out.println("RightToLeft Button");
+		if (currentActiveProduct != null) ProductService.updateStatusProduct(currentActiveProduct);
+	}
+	
+	/*@FXML
 	private void test2() {
 		//this.productTable.setOnKeyPressed(keyEvent -> System.out.printf("Touche enfoncée : %s %s", keyEvent.getCode(), keyEvent.getCharacter()).println());
 		System.out.println("test2");
@@ -147,22 +144,48 @@ public class StatusProductOverviewController{
 	@FXML
 	private void initialize() {
 		System.out.println("initialize");
-		/*this.nameColumn.setCellValueFactory(new NameValueFactory());
-		this.qualityColumn.setCellValueFactory(new QualityValueFactory());
-		this.sizeColumn.setCellValueFactory(new SizeValueFactory());
-		this.priceColumn.setCellValueFactory(new PriceValueFactory());
-		this.productTable.setPlaceholder(new Label("No category and/or family selected"));
-		this.productTable.refresh();
+		this.nameInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
+		this.qualityInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
+		this.sizeInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
+		this.inactiveProductTable.setItems(ProductService.getInactiveProducts(null, null));
+		this.inactiveProductTable.setPlaceholder(new Label("No inactive products"));
+		this.inactiveProductTable.refresh();
 		
-		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
+		this.nameActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
+		this.qualityActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
+		this.sizeActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
+		this.activeProductTable.setItems(ProductService.getActiveProducts(null, null));
+		this.activeProductTable.setPlaceholder(new Label("No active products"));
+		this.activeProductTable.refresh();
+		
+		this.inactiveProductTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
 			@Override
 			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
-				System.out.println("passage");
-				showProduct(newValue);
+				currentInactiveProduct = newValue;
 			}
 		});
-				
-		this.categoryComboBox.setItems(CategoryService.getCategory());
+		
+		this.activeProductTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
+			@Override
+			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
+				currentActiveProduct = newValue;
+			}
+		});
+		
+		if (this.inactiveProductTable.getItems().isEmpty() == false) this.inactiveProductTable.getSelectionModel().select(0);
+		if (this.activeProductTable.getItems().isEmpty() == false) this.activeProductTable.getSelectionModel().select(0);
+		
+		this.inactiveProductTable.setOnKeyPressed(keyEvent -> {
+			if(keyEvent.getCode() == KeyCode.RIGHT) this.activeProductTable.requestFocus();
+			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleLeftToRightButton();
+		});
+		
+		this.activeProductTable.setOnKeyPressed(keyEvent -> {
+			if(keyEvent.getCode() == KeyCode.LEFT) this.inactiveProductTable.requestFocus();
+			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleRightToLeftButton();
+		});
+		
+		/*this.categoryComboBox.setItems(CategoryService.getCategory());
 		this.familyComboBox.setDisable(true);
 		
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
