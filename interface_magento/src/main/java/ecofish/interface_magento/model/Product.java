@@ -1,24 +1,28 @@
 package ecofish.interface_magento.model;
 
+
 public class Product{
 	
 	private String name;
 	private String quality;
 	private String size;
-	private Double price;
+	private Double newPrice;
+	private Double actualPrice;
 	
 	public Product() {
 		name = "";
 		quality = "";
 		size = "";
-		price = 0.00;
+		actualPrice = null;
+		newPrice = null;
 	}
 	
-	public Product(String name, String quality, String size, double price) {
+	public Product(String name, String quality, String size, double actualPrice) {
 		this.name = name;
 		this.quality = quality;
 		this.size = size;
-		this.price = price;
+		this.actualPrice = actualPrice;
+		this.newPrice = null;
 	}
 	
 	public void setName(String name) {
@@ -33,8 +37,12 @@ public class Product{
 		this.size = size;
 	}
 	
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setNewPrice(Double newPrice) {
+		this.newPrice = newPrice;
+	}
+	
+	public void setActualPrice(Double actualPrice) {
+		this.actualPrice = actualPrice;
 	}
 	
 	public String getName() {
@@ -49,8 +57,12 @@ public class Product{
 		return size;
 	}
 	
-	public Double getPrice() {
-		return price;
+	public Double getNewPrice() {
+		return newPrice;
+	}
+	
+	public Double getActualPrice() {
+		return actualPrice;
 	}
 	
 	@Override

@@ -1,8 +1,11 @@
 package ecofish.interface_magento.service;
 
+import ecofish.interface_magento.InterfaceMagento;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -31,15 +34,19 @@ public class StageService {
 
 	public static void initPrimaryStage(Stage primaryStage) {
 		primaryStage.setTitle("Ecofish Products");
+		primaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
 		primaryStage.setScene(new Scene(StageServiceHolder.INSTANCE.mainLayout));
 		primaryStage.setResizable(false);
-		primaryStage.show();
-
 		StageServiceHolder.INSTANCE.primaryStage = primaryStage;
 	}
 
-	public static void showView(Node rootElement) {
-		StageServiceHolder.INSTANCE.mainLayout.setCenter(rootElement);
+	public static void showView(Pane rootElementPane) {
+		Node rootElementNode = rootElementPane;
+		StageServiceHolder.INSTANCE.primaryStage.hide();
+		StageServiceHolder.INSTANCE.mainLayout.setPrefSize(rootElementPane.getPrefWidth(), StageServiceHolder.INSTANCE.mainLayout.getTop().getBoundsInParent().getHeight() + rootElementPane.getPrefHeight());
+		StageServiceHolder.INSTANCE.mainLayout.setCenter(rootElementNode);
+		StageServiceHolder.INSTANCE.primaryStage.sizeToScene();
+		StageServiceHolder.INSTANCE.primaryStage.show();
 	}
 
 	public static void closeStage() {

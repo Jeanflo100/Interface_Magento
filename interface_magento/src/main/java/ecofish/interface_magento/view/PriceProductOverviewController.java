@@ -6,10 +6,6 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import ecofish.interface_magento.model.Product;
-import ecofish.interface_magento.util.NameValueFactory;
-import ecofish.interface_magento.util.PriceValueFactory;
-import ecofish.interface_magento.util.QualityValueFactory;
-import ecofish.interface_magento.util.SizeValueFactory;
 import ecofish.interface_magento.service.CategoryService;
 import ecofish.interface_magento.service.FamilyService;
 import ecofish.interface_magento.service.ProductService;
@@ -25,10 +21,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 
-public class ProductOverviewController{
+public class PriceProductOverviewController{
 	
 	@FXML
 	ComboBox<String> categoryComboBox;
@@ -49,19 +46,25 @@ public class ProductOverviewController{
 	TableColumn<Product, String> sizeColumn;
 	
 	@FXML
-	TableColumn<Product, String> priceColumn;
+	TableColumn<Product, String> newPriceColumn;
+	
+	@FXML
+	TableColumn<Product, String> actualPriceColumn;
 	
 	@FXML
 	Text descriptionText;
 	
 	@FXML
-	Text oldPriceText;
+	Text actualPriceText;
 	
 	@FXML
 	TextField newPriceTextField;
 	
 	@FXML
 	Button saveButton;
+	
+	@FXML
+	Button testButton;
 	
 	/*@FXML
 	DatePicker birthDatePicker;
@@ -109,7 +112,7 @@ public class ProductOverviewController{
 		System.out.println("Save bouton");
 		System.out.println(this.newPriceTextField.getText());
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
-			Double oldPrice = Double.parseDouble(this.oldPriceText.getText());
+			Double oldPrice = Double.parseDouble(this.actualPriceText.getText());
 			Double newPrice = Double.parseDouble(this.newPriceTextField.getText());
 			// nouveau nombre - ancien nombre le tout diviser par ancien nombre < 0.1
 			if ((newPrice - oldPrice) / oldPrice > 0.1) {
@@ -122,12 +125,16 @@ public class ProductOverviewController{
 					return;
 		    	}
 			}
-			this.currentProduct.setPrice(newPrice);
-			this.oldPriceText.setText(this.currentProduct.getPrice().toString());
-			this.newPriceTextField.setPromptText(this.currentProduct.getPrice().toString());
+			this.currentProduct.setNewPrice(newPrice);
+			this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
 			this.newPriceTextField.clear();
 			this.productTable.refresh();
 		}
+	}
+	
+	@FXML
+	private void handleTestButton() {
+		System.out.println("test");
 	}
 	
 	@FXML
@@ -137,17 +144,24 @@ public class ProductOverviewController{
 	
 	@FXML
 	private void test2() {
-		//this.categoryComboBox.getSelectionModel().clearSelection();
+		//this.productTable.setOnKeyPressed(keyEvent -> System.out.printf("Touche enfoncée : %s %s", keyEvent.getCode(), keyEvent.getCharacter()).println());
+		this.newPriceTextField.requestFocus();
 		System.out.println("test2");
 	}
 	
 	@FXML
 	private void initialize() {
 		System.out.println("initialize");
-		this.nameColumn.setCellValueFactory(new NameValueFactory());
+		/*this.nameColumn.setCellValueFactory(new NameValueFactory());
 		this.qualityColumn.setCellValueFactory(new QualityValueFactory());
 		this.sizeColumn.setCellValueFactory(new SizeValueFactory());
-		this.priceColumn.setCellValueFactory(new PriceValueFactory());
+		this.actualPriceColumn.setCellValueFactory(new ActualPriceValueFactory());
+		this.newPriceColumn.setCellValueFactory(new ActualPriceValueFactory());*/
+		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
+		this.qualityColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
+		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
+		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("actualPrice"));
+		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("newPrice"));
 		this.productTable.setPlaceholder(new Label("No category and/or family selected"));
 		this.productTable.refresh();
 		
@@ -187,19 +201,27 @@ public class ProductOverviewController{
 		
 		TextFormatter<Double> newPriceDoubleOnlyFormatter = new TextFormatter<Double>(doubleOnlyFilter);
 		this.newPriceTextField.setTextFormatter(newPriceDoubleOnlyFormatter);
+		
+		this.productTable.setOnKeyPressed(keyEvent -> System.out.printf("Touche enfoncée : %s %s", keyEvent.getCode(), keyEvent.getCharacter()).println());
+		
 	}
 	
 	private void showProduct(Product product) {
 		this.currentProduct = product;
 		if (this.currentProduct == null) {
 			this.descriptionText.setText(null);
-			this.oldPriceText.setText(null);
+			this.actualPriceText.setText(null);
 			this.newPriceTextField.setPromptText(null);
 		}
 		else {
-			this.descriptionText.setText(currentProduct.toString());
-			this.oldPriceText.setText(currentProduct.getPrice().toString());
-			this.newPriceTextField.setPromptText(currentProduct.getPrice().toString());
+			this.descriptionText.setText(this.currentProduct.toString());
+			this.actualPriceText.setText(this.currentProduct.getActualPrice().toString());
+			if (this.currentProduct.getNewPrice() == null) {
+				this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
+			}
+			else {
+				this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
+			}
 		}
 		
 	}
@@ -216,6 +238,10 @@ public class ProductOverviewController{
 		System.out.println("update productTable");
 		this.currentFamily = family;
 		this.productTable.setItems(ProductService.getProducts(this.currentCategory, this.currentFamily));
+		if (this.productTable.getItems().isEmpty() == false) {
+			this.productTable.getSelectionModel().select(0);
+		}
+		this.productTable.requestFocus();
 		this.productTable.refresh();
 	}
 	

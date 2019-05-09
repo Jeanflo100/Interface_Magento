@@ -29,6 +29,8 @@ public class ProductService{
 			else if (family == "Citron") {
 				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "2", "II", 1.04));
 				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Washington", "2", "I", 0.83));
+				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "3", "II", 1.54));
+				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "4", "II", 2.16));
 			}
 		}
 		else if (category == "Fruits à noyau") {

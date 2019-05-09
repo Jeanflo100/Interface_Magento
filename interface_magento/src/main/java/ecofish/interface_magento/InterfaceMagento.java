@@ -15,7 +15,7 @@ public class InterfaceMagento extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		StageService.initPrimaryStage(primaryStage);
-		StageService.showView(ViewService.getView("ProductOverview"));
+		StageService.showView(ViewService.getView("StatusProductOverview"));
 	}
 
 	public static void main(String[] args) throws IOException {
