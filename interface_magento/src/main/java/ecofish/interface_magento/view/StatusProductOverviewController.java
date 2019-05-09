@@ -172,8 +172,8 @@ public class StatusProductOverviewController{
 			}
 		});
 		
-		if (this.inactiveProductTable.getItems().isEmpty() == false) this.inactiveProductTable.getSelectionModel().select(0);
-		if (this.activeProductTable.getItems().isEmpty() == false) this.activeProductTable.getSelectionModel().select(0);
+		this.inactiveProductTable.getSelectionModel().selectFirst();
+		this.activeProductTable.getSelectionModel().selectFirst();
 		
 		this.inactiveProductTable.setOnKeyPressed(keyEvent -> {
 			if(keyEvent.getCode() == KeyCode.RIGHT) this.activeProductTable.requestFocus();

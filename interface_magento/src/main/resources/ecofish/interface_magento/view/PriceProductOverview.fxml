@@ -24,14 +24,14 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="categoryComboBox" layoutX="57.0" layoutY="108.0" onShowing="#test1" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
+                  <ComboBox fx:id="categoryComboBox" layoutX="57.0" layoutY="108.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
                   <Label layoutX="103.0" layoutY="155.0" text="FAMILY :">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
                   <ComboBox fx:id="familyComboBox" layoutX="57.0" layoutY="176.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
-                  <TableView fx:id="productTable" layoutX="260.0" layoutY="14.0" onKeyPressed="#test1" onKeyTyped="#test2" prefHeight="244.0" prefWidth="628.0">
+                  <TableView fx:id="productTable" layoutX="260.0" layoutY="14.0" prefHeight="244.0" prefWidth="628.0">
                      <columns>
                         <TableColumn fx:id="nameColumn" prefWidth="307.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Name" />
                         <TableColumn fx:id="qualityColumn" minWidth="0.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Quality" />

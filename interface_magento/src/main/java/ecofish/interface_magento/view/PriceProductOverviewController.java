@@ -22,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 
@@ -100,22 +101,14 @@ public class PriceProductOverviewController{
 	
 	String currentFamily;
 	
-	/*private boolean newPerson;
-	
-	@FXML
-	private void handleValidateButton() {
-		System.out.println("Validate bouton");
-	}*/
-	
 	@FXML
 	private void handleSaveButton() {
-		System.out.println("Save bouton");
 		System.out.println(this.newPriceTextField.getText());
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
 			Double oldPrice = Double.parseDouble(this.actualPriceText.getText());
 			Double newPrice = Double.parseDouble(this.newPriceTextField.getText());
 			// nouveau nombre - ancien nombre le tout diviser par ancien nombre < 0.1
-			if ((newPrice - oldPrice) / oldPrice > 0.1) {
+			if (Math.abs(newPrice - oldPrice) / oldPrice > 0.1) {
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 				alert.initOwner(StageService.getPrimaryStage());
 				alert.setTitle("WARNING");
@@ -130,33 +123,13 @@ public class PriceProductOverviewController{
 			this.newPriceTextField.clear();
 			this.productTable.refresh();
 		}
-	}
-	
-	@FXML
-	private void handleTestButton() {
-		System.out.println("test");
-	}
-	
-	@FXML
-	private void test1() {
-		System.out.println("test1");
-	}
-	
-	@FXML
-	private void test2() {
-		//this.productTable.setOnKeyPressed(keyEvent -> System.out.printf("Touche enfoncée : %s %s", keyEvent.getCode(), keyEvent.getCharacter()).println());
-		this.newPriceTextField.requestFocus();
-		System.out.println("test2");
+		this.productTable.requestFocus();
+		this.productTable.getSelectionModel().selectNext();
 	}
 	
 	@FXML
 	private void initialize() {
 		System.out.println("initialize");
-		/*this.nameColumn.setCellValueFactory(new NameValueFactory());
-		this.qualityColumn.setCellValueFactory(new QualityValueFactory());
-		this.sizeColumn.setCellValueFactory(new SizeValueFactory());
-		this.actualPriceColumn.setCellValueFactory(new ActualPriceValueFactory());
-		this.newPriceColumn.setCellValueFactory(new ActualPriceValueFactory());*/
 		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.qualityColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
@@ -200,9 +173,26 @@ public class PriceProductOverviewController{
 		};
 		
 		TextFormatter<Double> newPriceDoubleOnlyFormatter = new TextFormatter<Double>(doubleOnlyFilter);
-		this.newPriceTextField.setTextFormatter(newPriceDoubleOnlyFormatter);
+		this.newPriceTextField.setTextFormatter(newPriceDoubleOnlyFormatter);		
+
+		this.productTable.setOnKeyTyped(keyEvent -> {
+			if (!keyEvent.getCharacter().equals("\r") && !keyEvent.getCharacter().equals(" ")) {
+				this.newPriceTextField.requestFocus();
+				this.newPriceTextField.clear();
+				this.newPriceTextField.appendText(keyEvent.getCharacter());
+			}
+		});
 		
-		this.productTable.setOnKeyPressed(keyEvent -> System.out.printf("Touche enfoncée : %s %s", keyEvent.getCode(), keyEvent.getCharacter()).println());
+		this.productTable.setOnKeyPressed(keyEvent -> {
+			if (keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) {
+				this.newPriceTextField.requestFocus();
+			}
+		});
+		
+		this.newPriceTextField.setOnKeyPressed(keyEvent -> {
+			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleSaveButton();
+			if(keyEvent.getCode() == KeyCode.ESCAPE) this.productTable.requestFocus();
+		});
 		
 	}
 	
@@ -227,7 +217,6 @@ public class PriceProductOverviewController{
 	}
 	
 	private void updateFamilyComboBox(String category) {
-		System.out.println("update familyComboBox");
 		//this.familyComboBox.show();
 		this.currentCategory = category;
 		this.familyComboBox.setDisable(false);
@@ -235,7 +224,6 @@ public class PriceProductOverviewController{
 	}
 	
 	private void updateProductTable(String family) {
-		System.out.println("update productTable");
 		this.currentFamily = family;
 		this.productTable.setItems(ProductService.getProducts(this.currentCategory, this.currentFamily));
 		if (this.productTable.getItems().isEmpty() == false) this.productTable.getSelectionModel().select(0);
