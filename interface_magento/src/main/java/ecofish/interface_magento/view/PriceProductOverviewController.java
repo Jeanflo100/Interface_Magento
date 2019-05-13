@@ -12,12 +12,14 @@ import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -95,11 +97,16 @@ public class PriceProductOverviewController{
 	
 	private String urlChangePhoto;*/
 	
-	Product currentProduct;
+	private Product currentProduct;
 	
-	String currentCategory;
+	private String currentCategory;
 	
-	String currentFamily;
+	private String currentFamily;
+	
+	/*final PseudoClass highlightMessage = PseudoClass.getPseudoClass("highlight-message");
+	
+	private final PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
+	private final PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");*/
 	
 	@FXML
 	private void handleSaveButton() {
@@ -128,6 +135,22 @@ public class PriceProductOverviewController{
 	}
 	
 	@FXML
+	private void resetCategory() {
+		if (this.currentCategory != null) {
+			this.categoryComboBox.getSelectionModel().clearSelection();
+			updateFamilyComboBox(null);
+		}
+	}
+	
+	@FXML
+	private void resetFamily() {
+		if (this.currentFamily != null) {
+			this.familyComboBox.getSelectionModel().clearSelection();
+			updateProductTable(null);
+		}
+	}
+		
+	@FXML
 	private void initialize() {
 		System.out.println("initialize");
 		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
@@ -137,6 +160,40 @@ public class PriceProductOverviewController{
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("newPrice"));
 		this.productTable.setPlaceholder(new Label("No active products"));
 		this.productTable.refresh();
+		
+
+		/*this.productTable.setRowFactory((final TableView<Product> p) -> new ProductTableRow());
+		
+		final PseudoClass highlightMessage = PseudoClass.getPseudoClass("highlight-message");
+
+		this.productTable.setRowFactory(productTable -> new TableRow<Product>());
+		
+		this.productTable.setRowFactory(productTable -> new TableRow<Product>() {
+
+		    {
+		        selectedProperty().addListener((o, oldVal, newVal) -> {
+		        	if (newVal) {
+		                Product item = getItem();
+		                if (item != null) {
+		                	System.out.println("Passage Row");
+		                	pseudoClassStateChanged(increasePrice, true);
+		                }
+		            }
+		        });
+		    }
+
+		    @Override
+		    protected void updateItem(Product item, boolean empty) {
+		        super.updateItem(item, empty);
+		        System.out.println("highlight");
+		        System.out.println(item);
+		        pseudoClassStateChanged(decreasePrice, item != null);
+		    }
+		    
+		});*/
+		
+		
+		
 		
 		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
 			@Override
@@ -219,16 +276,22 @@ public class PriceProductOverviewController{
 	private void updateFamilyComboBox(String category) {
 		//this.familyComboBox.show();
 		this.currentCategory = category;
-		this.familyComboBox.setDisable(false);
-		this.familyComboBox.setItems(FamilyService.getFamily(category));
+		if (this.currentCategory == null) {
+			this.familyComboBox.setDisable(true);
+			resetFamily();
+		}
+		else {
+			this.familyComboBox.setDisable(false);
+			this.familyComboBox.setItems(FamilyService.getFamily(category));
+		}
 	}
 	
 	private void updateProductTable(String family) {
 		this.currentFamily = family;
 		this.productTable.setItems(ProductService.getProducts(this.currentCategory, this.currentFamily));
-		if (this.productTable.getItems().isEmpty() == false) this.productTable.getSelectionModel().select(0);
-		this.productTable.requestFocus();
+		this.productTable.getSelectionModel().selectFirst();
 		this.productTable.refresh();
+		this.productTable.requestFocus();
 	}
 	
 }
