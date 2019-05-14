@@ -146,7 +146,7 @@ public class PriceProductOverviewController{
 	private void resetFamily() {
 		if (this.currentFamily != null) {
 			this.familyComboBox.getSelectionModel().clearSelection();
-			updateProductTable(null);
+			updateProductTable(this.currentCategory, null);
 		}
 	}
 		
@@ -158,6 +158,7 @@ public class PriceProductOverviewController{
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("actualPrice"));
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("newPrice"));
+		this.productTable.setItems(ProductService.getActiveProducts(null, null));
 		this.productTable.setPlaceholder(new Label("No active products"));
 		this.productTable.refresh();
 		
@@ -209,6 +210,7 @@ public class PriceProductOverviewController{
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				updateProductTable(newValue, null);
 				updateFamilyComboBox(newValue);
 			}
 		});
@@ -216,7 +218,7 @@ public class PriceProductOverviewController{
 		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				updateProductTable(newValue);
+				updateProductTable(currentCategory, newValue);
 			}
 		});
 		
@@ -275,7 +277,6 @@ public class PriceProductOverviewController{
 	
 	private void updateFamilyComboBox(String category) {
 		//this.familyComboBox.show();
-		this.currentCategory = category;
 		if (this.currentCategory == null) {
 			this.familyComboBox.setDisable(true);
 			resetFamily();
@@ -286,9 +287,10 @@ public class PriceProductOverviewController{
 		}
 	}
 	
-	private void updateProductTable(String family) {
+	private void updateProductTable(String category, String family) {
+		this.currentCategory = category;
 		this.currentFamily = family;
-		this.productTable.setItems(ProductService.getProducts(this.currentCategory, this.currentFamily));
+		this.productTable.setItems(ProductService.getActiveProducts(this.currentCategory, this.currentFamily));
 		this.productTable.getSelectionModel().selectFirst();
 		this.productTable.refresh();
 		this.productTable.requestFocus();

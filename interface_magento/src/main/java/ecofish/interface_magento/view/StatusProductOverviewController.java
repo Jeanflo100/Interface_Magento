@@ -3,6 +3,8 @@ package ecofish.interface_magento.view;
 
 
 import ecofish.interface_magento.model.Product;
+import ecofish.interface_magento.service.CategoryService;
+import ecofish.interface_magento.service.FamilyService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.ViewService;
@@ -117,6 +119,10 @@ public class StatusProductOverviewController{
 	
 	private Product currentActiveProduct;
 	
+	private String currentCategory;
+	
+	private String currentFamily;
+	
 	@FXML
 	private void handleUpdatePriceButton() {
 		System.out.println("UpdatePrice bouton");
@@ -135,11 +141,21 @@ public class StatusProductOverviewController{
 		if (currentActiveProduct != null) ProductService.updateStatusProduct(currentActiveProduct);
 	}
 	
-	/*@FXML
-	private void test2() {
-		//this.productTable.setOnKeyPressed(keyEvent -> System.out.printf("Touche enfoncée : %s %s", keyEvent.getCode(), keyEvent.getCharacter()).println());
-		System.out.println("test2");
-	}*/
+	@FXML
+	private void resetCategory() {
+		if (this.currentCategory != null) {
+			this.categoryComboBox.getSelectionModel().clearSelection();
+			updateFamilyComboBox(null);
+		}
+	}
+	
+	@FXML
+	private void resetFamily() {
+		if (this.currentFamily != null) {
+			this.familyComboBox.getSelectionModel().clearSelection();
+			updateProductTable(this.currentCategory, null);
+		}
+	}
 	
 	@FXML
 	private void initialize() {
@@ -185,12 +201,13 @@ public class StatusProductOverviewController{
 			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleRightToLeftButton();
 		});
 		
-		/*this.categoryComboBox.setItems(CategoryService.getCategory());
+		this.categoryComboBox.setItems(CategoryService.getCategory());
 		this.familyComboBox.setDisable(true);
 		
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				updateProductTable(newValue, null);
 				updateFamilyComboBox(newValue);
 			}
 		});
@@ -198,24 +215,34 @@ public class StatusProductOverviewController{
 		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				updateProductTable(newValue);
+				updateProductTable(currentCategory, newValue);
 			}
 		});
 		
-		UnaryOperator<TextFormatter.Change> doubleOnlyFilter = change -> {
-			String text = change.getText();
-			if (text.isEmpty() || text == null) return change;
-			for (int i = 0; i<text.length(); i++) {
-				if (!String.valueOf(text.charAt(i)).matches("[.0-9]")) return null;
-			}
-			return change;
-		};
-		
-		TextFormatter<Double> newPriceDoubleOnlyFormatter = new TextFormatter<Double>(doubleOnlyFilter);
-		this.newPriceTextField.setTextFormatter(newPriceDoubleOnlyFormatter);
-		
-		this.productTable.setOnKeyPressed(keyEvent -> System.out.printf("Touche enfoncée : %s %s", keyEvent.getCode(), keyEvent.getCharacter()).println());*/
-		
+	}
+	
+	private void updateFamilyComboBox(String category) {
+		//this.familyComboBox.show();
+		if (this.currentCategory == null) {
+			this.familyComboBox.setDisable(true);
+			resetFamily();
+		}
+		else {
+			this.familyComboBox.setDisable(false);
+			this.familyComboBox.setItems(FamilyService.getFamily(category));
+		}
+	}
+	
+	private void updateProductTable(String category, String family) {
+		this.currentCategory = category;
+		this.currentFamily = family;
+		this.inactiveProductTable.setItems(ProductService.getInactiveProducts(this.currentCategory, this.currentFamily));
+		this.activeProductTable.setItems(ProductService.getActiveProducts(this.currentCategory, this.currentFamily));
+		this.inactiveProductTable.getSelectionModel().selectFirst();
+		this.activeProductTable.getSelectionModel().selectFirst();
+		this.inactiveProductTable.refresh();
+		this.activeProductTable.refresh();
+		this.inactiveProductTable.requestFocus();
 	}
 	
 }

@@ -4,23 +4,36 @@ package ecofish.interface_magento.model;
 public class Product{
 	
 	private String name;
+	private String category;
+	private String family;
 	private String quality;
 	private String size;
 	private Double newPrice;
 	private Double actualPrice;
 	private Boolean active;
 	
-	public Product() {
+	/*public Product() {
 		this.name = "";
 		this.quality = "";
 		this.size = "";
 		this.actualPrice = null;
 		this.newPrice = null;
 		this.active = true;
-	}
+	}*/
 	
 	public Product(String name, String quality, String size, Double actualPrice, Boolean active) {
 		this.name = name;
+		this.quality = quality;
+		this.size = size;
+		this.actualPrice = actualPrice;
+		this.newPrice = null;
+		this.active = active;
+	}
+	
+	public Product(String name, String category, String family, String quality, String size, Double actualPrice, Boolean active) {
+		this.name = name;
+		this.category = category;
+		this.family = family;
 		this.quality = quality;
 		this.size = size;
 		this.actualPrice = actualPrice;
@@ -54,6 +67,14 @@ public class Product{
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+	
+	public String getFamily() {
+		return family;
 	}
 	
 	public String getQuality() {

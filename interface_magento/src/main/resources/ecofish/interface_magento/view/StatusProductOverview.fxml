@@ -22,6 +22,9 @@
                </columns>
             </TableColumn>
          </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
       <TableView fx:id="activeProductTable" layoutX="425.0" layoutY="34.0" prefHeight="460.0" prefWidth="312.0">
          <columns>
@@ -33,6 +36,9 @@
                </columns>
             </TableColumn>
          </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
       </TableView>
       <Button fx:id="leftToRightButton" layoutX="352.0" layoutY="242.0" mnemonicParsing="false" onAction="#handleLeftToRightButton" prefHeight="25.0" prefWidth="69.0" text="&gt;&gt;&gt;&gt;&gt;&gt;" />
       <Button fx:id="rightToLeftButton" layoutX="352.0" layoutY="288.0" mnemonicParsing="false" onAction="#handleRightToLeftButton" prefHeight="25.0" prefWidth="69.0" text="&lt;&lt;&lt;&lt;&lt;&lt;" />
@@ -42,7 +48,7 @@
          </font>
       </Label>
       <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="529.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="528.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="528.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>
@@ -53,7 +59,7 @@
          </font>
       </Label>
       <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="585.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="584.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="584.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>

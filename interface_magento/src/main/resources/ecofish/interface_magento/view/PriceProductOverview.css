@@ -1,0 +1,10 @@
+.table-row-cell:filled {
+}
+
+.table-row-cell:filled:increase-price {
+	-fx-background: green;
+}
+
+.table-row-cell:filled:decrease-price {
+	-fx-background: pink;
+}
