@@ -1,10 +1,15 @@
-.table-row-cell:filled {
+.table-row-cell {
 }
 
-.table-row-cell:filled:increase-price {
-	-fx-background: green;
+/*.table-row-cell:filled:focus {
+	-fx-font-weight: bold;
+}*/
+
+.table-row-cell:increase-price{
+	-fx-background: #76C778;
 }
 
-.table-row-cell:filled:decrease-price {
-	-fx-background: pink;
+
+.table-row-cell:decrease-price {
+	-fx-background: #EAA471;
 }

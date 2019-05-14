@@ -10,6 +10,7 @@ import ecofish.interface_magento.service.CategoryService;
 import ecofish.interface_magento.service.FamilyService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
+import ecofish.interface_magento.util.ProductTableRow;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.css.PseudoClass;
@@ -103,10 +104,11 @@ public class PriceProductOverviewController{
 	
 	private String currentFamily;
 	
-	/*final PseudoClass highlightMessage = PseudoClass.getPseudoClass("highlight-message");
+	/*final PseudoClass highlightMessage = PseudoClass.getPseudoClass("highlight-message");*/
 	
+	private final PseudoClass focus = PseudoClass.getPseudoClass("focus");
 	private final PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
-	private final PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");*/
+	private final PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
 	
 	@FXML
 	private void handleSaveButton() {
@@ -132,6 +134,7 @@ public class PriceProductOverviewController{
 		}
 		this.productTable.requestFocus();
 		this.productTable.getSelectionModel().selectNext();
+		//this.productTable.
 	}
 	
 	@FXML
@@ -149,7 +152,7 @@ public class PriceProductOverviewController{
 			updateProductTable(this.currentCategory, null);
 		}
 	}
-		
+	
 	@FXML
 	private void initialize() {
 		System.out.println("initialize");
@@ -167,31 +170,14 @@ public class PriceProductOverviewController{
 		
 		final PseudoClass highlightMessage = PseudoClass.getPseudoClass("highlight-message");
 
-		this.productTable.setRowFactory(productTable -> new TableRow<Product>());
+		this.productTable.setRowFactory(productTable -> new TableRow<Product>());*/
 		
-		this.productTable.setRowFactory(productTable -> new TableRow<Product>() {
-
-		    {
-		        selectedProperty().addListener((o, oldVal, newVal) -> {
-		        	if (newVal) {
-		                Product item = getItem();
-		                if (item != null) {
-		                	System.out.println("Passage Row");
-		                	pseudoClassStateChanged(increasePrice, true);
-		                }
-		            }
-		        });
-		    }
-
-		    @Override
-		    protected void updateItem(Product item, boolean empty) {
-		        super.updateItem(item, empty);
-		        System.out.println("highlight");
-		        System.out.println(item);
-		        pseudoClassStateChanged(decreasePrice, item != null);
-		    }
-		    
-		});*/
+		
+		//System.out.println(this.productTable.getColumns());
+		
+		
+		
+		
 		
 		
 		
@@ -252,6 +238,33 @@ public class PriceProductOverviewController{
 			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleSaveButton();
 			if(keyEvent.getCode() == KeyCode.ESCAPE) this.productTable.requestFocus();
 		});
+				
+		/*this.productTable.setRowFactory(productTable -> new TableRow<Product>() {
+			
+			{
+		        selectedProperty().addListener((o, oldVal, newVal) -> {
+		        	if (newVal) {
+		                Product product = this.getItem();
+		                if (product != null) {
+		                	System.out.println("Passage Row");
+		                	System.out.println(this);
+		                }
+		            }
+		        });
+		    }
+
+		    @Override
+		    protected void updateItem(Product product, boolean empty) {
+		        super.updateItem(product, empty);
+		        if (product != null && product.getNewPrice() != null) {
+		        	if (product.getNewPrice() > product.getActualPrice()) this.pseudoClassStateChanged(increasePrice, true);
+		        	else if (product.getNewPrice() < product.getActualPrice()) this.pseudoClassStateChanged(decreasePrice, true);
+		        	else {this.pseudoClassStateChanged(increasePrice, false); this.pseudoClassStateChanged(decreasePrice, false);}
+		        }
+		    }
+		    
+		});*/
+		this.productTable.setRowFactory(productTable -> new ProductTableRow());
 		
 	}
 	
