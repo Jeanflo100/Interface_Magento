@@ -1,8 +1,6 @@
 package ecofish.interface_magento.view;
 
 
-import java.sql.SQLException;
-
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.CategoryService;
 import ecofish.interface_magento.service.FamilyService;
@@ -130,9 +128,8 @@ public class StatusProductOverviewController{
     private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
 	
 	@FXML
-	private void handleUpdatePriceButton() throws SQLException {
+	private void handleUpdatePriceButton() {
 		System.out.println("UpdatePrice bouton");
-		ProductService.updateProducts();
 		StageService.showView(ViewService.getView("PriceProductOverview"));
 	}
 	

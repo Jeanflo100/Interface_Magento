@@ -39,7 +39,7 @@
                         <TableColumn prefWidth="201.0" resizable="false" sortable="false" text="Price">
                            <columns>
                               <TableColumn fx:id="actualPriceColumn" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Actual" />
-                              <TableColumn fx:id="newPriceColumn" onEditCommit="#updateNewPrice" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="New" />
+                              <TableColumn fx:id="newPriceColumn" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="New" />
                            </columns>
                         </TableColumn>
                      </columns>
@@ -92,12 +92,13 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Button fx:id="saveButton" layoutX="659.0" layoutY="105.0" mnemonicParsing="false" onAction="#handleSaveButton" text="Save" />
+                  <Button fx:id="updateButton" layoutX="644.0" layoutY="105.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" text="Update price" />
                   <Text fx:id="descriptionText" layoutX="377.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="148.99998307228088">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Text>
+                  <Button fx:id="saveButton" layoutX="150.0" layoutY="60.0" mnemonicParsing="false" onAction="#handleSaveChangesButton" prefHeight="51.0" prefWidth="110.0" text="Save changes" />
                </children>
             </AnchorPane>
          </items>

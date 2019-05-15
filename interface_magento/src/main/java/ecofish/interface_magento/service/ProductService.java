@@ -56,8 +56,9 @@ public class ProductService{
 		Connection connection = DataSourceFactory.getDataSource().getConnection();
 		Statement stmt = connection.createStatement();
 		for (Product product : ProductServiceHolder.INSTANCE.products) {
-			if (product.getChangeActive() == true) {
-				stmt.executeUpdate("UPDATE product SET product.active = " + product.getActive() +" WHERE product.idproduct = " + product.getIdProduct());
+			if (product.getChangeActive() == true || product.getNewPrice() != null) {
+				if (product.getChangeActive() == true) stmt.executeUpdate("UPDATE product SET product.active = " + product.getActive() +" WHERE product.idproduct = " + product.getIdProduct());
+				else if (product.getNewPrice() != null) stmt.executeUpdate("UPDATE product SET product.actual_price = " + product.getNewPrice() +" WHERE product.idproduct = " + product.getIdProduct());
 			}
 		}
 		stmt.close();

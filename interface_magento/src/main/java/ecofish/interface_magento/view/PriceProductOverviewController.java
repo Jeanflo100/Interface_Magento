@@ -1,6 +1,7 @@
 package ecofish.interface_magento.view;
 
 
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
@@ -63,6 +64,9 @@ public class PriceProductOverviewController{
 	TextField newPriceTextField;
 	
 	@FXML
+	Button updateButton;
+	
+	@FXML
 	Button saveButton;
 	
 	@FXML
@@ -106,7 +110,7 @@ public class PriceProductOverviewController{
     private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
 	
 	@FXML
-	private void handleSaveButton() {
+	private void handleUpdatePriceButton() {
 		System.out.println(this.newPriceTextField.getText());
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
 			Double oldPrice = Double.parseDouble(this.actualPriceText.getText());
@@ -131,9 +135,8 @@ public class PriceProductOverviewController{
 	}
 	
 	@FXML
-	private void updateNewPrice() {
-		System.out.println("New price");
-		//System.out.println(this.productTable.getSelectionModel().getSelectedItem().getNewPrice());
+	private void handleSaveChangesButton() throws SQLException {
+		ProductService.updateProducts();
 	}
 	
 	@FXML
@@ -236,7 +239,7 @@ public class PriceProductOverviewController{
 		});
 		
 		this.newPriceTextField.setOnKeyPressed(keyEvent -> {
-			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleSaveButton();
+			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleUpdatePriceButton();
 			if(keyEvent.getCode() == KeyCode.ESCAPE) this.productTable.requestFocus();
 		});
 		
