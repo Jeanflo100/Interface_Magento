@@ -1,7 +1,6 @@
 package ecofish.interface_magento.view;
 
 
-
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 

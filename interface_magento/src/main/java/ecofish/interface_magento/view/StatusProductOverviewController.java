@@ -1,6 +1,7 @@
 package ecofish.interface_magento.view;
 
 
+import java.sql.SQLException;
 
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.CategoryService;
@@ -129,21 +130,22 @@ public class StatusProductOverviewController{
     private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
 	
 	@FXML
-	private void handleUpdatePriceButton() {
+	private void handleUpdatePriceButton() throws SQLException {
 		System.out.println("UpdatePrice bouton");
+		ProductService.updateProducts();
 		StageService.showView(ViewService.getView("PriceProductOverview"));
 	}
 	
 	@FXML
 	private void handleLeftToRightButton() {
 		System.out.println("LeftToRight Button");
-		if (currentInactiveProduct != null) ProductService.updateStatusProduct(currentInactiveProduct);
+		if (currentInactiveProduct != null) ProductService.changeStatusProduct(currentInactiveProduct);
 	}
 	
 	@FXML
 	private void handleRightToLeftButton() {
 		System.out.println("RightToLeft Button");
-		if (currentActiveProduct != null) ProductService.updateStatusProduct(currentActiveProduct);
+		if (currentActiveProduct != null) ProductService.changeStatusProduct(currentActiveProduct);
 	}
 	
 	@FXML
@@ -275,5 +277,6 @@ public class StatusProductOverviewController{
 		this.activeProductTable.refresh();
 		this.inactiveProductTable.requestFocus();
 	}
+	
 	
 }

@@ -1,6 +1,12 @@
 package ecofish.interface_magento.service;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import ecofish.interface_magento.model.Product;
+import ecofish.interface_magento.daos.DataSourceFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,95 +22,49 @@ public class ProductService{
 	
 	private ProductService() {
 		products = FXCollections.observableArrayList();
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "I", 0.53, true));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "II", 1.04, true));
-		products.add(new Product("Orange Washington", "Agrumes", "Orange", "2", "I", 0.83, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "3", "II", 1.54, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "4", "II", 2.16, true));
-		products.add(new Product("Orange Navelina", "Fruits à noyau", "Mandarine", "2", "II", 1.04, false));
-		
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "I", 0.53, true));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "II", 1.04, true));
-		products.add(new Product("Orange Washington", "Agrumes", "Orange", "2", "I", 0.83, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "3", "II", 1.54, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "4", "II", 2.16, true));
-		products.add(new Product("Orange Navelina", "Fruits à noyau", "Mandarine", "2", "II", 1.04, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "I", 0.53, true));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "II", 1.04, true));
-		products.add(new Product("Orange Washington", "Agrumes", "Orange", "2", "I", 0.83, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "3", "II", 1.54, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "4", "II", 2.16, true));
-		products.add(new Product("Orange Navelina", "Fruits à noyau", "Mandarine", "2", "II", 1.04, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "I", 0.53, true));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "II", 1.04, true));
-		products.add(new Product("Orange Washington", "Agrumes", "Orange", "2", "I", 0.83, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "3", "II", 1.54, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "4", "II", 2.16, true));
-		products.add(new Product("Orange Navelina", "Fruits à noyau", "Mandarine", "2", "II", 1.04, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "I", 0.53, true));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "II", 1.04, true));
-		products.add(new Product("Orange Washington", "Agrumes", "Orange", "2", "I", 0.83, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "3", "II", 1.54, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "4", "II", 2.16, true));
-		products.add(new Product("Orange Navelina", "Fruits à noyau", "Mandarine", "2", "II", 1.04, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "I", 0.53, true));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "II", 1.04, true));
-		products.add(new Product("Orange Washington", "Agrumes", "Orange", "2", "I", 0.83, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "3", "II", 1.54, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "4", "II", 2.16, true));
-		products.add(new Product("Orange Navelina", "Fruits à noyau", "Mandarine", "2", "II", 1.04, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "I", 0.53, true));
-		products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "II", 1.04, true));
-		products.add(new Product("Orange Washington", "Agrumes", "Orange", "2", "I", 0.83, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "3", "II", 1.54, false));
-		products.add(new Product("Orange Navelina", "Agrumes", "Citron", "4", "II", 2.16, true));
-		products.add(new Product("Orange Navelina", "Fruits à noyau", "Mandarine", "2", "II", 1.04, false));
 		activeProducts = FXCollections.observableArrayList();
 		inactiveProducts = FXCollections.observableArrayList();
+		getProducts();
 	}
 	
-	/*public static ObservableList<Product> getProducts(String category, String family) {
-		// requête SQL afin d'avoir les différents produits pour la famille et la catégorie sélectionée
-		// Supprimer ancien produits lorsque changements
-		
-		ProductServiceHolder.INSTANCE.products.clear();
-		if (category == "Agrumes") {
-			if (family == "Orange") {
-				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "2", "I", 0.53, true));
-			}
-			else if (family == "Citron") {
-				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "2", "II", 1.04, true));
-				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Washington", "2", "I", 0.83, true));
-				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "3", "II", 1.54, false));
-				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "4", "II", 2.16, true));
+	public void getProducts() {
+		try(Connection connection = DataSourceFactory.getDataSource().getConnection()){
+			String sqlQuery = "SELECT * FROM product";
+			try(Statement statement = connection.createStatement()){
+				try(ResultSet resultSet = statement.executeQuery(sqlQuery)){
+					while(resultSet.next()) {
+						Product product = new Product(
+								resultSet.getInt("idproduct"),
+								resultSet.getString("name"),
+								resultSet.getString("category"),
+								resultSet.getString("family"),
+								resultSet.getString("quality"),
+								resultSet.getString("size"),
+								resultSet.getDouble("actual_price"),
+								resultSet.getBoolean("active"));
+						products.add(product);
+					}
+				}
 			}
 		}
-		else if (category == "Fruits à noyau") {
-			if (family == "Mandarine") {
-				ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "2", "II", 1.04, false));
-			}
+		catch (SQLException e){
+			System.out.println("Error when getting products list");
 		}
-		return ProductServiceHolder.INSTANCE.products;
-	}*/
+	}
 	
-	/*private static void setProducts() {
-		
-		ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "I", 0.53, true));
-		ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "Agrumes", "Orange", "2", "II", 1.04, true));
-		ProductServiceHolder.INSTANCE.products.add(new Product("Orange Washington", "Agrumes", "Orange", "2", "I", 0.83, false));
-		ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "Agrumes", "Citron", "3", "II", 1.54, false));
-		ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "Agrumes", "Citron", "4", "II", 2.16, true));
-		ProductServiceHolder.INSTANCE.products.add(new Product("Orange Navelina", "Fruits à noyau", "Mandarine", "2", "II", 1.04, false));
-		//return ProductServiceHolder.INSTANCE.products;
-	}*/
+	public static void updateProducts() throws SQLException {
+		Connection connection = DataSourceFactory.getDataSource().getConnection();
+		Statement stmt = connection.createStatement();
+		for (Product product : ProductServiceHolder.INSTANCE.products) {
+			if (product.getChangeActive() == true) {
+				stmt.executeUpdate("UPDATE product SET product.active = " + product.getActive() +" WHERE product.idproduct = " + product.getIdProduct());
+			}
+		}
+		stmt.close();
+		connection.close();
+	}
 	
 	public static ObservableList<Product> getActiveProducts(String category, String family){
-		// requête SQL afin d'avoir les produicts actifs avec filtrage possible sur catégorie et famille
-		/*ProductServiceHolder.INSTANCE.activeProducts.add(new Product("Orange Navelina", "4", "II", 2.16, true));
-		ProductServiceHolder.INSTANCE.activeProducts.add(new Product("Orange Washington", "3", "III", 2.02, true));
-		ProductServiceHolder.INSTANCE.activeProducts.add(new Product("Orange Navelina", "4", "I", 1.84, true));
-		ProductServiceHolder.INSTANCE.activeProducts.add(new Product("Orange Washington", "5", "II", 2.48, true));
-		return ProductServiceHolder.INSTANCE.activeProducts;*/
 		ProductServiceHolder.INSTANCE.activeProducts.clear();
 		for (Product product : ProductServiceHolder.INSTANCE.products) {
 			if (product.getActive().equals(true)) {
@@ -127,10 +87,6 @@ public class ProductService{
 	}
 	
 	public static ObservableList<Product> getInactiveProducts(String category, String family){
-		// requête SQL afin d'avoir les produicts inactifs avec filtrage possible sur catégorie et famille
-		/*ProductServiceHolder.INSTANCE.inactiveProducts.add(new Product("Orange Navelina", "2", "II", 1.42, false));
-		ProductServiceHolder.INSTANCE.inactiveProducts.add(new Product("Orange Washington", "1", "I", 1.23, false));
-		return ProductServiceHolder.INSTANCE.inactiveProducts;*/
 		ProductServiceHolder.INSTANCE.inactiveProducts.clear();
 		for (Product product : ProductServiceHolder.INSTANCE.products) {
 			if (product.getActive().equals(false)) {
@@ -152,7 +108,7 @@ public class ProductService{
 		return ProductServiceHolder.INSTANCE.inactiveProducts;
 	}
 	
-	public static void updateStatusProduct(Product product) {
+	public static void changeStatusProduct(Product product) {
 		product.setActive(!product.getActive());
 		product.setChangeActive(!product.getChangeActive());
 		if (product.getActive()) {
@@ -168,5 +124,75 @@ public class ProductService{
 	private static class ProductServiceHolder {
 		private static ProductService INSTANCE = new ProductService();
 	}
+	
+	/*public static ObservableList<Product> getActiveProducts(String category, String family){
+		// requête SQL afin d'avoir les produicts actifs avec filtrage possible sur catégorie et famille
+		ProductServiceHolder.INSTANCE.activeProducts.clear();
+		try(Connection connection = DataSourceFactory.getDataSource().getConnection()){
+			String sqlQuery = "SELECT * FROM product WHERE product.active = true";
+			if (category != null) {
+				sqlQuery += " and product.category = \"" + category + "\"";
+				if (family != null) {
+					sqlQuery += " and product.family = \"" + family + "\"";
+				}
+			}
+			System.out.println(sqlQuery);
+			try(Statement statement = connection.createStatement()){
+				try(ResultSet resultSet = statement.executeQuery(sqlQuery)){
+					while(resultSet.next()) {
+						Product product = new Product(
+								resultSet.getInt("idproduct"),
+								resultSet.getString("name"),
+								resultSet.getString("category"),
+								resultSet.getString("family"),
+								resultSet.getString("quality"),
+								resultSet.getString("size"),
+								resultSet.getDouble("actual_price"),
+								resultSet.getBoolean("active"));
+						ProductServiceHolder.INSTANCE.activeProducts.add(product);
+					}
+				}
+			}
+		}
+		catch (SQLException e){
+			System.out.println("Error when getting active products list");
+		}
+		return ProductServiceHolder.INSTANCE.activeProducts;
+	}
+	
+	public static ObservableList<Product> getInactiveProducts(String category, String family){
+		// requête SQL afin d'avoir les produicts actifs avec filtrage possible sur catégorie et famille
+		ProductServiceHolder.INSTANCE.inactiveProducts.clear();
+		try(Connection connection = DataSourceFactory.getDataSource().getConnection()){
+			String sqlQuery = "SELECT * FROM product WHERE product.active = false";
+			if (category != null) {
+				sqlQuery += " and product.category = \"" + category + "\"";
+				if (family != null) {
+					sqlQuery += " and product.family = \"" + family + "\"";
+				}
+			}
+			System.out.println(sqlQuery);
+			try(Statement statement = connection.createStatement()){
+				try(ResultSet resultSet = statement.executeQuery(sqlQuery)){
+					while(resultSet.next()) {
+						Product product = new Product(
+								resultSet.getInt("idproduct"),
+								resultSet.getString("name"),
+								resultSet.getString("category"),
+								resultSet.getString("family"),
+								resultSet.getString("quality"),
+								resultSet.getString("size"),
+								resultSet.getDouble("actual_price"),
+								resultSet.getBoolean("active"));
+						ProductServiceHolder.INSTANCE.inactiveProducts.add(product);
+					}
+				}
+			}
+		}
+		catch (SQLException e){
+			System.out.println("Error when getting inactive products list");
+		}
+		return ProductServiceHolder.INSTANCE.inactiveProducts;
+	}*/
 	
 }
