@@ -10,10 +10,12 @@ import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.ViewService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -123,6 +125,9 @@ public class StatusProductOverviewController{
 	
 	private String currentFamily;
 	
+    private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("inactive-to-active");
+    private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
+	
 	@FXML
 	private void handleUpdatePriceButton() {
 		System.out.println("UpdatePrice bouton");
@@ -199,6 +204,32 @@ public class StatusProductOverviewController{
 		this.activeProductTable.setOnKeyPressed(keyEvent -> {
 			if(keyEvent.getCode() == KeyCode.LEFT) this.inactiveProductTable.requestFocus();
 			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleRightToLeftButton();
+		});
+		
+		this.inactiveProductTable.setRowFactory(productTable -> new TableRow<Product>() {
+		    @Override
+		    protected void updateItem(Product product, boolean empty) {
+		        super.updateItem(product, empty);
+		        if (product != null && product.getChangeActive() == true) {
+		        	this.pseudoClassStateChanged(activeToInactive, true);
+		        }
+		        else {
+		        	this.pseudoClassStateChanged(activeToInactive, false);
+		        }
+		    }
+		});
+		
+		this.activeProductTable.setRowFactory(productTable -> new TableRow<Product>() {
+		    @Override
+		    protected void updateItem(Product product, boolean empty) {
+		        super.updateItem(product, empty);
+		        if (product != null && product.getChangeActive() == true) {
+		        	this.pseudoClassStateChanged(inactiveToActive, true);
+		        }
+		        else {
+		        	this.pseudoClassStateChanged(inactiveToActive, false);
+		        }
+		    }
 		});
 		
 		this.categoryComboBox.setItems(CategoryService.getCategory());

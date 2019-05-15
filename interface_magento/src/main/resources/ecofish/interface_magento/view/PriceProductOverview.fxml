@@ -31,15 +31,15 @@
                      </font>
                   </Label>
                   <ComboBox fx:id="familyComboBox" layoutX="57.0" layoutY="176.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
-                  <TableView fx:id="productTable" layoutX="260.0" layoutY="14.0" prefHeight="244.0" prefWidth="628.0" styleClass="table-row-cell">
+                  <TableView fx:id="productTable" editable="true" layoutX="260.0" layoutY="14.0" prefHeight="244.0" prefWidth="633.0" styleClass="table-row-cell">
                      <columns>
-                        <TableColumn fx:id="nameColumn" prefWidth="307.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Name" />
+                        <TableColumn fx:id="nameColumn" prefWidth="300.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Name" />
                         <TableColumn fx:id="qualityColumn" minWidth="0.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Quality" />
                         <TableColumn fx:id="sizeColumn" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Size" />
-                        <TableColumn prefWidth="201.0" resizable="false" text="Price">
+                        <TableColumn prefWidth="201.0" resizable="false" sortable="false" text="Price">
                            <columns>
                               <TableColumn fx:id="actualPriceColumn" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Actual" />
-                              <TableColumn fx:id="newPriceColumn" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="New" />
+                              <TableColumn fx:id="newPriceColumn" onEditCommit="#updateNewPrice" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="New" />
                            </columns>
                         </TableColumn>
                      </columns>

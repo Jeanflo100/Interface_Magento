@@ -154,6 +154,7 @@ public class ProductService{
 	
 	public static void updateStatusProduct(Product product) {
 		product.setActive(!product.getActive());
+		product.setChangeActive(!product.getChangeActive());
 		if (product.getActive()) {
 			ProductServiceHolder.INSTANCE.inactiveProducts.remove(product);
 			ProductServiceHolder.INSTANCE.activeProducts.add(product);

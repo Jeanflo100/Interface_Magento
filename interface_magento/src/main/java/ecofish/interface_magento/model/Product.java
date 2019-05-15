@@ -11,6 +11,7 @@ public class Product{
 	private Double newPrice;
 	private Double actualPrice;
 	private Boolean active;
+	private Boolean changeActive;
 	
 	/*public Product() {
 		this.name = "";
@@ -28,6 +29,7 @@ public class Product{
 		this.actualPrice = actualPrice;
 		this.newPrice = null;
 		this.active = active;
+		this.changeActive = false;
 	}
 	
 	public Product(String name, String category, String family, String quality, String size, Double actualPrice, Boolean active) {
@@ -39,6 +41,7 @@ public class Product{
 		this.actualPrice = actualPrice;
 		this.newPrice = null;
 		this.active = active;
+		this.changeActive = false;
 	}
 	
 	public void setName(String name) {
@@ -63,6 +66,10 @@ public class Product{
 	
 	public void setActive(Boolean active) {
 		this.active = active;
+	}
+	
+	public void setChangeActive(Boolean changeActive) {
+		this.changeActive = changeActive;
 	}
 	
 	public String getName() {
@@ -95,6 +102,10 @@ public class Product{
 	
 	public Boolean getActive() {
 		return active;
+	}
+	
+	public Boolean getChangeActive() {
+		return changeActive;
 	}
 	
 	@Override
