@@ -27,6 +27,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 
 public class PriceProductOverviewController{
 	
@@ -70,7 +72,7 @@ public class PriceProductOverviewController{
 	Button saveButton;
 	
 	@FXML
-	Button testButton;
+	public ProgressBar saveProgressBar;
 	
 	/*@FXML
 	DatePicker birthDatePicker;
@@ -136,7 +138,8 @@ public class PriceProductOverviewController{
 	
 	@FXML
 	private void handleSaveChangesButton() throws SQLException {
-		ProductService.updateProducts();
+		this.saveProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		ProductService.updateDatabase(this.saveProgressBar);
 	}
 	
 	@FXML

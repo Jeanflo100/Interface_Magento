@@ -9,6 +9,7 @@ import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.daos.DataSourceFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ProgressBar;
 
 public class ProductService{
 	
@@ -52,14 +53,18 @@ public class ProductService{
 		}
 	}
 	
-	public static void updateProducts() throws SQLException {
+	public static void updateDatabase(ProgressBar saveProgressBar) throws SQLException {
 		Connection connection = DataSourceFactory.getDataSource().getConnection();
 		Statement stmt = connection.createStatement();
+		Integer nb_products = ProductServiceHolder.INSTANCE.products.size();
+		Integer nb_update_products = 0;
 		for (Product product : ProductServiceHolder.INSTANCE.products) {
 			if (product.getChangeActive() == true || product.getNewPrice() != null) {
 				if (product.getChangeActive() == true) stmt.executeUpdate("UPDATE product SET product.active = " + product.getActive() +" WHERE product.idproduct = " + product.getIdProduct());
 				else if (product.getNewPrice() != null) stmt.executeUpdate("UPDATE product SET product.actual_price = " + product.getNewPrice() +" WHERE product.idproduct = " + product.getIdProduct());
 			}
+			nb_update_products += 1;
+			if (saveProgressBar != null) saveProgressBar.setProgress((double)nb_update_products/nb_products);
 		}
 		stmt.close();
 		connection.close();
