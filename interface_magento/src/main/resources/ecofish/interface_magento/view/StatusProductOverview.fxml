@@ -14,11 +14,11 @@
    <children>
       <TableView fx:id="inactiveProductTable" editable="true" layoutX="36.0" layoutY="34.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
          <columns>
-            <TableColumn prefWidth="312.0" text="Inactive products">
+            <TableColumn prefWidth="312.0" sortable="false" text="Inactive products">
                <columns>
-                  <TableColumn fx:id="nameInactiveProductColumn" prefWidth="190.0" text="Name" />
-                  <TableColumn fx:id="qualityInactiveProductColumn" prefWidth="60.0" text="Quality" />
-                  <TableColumn fx:id="sizeInactiveProductColumn" prefWidth="60.0" text="Size" />
+                  <TableColumn fx:id="nameInactiveProductColumn" prefWidth="170.0" sortable="false" style="-fx-alignment: CENTER;" text="Name" />
+                  <TableColumn fx:id="sizeInactiveProductColumn" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Size" />
+                  <TableColumn fx:id="qualityInactiveProductColumn" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Quality" />
                </columns>
             </TableColumn>
          </columns>
@@ -28,11 +28,11 @@
       </TableView>
       <TableView fx:id="activeProductTable" layoutX="425.0" layoutY="34.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
          <columns>
-            <TableColumn prefWidth="312.0" text="Active products">
+            <TableColumn prefWidth="312.0" sortable="false" text="Active products">
                <columns>
-                  <TableColumn fx:id="nameActiveProductColumn" prefWidth="190.0" text="Name" />
-                  <TableColumn fx:id="qualityActiveProductColumn" prefWidth="60.0" text="Quality" />
-                  <TableColumn fx:id="sizeActiveProductColumn" prefWidth="60.0" text="Size" />
+                  <TableColumn fx:id="nameActiveProductColumn" prefWidth="170.0" sortable="false" style="-fx-alignment: CENTER;" text="Name" />
+                  <TableColumn fx:id="sizeActiveProductColumn" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Size" />
+                  <TableColumn fx:id="qualityActiveProductColumn" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Quality" />
                </columns>
             </TableColumn>
          </columns>

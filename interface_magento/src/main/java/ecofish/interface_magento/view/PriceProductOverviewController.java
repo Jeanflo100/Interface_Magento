@@ -161,13 +161,17 @@ public class PriceProductOverviewController{
 	@FXML
 	private void initialize() {
 		System.out.println("initialize");
+		this.productTable.setPlaceholder(new Label("No active products"));
 		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
-		this.qualityColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
+		this.qualityColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
 		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("actualPrice"));
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("newPrice"));
 		this.productTable.setItems(ProductService.getActiveProducts(null, null));
-		this.productTable.setPlaceholder(new Label("No active products"));
+		this.productTable.getSortOrder().add(this.nameColumn);
+		this.productTable.getSortOrder().add(this.sizeColumn);
+		this.productTable.getSortOrder().add(this.qualityColumn);
+		sortProductTable();
 		this.productTable.refresh();
 		
 		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
@@ -246,10 +250,6 @@ public class PriceProductOverviewController{
 			if(keyEvent.getCode() == KeyCode.ESCAPE) this.productTable.requestFocus();
 		});
 		
-		
-		
-		//System.out.println(this.productTable.getSortPolicy());
-		
 	}
 	
 	private void showProduct(Product product) {
@@ -291,6 +291,15 @@ public class PriceProductOverviewController{
 		this.productTable.getSelectionModel().selectFirst();
 		this.productTable.refresh();
 		this.productTable.requestFocus();
+	}
+	
+	private void sortProductTable() {
+		this.nameColumn.setSortable(true);
+		this.sizeColumn.setSortable(true);
+		this.qualityColumn.setSortable(true);
+		this.qualityColumn.setSortable(false);
+		this.sizeColumn.setSortable(false);
+		this.nameColumn.setSortable(false);
 	}
 	
 }
