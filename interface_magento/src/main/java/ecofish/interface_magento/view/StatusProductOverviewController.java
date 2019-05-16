@@ -1,7 +1,6 @@
 package ecofish.interface_magento.view;
 
 
-
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.CategoryService;
 import ecofish.interface_magento.service.FamilyService;
@@ -137,13 +136,15 @@ public class StatusProductOverviewController{
 	@FXML
 	private void handleLeftToRightButton() {
 		System.out.println("LeftToRight Button");
-		if (currentInactiveProduct != null) ProductService.updateStatusProduct(currentInactiveProduct);
+		if (currentInactiveProduct != null) ProductService.changeStatusProduct(currentInactiveProduct);
+		sortActiveProductTable();
 	}
 	
 	@FXML
 	private void handleRightToLeftButton() {
 		System.out.println("RightToLeft Button");
-		if (currentActiveProduct != null) ProductService.updateStatusProduct(currentActiveProduct);
+		if (currentActiveProduct != null) ProductService.changeStatusProduct(currentActiveProduct);
+		sortInactiveProductTable();
 	}
 	
 	@FXML
@@ -165,18 +166,27 @@ public class StatusProductOverviewController{
 	@FXML
 	private void initialize() {
 		System.out.println("initialize");
-		this.nameInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
-		this.qualityInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
-		this.sizeInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
-		this.inactiveProductTable.setItems(ProductService.getInactiveProducts(null, null));
-		this.inactiveProductTable.setPlaceholder(new Label("No inactive products"));
-		this.inactiveProductTable.refresh();
 		
-		this.nameActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
-		this.qualityActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
-		this.sizeActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
-		this.activeProductTable.setItems(ProductService.getActiveProducts(null, null));
+		this.inactiveProductTable.setItems(ProductService.getInactiveProducts(null, null));
+		this.nameInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
+		this.sizeInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
+		this.qualityInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
+		this.inactiveProductTable.setPlaceholder(new Label("No inactive products"));
+		this.inactiveProductTable.getSortOrder().add(this.nameInactiveProductColumn);
+		this.inactiveProductTable.getSortOrder().add(this.sizeInactiveProductColumn);
+		this.inactiveProductTable.getSortOrder().add(this.qualityInactiveProductColumn);
+		sortInactiveProductTable();
+		this.inactiveProductTable.refresh();
+
 		this.activeProductTable.setPlaceholder(new Label("No active products"));
+		this.nameActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
+		this.sizeActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
+		this.qualityActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
+		this.activeProductTable.setItems(ProductService.getActiveProducts(null, null));
+		this.activeProductTable.getSortOrder().add(this.nameActiveProductColumn);
+		this.activeProductTable.getSortOrder().add(this.sizeActiveProductColumn);
+		this.activeProductTable.getSortOrder().add(this.qualityActiveProductColumn);
+		sortActiveProductTable();
 		this.activeProductTable.refresh();
 		
 		this.inactiveProductTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
@@ -274,6 +284,24 @@ public class StatusProductOverviewController{
 		this.inactiveProductTable.refresh();
 		this.activeProductTable.refresh();
 		this.inactiveProductTable.requestFocus();
+	}
+	
+	private void sortInactiveProductTable() {
+		this.nameInactiveProductColumn.setSortable(true);
+		this.sizeInactiveProductColumn.setSortable(true);
+		this.qualityInactiveProductColumn.setSortable(true);
+		this.qualityInactiveProductColumn.setSortable(false);
+		this.sizeInactiveProductColumn.setSortable(false);
+		this.nameInactiveProductColumn.setSortable(false);
+	}
+	
+	private void sortActiveProductTable() {
+		this.nameActiveProductColumn.setSortable(true);
+		this.sizeActiveProductColumn.setSortable(true);
+		this.qualityActiveProductColumn.setSortable(true);
+		this.qualityActiveProductColumn.setSortable(false);
+		this.sizeActiveProductColumn.setSortable(false);
+		this.nameActiveProductColumn.setSortable(false);
 	}
 	
 }

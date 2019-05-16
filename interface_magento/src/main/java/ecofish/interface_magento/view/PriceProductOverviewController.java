@@ -1,7 +1,7 @@
 package ecofish.interface_magento.view;
 
 
-
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
@@ -27,6 +27,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 
 public class PriceProductOverviewController{
 	
@@ -64,10 +66,13 @@ public class PriceProductOverviewController{
 	TextField newPriceTextField;
 	
 	@FXML
+	Button updateButton;
+	
+	@FXML
 	Button saveButton;
 	
 	@FXML
-	Button testButton;
+	public ProgressBar saveProgressBar;
 	
 	/*@FXML
 	DatePicker birthDatePicker;
@@ -107,7 +112,7 @@ public class PriceProductOverviewController{
     private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
 	
 	@FXML
-	private void handleSaveButton() {
+	private void handleUpdatePriceButton() {
 		System.out.println(this.newPriceTextField.getText());
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
 			Double oldPrice = Double.parseDouble(this.actualPriceText.getText());
@@ -132,9 +137,9 @@ public class PriceProductOverviewController{
 	}
 	
 	@FXML
-	private void updateNewPrice() {
-		System.out.println("New price");
-		//System.out.println(this.productTable.getSelectionModel().getSelectedItem().getNewPrice());
+	private void handleSaveChangesButton() throws SQLException {
+		this.saveProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		ProductService.updateDatabase(this.saveProgressBar);
 	}
 	
 	@FXML
@@ -156,13 +161,17 @@ public class PriceProductOverviewController{
 	@FXML
 	private void initialize() {
 		System.out.println("initialize");
+		this.productTable.setPlaceholder(new Label("No active products"));
 		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
-		this.qualityColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
+		this.qualityColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
 		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("actualPrice"));
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("newPrice"));
 		this.productTable.setItems(ProductService.getActiveProducts(null, null));
-		this.productTable.setPlaceholder(new Label("No active products"));
+		this.productTable.getSortOrder().add(this.nameColumn);
+		this.productTable.getSortOrder().add(this.sizeColumn);
+		this.productTable.getSortOrder().add(this.qualityColumn);
+		sortProductTable();
 		this.productTable.refresh();
 		
 		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
@@ -237,13 +246,9 @@ public class PriceProductOverviewController{
 		});
 		
 		this.newPriceTextField.setOnKeyPressed(keyEvent -> {
-			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleSaveButton();
+			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleUpdatePriceButton();
 			if(keyEvent.getCode() == KeyCode.ESCAPE) this.productTable.requestFocus();
 		});
-		
-		
-		
-		//System.out.println(this.productTable.getSortPolicy());
 		
 	}
 	
@@ -286,6 +291,15 @@ public class PriceProductOverviewController{
 		this.productTable.getSelectionModel().selectFirst();
 		this.productTable.refresh();
 		this.productTable.requestFocus();
+	}
+	
+	private void sortProductTable() {
+		this.nameColumn.setSortable(true);
+		this.sizeColumn.setSortable(true);
+		this.qualityColumn.setSortable(true);
+		this.qualityColumn.setSortable(false);
+		this.sizeColumn.setSortable(false);
+		this.nameColumn.setSortable(false);
 	}
 	
 }

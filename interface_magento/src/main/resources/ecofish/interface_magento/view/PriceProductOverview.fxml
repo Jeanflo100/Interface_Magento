@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -19,27 +20,27 @@
          <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="288.0" prefWidth="894.0">
                <children>
-                  <Label layoutX="91.0" layoutY="87.0" text="CATEGORY :">
+                  <Label layoutX="84.0" layoutY="83.0" text="CATEGORY :">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="categoryComboBox" layoutX="57.0" layoutY="108.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
-                  <Label layoutX="103.0" layoutY="155.0" text="FAMILY :">
+                  <ComboBox fx:id="categoryComboBox" layoutX="50.0" layoutY="104.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
+                  <Label layoutX="96.0" layoutY="151.0" text="FAMILY :">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="familyComboBox" layoutX="57.0" layoutY="176.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
-                  <TableView fx:id="productTable" editable="true" layoutX="260.0" layoutY="14.0" prefHeight="244.0" prefWidth="633.0" styleClass="table-row-cell">
+                  <ComboBox fx:id="familyComboBox" layoutX="50.0" layoutY="172.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
+                  <TableView fx:id="productTable" editable="true" layoutX="252.0" layoutY="14.0" prefHeight="244.0" prefWidth="633.0" styleClass="table-row-cell">
                      <columns>
-                        <TableColumn fx:id="nameColumn" prefWidth="300.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Name" />
-                        <TableColumn fx:id="qualityColumn" minWidth="0.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Quality" />
-                        <TableColumn fx:id="sizeColumn" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Size" />
-                        <TableColumn prefWidth="201.0" resizable="false" sortable="false" text="Price">
+                        <TableColumn fx:id="nameColumn" prefWidth="300.0" sortable="false" style="-fx-alignment: CENTER;" text="Name" />
+                        <TableColumn fx:id="sizeColumn" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Size" />
+                        <TableColumn fx:id="qualityColumn" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Quality" />
+                        <TableColumn prefWidth="180.0" sortable="false" text="Price">
                            <columns>
-                              <TableColumn fx:id="actualPriceColumn" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Actual" />
-                              <TableColumn fx:id="newPriceColumn" onEditCommit="#updateNewPrice" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="New" />
+                              <TableColumn fx:id="actualPriceColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="Actual" />
+                              <TableColumn fx:id="newPriceColumn" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" sortable="false" style="-fx-alignment: CENTER;" text="New" />
                            </columns>
                         </TableColumn>
                      </columns>
@@ -47,12 +48,12 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="206.0" layoutY="107.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="199.0" layoutY="103.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../image/black-cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="206.0" layoutY="175.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="199.0" layoutY="171.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../image/black-cross.png" />
                      </image>
@@ -61,43 +62,45 @@
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="189.0" prefWidth="899.0">
                <children>
-                  <ImageView fitHeight="57.0" fitWidth="51.0" layoutX="426.0" layoutY="25.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="57.0" fitWidth="51.0" layoutX="472.0" layoutY="25.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../image/default-photo.jpg" />
                      </image>
                   </ImageView>
-                  <TextField fx:id="newPriceTextField" alignment="CENTER" layoutX="686.0" layoutY="64.0" prefHeight="25.0" prefWidth="62.0" />
-                  <Label layoutX="584.0" layoutY="32.0" text="Actual price :">
+                  <TextField fx:id="newPriceTextField" alignment="CENTER" layoutX="757.0" layoutY="64.0" prefHeight="25.0" prefWidth="62.0" />
+                  <Label layoutX="655.0" layoutY="32.0" text="Actual price :">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="596.0" layoutY="66.0" text="New price :">
+                  <Label layoutX="667.0" layoutY="66.0" text="New price :">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="751.0" layoutY="66.0" text="£">
+                  <Label layoutX="822.0" layoutY="66.0" text="£">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="751.0" layoutY="32.0" text="£">
+                  <Label layoutX="822.0" layoutY="32.0" text="£">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Text fx:id="actualPriceText" layoutX="686.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="62.00001239776611">
+                  <Text fx:id="actualPriceText" layoutX="757.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="62.00001239776611">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Button fx:id="saveButton" layoutX="659.0" layoutY="105.0" mnemonicParsing="false" onAction="#handleSaveButton" text="Save" />
-                  <Text fx:id="descriptionText" layoutX="377.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="148.99998307228088">
+                  <Button fx:id="updateButton" layoutX="715.0" layoutY="105.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" text="Update price" />
+                  <Text fx:id="descriptionText" layoutX="423.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="148.99998307228088">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Text>
+                  <Button fx:id="saveButton" layoutX="166.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleSaveChangesButton" prefHeight="51.0" prefWidth="110.0" text="Save changes" />
+                  <ProgressBar fx:id="saveProgressBar" layoutX="121.0" layoutY="115.0" prefWidth="200.0" progress="0.0" />
                </children>
             </AnchorPane>
          </items>
