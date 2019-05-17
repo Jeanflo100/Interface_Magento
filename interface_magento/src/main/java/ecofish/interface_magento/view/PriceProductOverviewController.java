@@ -3,13 +3,13 @@ package ecofish.interface_magento.view;
 
 import java.sql.SQLException;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
 
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.CategoryService;
 import ecofish.interface_magento.service.FamilyService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
+import ecofish.interface_magento.util.TextFormatterDouble;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.css.PseudoClass;
@@ -22,7 +22,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
@@ -43,18 +42,19 @@ public class PriceProductOverviewController{
 
 	@FXML
 	TableColumn<Product, String> nameColumn;
-	
-	@FXML
-	TableColumn<Product, String> qualityColumn;
 
 	@FXML
 	TableColumn<Product, String> sizeColumn;
 	
 	@FXML
-	TableColumn<Product, String> newPriceColumn;
+	TableColumn<Product, String> qualityColumn;
 	
 	@FXML
-	TableColumn<Product, String> actualPriceColumn;
+	TableColumn<Product, Double> actualPriceColumn;
+	
+	@FXML
+	TableColumn<Product, Double> newPriceColumn;
+
 	
 	@FXML
 	Text descriptionText;
@@ -74,34 +74,6 @@ public class PriceProductOverviewController{
 	@FXML
 	public ProgressBar saveProgressBar;
 	
-	/*@FXML
-	DatePicker birthDatePicker;
-	
-	@FXML
-	ComboBox<Category> categoryComboBox;
-	
-	@FXML
-	ImageView photoImageView;
-	
-	@FXML
-	ImageView changePhotoImageView;
-	
-	@FXML
-	Button validateButton;
-	
-	@FXML
-	ComboBox<Category> filterComboBox;
-	
-	@FXML
-	TextField filterTextField;
-	
-	@FXML
-	Button filterButton;
-	
-	private final Image defaultPhoto = new Image(InterfaceMagento.class.getResource("image/default-photo.jpg").toString());
-	
-	private String urlChangePhoto;*/
-	
 	private Product currentProduct;
 	
 	private String currentCategory;
@@ -115,9 +87,9 @@ public class PriceProductOverviewController{
 	private void handleUpdatePriceButton() {
 		System.out.println(this.newPriceTextField.getText());
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
-			Double oldPrice = Double.parseDouble(this.actualPriceText.getText());
+			Double actualPrice = this.currentProduct.getActualPrice();
 			Double newPrice = Double.parseDouble(this.newPriceTextField.getText());
-			if (Math.abs(newPrice - oldPrice) / oldPrice > 0.1) {
+			if (Math.abs(newPrice - actualPrice) / actualPrice > 0.1) {
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 				alert.initOwner(StageService.getPrimaryStage());
 				alert.setTitle("WARNING");
@@ -138,6 +110,7 @@ public class PriceProductOverviewController{
 	
 	@FXML
 	private void handleSaveChangesButton() throws SQLException {
+		this.saveProgressBar.setVisible(true);
 		this.saveProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		ProductService.updateDatabase(this.saveProgressBar);
 	}
@@ -165,14 +138,14 @@ public class PriceProductOverviewController{
 		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.qualityColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
-		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("actualPrice"));
-		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("newPrice"));
+		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("actualPrice"));
+		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("newPrice"));
 		this.productTable.setItems(ProductService.getActiveProducts(null, null));
+		this.productTable.refresh();
 		this.productTable.getSortOrder().add(this.nameColumn);
 		this.productTable.getSortOrder().add(this.sizeColumn);
 		this.productTable.getSortOrder().add(this.qualityColumn);
 		sortProductTable();
-		this.productTable.refresh();
 		
 		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
 			@Override
@@ -183,7 +156,7 @@ public class PriceProductOverviewController{
 		});
 		
 		this.productTable.setRowFactory(productTable -> new TableRow<Product>() {
-	
+			
 		    @Override
 		    protected void updateItem(Product product, boolean empty) {
 		        super.updateItem(product, empty);
@@ -200,6 +173,8 @@ public class PriceProductOverviewController{
 		    }
 	    
 		});
+		
+		this.productTable.getSelectionModel().selectFirst();
 				
 		this.categoryComboBox.setItems(CategoryService.getCategory());
 		this.familyComboBox.setDisable(true);
@@ -219,17 +194,7 @@ public class PriceProductOverviewController{
 			}
 		});
 		
-		UnaryOperator<TextFormatter.Change> doubleOnlyFilter = change -> {
-			String text = change.getText();
-			if (text.isEmpty() || text == null) return change;
-			for (int i = 0; i<text.length(); i++) {
-				if (!String.valueOf(text.charAt(i)).matches("[.0-9]")) return null;
-			}
-			return change;
-		};
-		
-		TextFormatter<Double> newPriceDoubleOnlyFormatter = new TextFormatter<Double>(doubleOnlyFilter);
-		this.newPriceTextField.setTextFormatter(newPriceDoubleOnlyFormatter);		
+		this.newPriceTextField.setTextFormatter(TextFormatterDouble.getTextFormatterDouble());
 
 		this.productTable.setOnKeyTyped(keyEvent -> {
 			if (!keyEvent.getCharacter().equals("\r") && !keyEvent.getCharacter().equals(" ")) {
@@ -273,7 +238,6 @@ public class PriceProductOverviewController{
 	}
 	
 	private void updateFamilyComboBox(String category) {
-		//this.familyComboBox.show();
 		if (this.currentCategory == null) {
 			this.familyComboBox.setDisable(true);
 			resetFamily();
@@ -288,8 +252,9 @@ public class PriceProductOverviewController{
 		this.currentCategory = category;
 		this.currentFamily = family;
 		this.productTable.setItems(ProductService.getActiveProducts(this.currentCategory, this.currentFamily));
-		this.productTable.getSelectionModel().selectFirst();
 		this.productTable.refresh();
+		sortProductTable();
+		this.productTable.getSelectionModel().selectFirst();
 		this.productTable.requestFocus();
 	}
 	

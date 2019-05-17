@@ -30,21 +30,21 @@ public class StatusProductOverviewController{
 	
 	@FXML
 	TableColumn<Product, String> nameActiveProductColumn;
-	
-	@FXML
-	TableColumn<Product, String> qualityActiveProductColumn;
 
 	@FXML
 	TableColumn<Product, String> sizeActiveProductColumn;
 	
 	@FXML
-	TableColumn<Product, String> nameInactiveProductColumn;
+	TableColumn<Product, String> qualityActiveProductColumn;
 	
 	@FXML
-	TableColumn<Product, String> qualityInactiveProductColumn;
+	TableColumn<Product, String> nameInactiveProductColumn;
 
 	@FXML
 	TableColumn<Product, String> sizeInactiveProductColumn;
+	
+	@FXML
+	TableColumn<Product, String> qualityInactiveProductColumn;
 	
 	@FXML
 	Button leftToRightButton;
@@ -59,62 +59,7 @@ public class StatusProductOverviewController{
 	ComboBox<String> categoryComboBox;
 	
 	@FXML
-	ComboBox<String> familyComboBox;
-	
-	/*@FXML
-	TableView<Product> productTable;
-
-	@FXML
-	TableColumn<Product, String> nameColumn;
-	
-	@FXML
-	TableColumn<Product, String> qualityColumn;
-
-	@FXML
-	TableColumn<Product, String> sizeColumn;
-	
-	@FXML
-	TableColumn<Product, String> priceColumn;
-	
-	@FXML
-	Text descriptionText;
-	
-	@FXML
-	Text oldPriceText;
-	
-	@FXML
-	TextField newPriceTextField;
-	
-	@FXML
-	Button saveButton;*/
-	
-	/*@FXML
-	DatePicker birthDatePicker;
-	
-	@FXML
-	ComboBox<Category> categoryComboBox;
-	
-	@FXML
-	ImageView photoImageView;
-	
-	@FXML
-	ImageView changePhotoImageView;
-	
-	@FXML
-	Button validateButton;
-	
-	@FXML
-	ComboBox<Category> filterComboBox;
-	
-	@FXML
-	TextField filterTextField;
-	
-	@FXML
-	Button filterButton;
-	
-	private final Image defaultPhoto = new Image(InterfaceMagento.class.getResource("image/default-photo.jpg").toString());
-	
-	private String urlChangePhoto;*/
+	ComboBox<String> familyComboBox;	
 	
 	private Product currentInactiveProduct;
 	
@@ -172,22 +117,22 @@ public class StatusProductOverviewController{
 		this.sizeInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.qualityInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
 		this.inactiveProductTable.setPlaceholder(new Label("No inactive products"));
+		this.inactiveProductTable.refresh();
 		this.inactiveProductTable.getSortOrder().add(this.nameInactiveProductColumn);
 		this.inactiveProductTable.getSortOrder().add(this.sizeInactiveProductColumn);
 		this.inactiveProductTable.getSortOrder().add(this.qualityInactiveProductColumn);
 		sortInactiveProductTable();
-		this.inactiveProductTable.refresh();
 
 		this.activeProductTable.setPlaceholder(new Label("No active products"));
 		this.nameActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.qualityActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
 		this.activeProductTable.setItems(ProductService.getActiveProducts(null, null));
+		this.activeProductTable.refresh();
 		this.activeProductTable.getSortOrder().add(this.nameActiveProductColumn);
 		this.activeProductTable.getSortOrder().add(this.sizeActiveProductColumn);
 		this.activeProductTable.getSortOrder().add(this.qualityActiveProductColumn);
 		sortActiveProductTable();
-		this.activeProductTable.refresh();
 		
 		this.inactiveProductTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
 			@Override

@@ -117,7 +117,7 @@ public class Product{
 	
 	@Override
 	public String toString() {
-		return name + "\nQuality : " + quality + "\nSize : " + size;
+		return name + "\nSize : " + size + "\nQuality : " + quality;
 	}
 	
 }

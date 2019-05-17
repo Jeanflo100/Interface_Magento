@@ -20,18 +20,6 @@
          <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="288.0" prefWidth="894.0">
                <children>
-                  <Label layoutX="84.0" layoutY="83.0" text="CATEGORY :">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="categoryComboBox" layoutX="50.0" layoutY="104.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
-                  <Label layoutX="96.0" layoutY="151.0" text="FAMILY :">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
-                  <ComboBox fx:id="familyComboBox" layoutX="50.0" layoutY="172.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
                   <TableView fx:id="productTable" editable="true" layoutX="252.0" layoutY="14.0" prefHeight="244.0" prefWidth="633.0" styleClass="table-row-cell">
                      <columns>
                         <TableColumn fx:id="nameColumn" prefWidth="300.0" sortable="false" style="-fx-alignment: CENTER;" text="Name" />
@@ -48,11 +36,23 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
+                  <Label layoutX="84.0" layoutY="83.0" text="CATEGORY :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="categoryComboBox" layoutX="50.0" layoutY="104.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
                   <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="199.0" layoutY="103.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../image/black-cross.png" />
                      </image>
                   </ImageView>
+                  <Label layoutX="96.0" layoutY="151.0" text="FAMILY :">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="familyComboBox" layoutX="50.0" layoutY="172.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
                   <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="199.0" layoutY="171.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../image/black-cross.png" />
@@ -100,7 +100,7 @@
                      </font>
                   </Text>
                   <Button fx:id="saveButton" layoutX="166.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleSaveChangesButton" prefHeight="51.0" prefWidth="110.0" text="Save changes" />
-                  <ProgressBar fx:id="saveProgressBar" layoutX="121.0" layoutY="115.0" prefWidth="200.0" progress="0.0" />
+                  <ProgressBar fx:id="saveProgressBar" layoutX="121.0" layoutY="115.0" prefWidth="200.0" progress="0.0" visible="false" />
                </children>
             </AnchorPane>
          </items>
