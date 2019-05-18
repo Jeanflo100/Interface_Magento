@@ -113,7 +113,7 @@ public class EditingDoubleCell extends TableCell<Product,Double>{
         // add filter to allow for typing only integer
         textField.setTextFormatter( textFormatter);
 
-        textField.setText( getString() );
+        textField.setText(getString());
 
         textField.setMaxWidth( this.getWidth() - this.getGraphicTextGap() * 2 );
 

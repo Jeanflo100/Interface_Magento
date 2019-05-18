@@ -74,6 +74,8 @@ public class PriceProductOverviewController{
 	@FXML
 	public ProgressBar saveProgressBar;
 	
+	private Integer numberVisibleRow;
+	
 	private Product currentProduct;
 	
 	private String currentCategory;
@@ -106,6 +108,12 @@ public class PriceProductOverviewController{
 		}
 		this.productTable.requestFocus();
 		this.productTable.getSelectionModel().selectNext();
+		if(this.numberVisibleRow/2 - this.productTable.getSelectionModel().getSelectedIndex() <= 0) {
+			this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRow/2);
+		}
+		else {
+			this.productTable.scrollTo(0);
+		}
 	}
 	
 	@FXML
@@ -140,6 +148,8 @@ public class PriceProductOverviewController{
 		this.qualityColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
 		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("actualPrice"));
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("newPrice"));
+		this.productTable.setFixedCellSize(25);
+		setNumberVisibleRow();
 		this.productTable.setItems(ProductService.getActiveProducts(null, null));
 		this.productTable.refresh();
 		this.productTable.getSortOrder().add(this.nameColumn);
@@ -217,6 +227,31 @@ public class PriceProductOverviewController{
 		
 	}
 	
+	private void setNumberVisibleRow() {
+		Integer numberColumnRow = 0;
+		Integer newNumberColumnRow = numberColumnRow;
+		for (TableColumn<Product, ?> column : this.productTable.getColumns()) {
+			Integer temp_newNumberColumnRow = getNumberColumnRow(column, numberColumnRow);
+			if (temp_newNumberColumnRow > newNumberColumnRow) {
+				newNumberColumnRow = temp_newNumberColumnRow;
+			}
+		}
+		numberColumnRow = newNumberColumnRow;
+		Integer numberVisibleRow = (int) ((this.productTable.getPrefHeight() - numberColumnRow * 20) / this.productTable.getFixedCellSize());
+		this.numberVisibleRow = numberVisibleRow;
+	}
+	
+	private Integer getNumberColumnRow(TableColumn<?, ?> column, Integer actualNumberColumnRow) {
+		Integer newNumberColumnRow = actualNumberColumnRow;
+		for (TableColumn<?, ?> subColumn : column.getColumns()) {
+			Integer temp_newNumberColumnRow = getNumberColumnRow(subColumn, actualNumberColumnRow);
+			if (temp_newNumberColumnRow > newNumberColumnRow) {
+				newNumberColumnRow = temp_newNumberColumnRow;
+			}
+		}
+		return newNumberColumnRow + 1;
+	}
+	
 	private void showProduct(Product product) {
 		this.currentProduct = product;
 		if (this.currentProduct == null) {
@@ -256,6 +291,7 @@ public class PriceProductOverviewController{
 		sortProductTable();
 		this.productTable.getSelectionModel().selectFirst();
 		this.productTable.requestFocus();
+		this.productTable.scrollTo(currentProduct);
 	}
 	
 	private void sortProductTable() {
