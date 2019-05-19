@@ -1,7 +1,7 @@
 package ecofish.interface_magento.service;
 
 import java.io.IOException;
-import java.util.Hashtable;
+//import java.util.Hashtable;
 
 import ecofish.interface_magento.InterfaceMagento;
 import javafx.fxml.FXMLLoader;
@@ -9,12 +9,11 @@ import javafx.fxml.FXMLLoader;
 public class ViewService {
 	
 	public static String actualView;
-	
-	private static Hashtable<String, FXMLLoader> views = new Hashtable<>(); 
+	//private static Hashtable<String, FXMLLoader> views = new Hashtable<>(); 		// Possiblement réutiliser avec un parametre "nouveau" pour si recreer une instance ou reprendre la precedente
 
 	public static <T> T getView(String id) {
 		actualView = id;
-		FXMLLoader loader;
+		/*FXMLLoader loader;
 		if (views.containsKey(id)) {
 			loader = views.get(id);
 		}
@@ -22,7 +21,8 @@ public class ViewService {
 			loader = getLoader(id);
 			views.put(id, loader);
 		}
-		return loader.getRoot();
+		return loader.getRoot();*/
+		return getLoader(id).getRoot();
 	}
 
 	private static FXMLLoader getLoader(String id) {

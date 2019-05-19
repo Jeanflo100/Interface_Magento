@@ -10,12 +10,15 @@
 	<top>
 		<MenuBar BorderPane.alignment="CENTER">
 			<menus>
-				<Menu mnemonicParsing="false" onShowing="#updateMenu" text="File">
+				<Menu mnemonicParsing="false" text="File">
 					<items>
-                  <MenuItem fx:id="importDataMenuItem" mnemonicParsing="false" onAction="#importData" text="Import Data" />
-					<MenuItem fx:id="exportDataMenuItem" mnemonicParsing="false" onAction="#exportData" text="Export Data" />
-					<SeparatorMenuItem fx:id="separatorMenuItem" mnemonicParsing="false" visible="false" />
-                  <MenuItem fx:id="changeUserMenuItem" mnemonicParsing="false" onAction="#changeUser" text="Change user" />
+                  <Menu mnemonicParsing="false" text="View products">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#showStatusProductView" text="Status" />
+                        <MenuItem mnemonicParsing="false" onAction="#showPriceProductView" text="Price" />
+                    </items>
+                  </Menu>
+					<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Close" />
                   		
 						

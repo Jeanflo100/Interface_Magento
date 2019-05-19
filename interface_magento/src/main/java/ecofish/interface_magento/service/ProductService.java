@@ -28,11 +28,14 @@ public class ProductService{
 		getProducts();
 	}
 	
-	public void getProducts() {
+	private void getProducts() {
 		try(Connection connection = DataSourceFactory.getDataSource().getConnection()){
 			String sqlQuery = "SELECT * FROM product";
 			try(Statement statement = connection.createStatement()){
 				try(ResultSet resultSet = statement.executeQuery(sqlQuery)){
+					/*resultSet.last();
+					System.out.println(resultSet.getRow() - 1);		// ou requete SELECT COUNT(*)
+					resultSet.first();*/
 					while(resultSet.next()) {
 						Product product = new Product(
 								resultSet.getInt("idproduct"),

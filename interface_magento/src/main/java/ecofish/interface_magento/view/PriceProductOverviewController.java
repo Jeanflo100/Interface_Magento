@@ -9,7 +9,6 @@ import ecofish.interface_magento.service.CategoryService;
 import ecofish.interface_magento.service.FamilyService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
 import ecofish.interface_magento.util.TextFormatterDouble;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -71,6 +70,9 @@ public class PriceProductOverviewController{
 	
 	@FXML
 	Button saveButton;
+	
+	@FXML
+	Text successfulBackupText;
 	
 	@FXML
 	public ProgressBar saveProgressBar;
@@ -147,9 +149,7 @@ public class PriceProductOverviewController{
 		this.saveProgressBar.setVisible(true);
 		this.saveProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		ProductService.updateDatabase(this.saveProgressBar);
-		
-		this.productTable.refresh();
-		StageService.showView(ViewService.getView("PriceProductOverview"));	// En test pour ensuite refresh sa propre scene
+		this.successfulBackupText.setVisible(true);
 	}
 	
 	@FXML

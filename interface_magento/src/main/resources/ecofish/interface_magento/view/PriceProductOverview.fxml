@@ -67,33 +67,33 @@
                         <Image url="@../image/default-photo.jpg" />
                      </image>
                   </ImageView>
-                  <TextField fx:id="newPriceTextField" alignment="CENTER" layoutX="757.0" layoutY="64.0" prefHeight="25.0" prefWidth="62.0" />
-                  <Label layoutX="655.0" layoutY="32.0" text="Actual price :">
+                  <TextField fx:id="newPriceTextField" alignment="CENTER" layoutX="748.0" layoutY="64.0" prefHeight="25.0" prefWidth="62.0" />
+                  <Label layoutX="646.0" layoutY="32.0" text="Actual price :">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="667.0" layoutY="66.0" text="New price :">
+                  <Label layoutX="658.0" layoutY="66.0" text="New price :">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="822.0" layoutY="66.0" text="£">
+                  <Label layoutX="813.0" layoutY="66.0" text="£">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="822.0" layoutY="32.0" text="£">
+                  <Label layoutX="813.0" layoutY="32.0" text="£">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Text fx:id="actualPriceText" layoutX="757.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="62.00001239776611">
+                  <Text fx:id="actualPriceText" layoutX="748.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="62.00001239776611">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Button fx:id="updateButton" layoutX="715.0" layoutY="105.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" text="Update price" />
+                  <Button fx:id="updateButton" layoutX="706.0" layoutY="105.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" text="Update price" />
                   <Text fx:id="descriptionText" layoutX="423.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="148.99998307228088">
                      <font>
                         <Font size="14.0" />
@@ -101,6 +101,11 @@
                   </Text>
                   <Button fx:id="saveButton" layoutX="166.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleSaveChangesButton" prefHeight="51.0" prefWidth="110.0" text="Save changes" />
                   <ProgressBar fx:id="saveProgressBar" layoutX="121.0" layoutY="115.0" prefWidth="200.0" progress="0.0" visible="false" />
+                  <Text fx:id="successfulBackupText" layoutX="152.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Successful backup !" textAlignment="CENTER" visible="false" wrappingWidth="138.00000685453415">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
                </children>
             </AnchorPane>
          </items>
