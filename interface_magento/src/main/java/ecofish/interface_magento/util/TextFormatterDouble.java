@@ -10,11 +10,11 @@ import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
 
 public class TextFormatterDouble {
-	
-    private TextFormatter<Double> textFormatter ;
+
     private DecimalFormat df ;
+    private TextFormatter<Double> textFormatter ;
     
-    private TextFormatterDouble() {
+    public TextFormatterDouble() {
         Locale locale  = new Locale("en", "EN");
         String pattern = "###,###.##";
         df = (DecimalFormat) NumberFormat.getNumberInstance(locale);
@@ -57,12 +57,8 @@ public class TextFormatterDouble {
         });
     }
     
-    public static TextFormatter<Double> getTextFormatterDouble(){
-    	return TextFormatterDoubleHolder.INSTANCE.textFormatter;
-    }
-    
-    private static class TextFormatterDoubleHolder {
-    	private static TextFormatterDouble INSTANCE = new TextFormatterDouble();
+    public TextFormatter<Double> getTextFormatterDouble(){
+    	return textFormatter;
     }
     
 }

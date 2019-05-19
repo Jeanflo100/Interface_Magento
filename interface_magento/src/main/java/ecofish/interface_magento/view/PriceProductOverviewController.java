@@ -147,7 +147,7 @@ public class PriceProductOverviewController{
 		this.saveProgressBar.setVisible(true);
 		this.saveProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		ProductService.updateDatabase(this.saveProgressBar);
-		StageService.showView(ViewService.getView("StatusProductOverview"));	// En test pour ensuite refresh sa propre scene
+		StageService.showView(ViewService.getView("PriceProductOverview"));	// En test pour ensuite refresh sa propre scene
 	}
 	
 	@FXML
@@ -231,7 +231,8 @@ public class PriceProductOverviewController{
 			}
 		});
 		
-		this.newPriceTextField.setTextFormatter(TextFormatterDouble.getTextFormatterDouble());
+		TextFormatterDouble textFormatter = new TextFormatterDouble();
+		this.newPriceTextField.setTextFormatter(textFormatter.getTextFormatterDouble());
 
 		this.productTable.setOnKeyTyped(keyEvent -> {
 			if (!keyEvent.getCharacter().equals("\r") && !keyEvent.getCharacter().equals(" ")) {
