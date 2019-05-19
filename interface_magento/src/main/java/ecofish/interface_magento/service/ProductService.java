@@ -60,8 +60,22 @@ public class ProductService{
 		Integer nb_update_products = 0;
 		for (Product product : ProductServiceHolder.INSTANCE.products) {
 			if (product.getChangeActive() == true || product.getNewPrice() != null) {
-				if (product.getChangeActive() == true) stmt.executeUpdate("UPDATE product SET product.active = " + product.getActive() +" WHERE product.idproduct = " + product.getIdProduct());
-				else if (product.getNewPrice() != null) stmt.executeUpdate("UPDATE product SET product.actual_price = " + product.getNewPrice() +" WHERE product.idproduct = " + product.getIdProduct());
+				String SQLquery = "UPDATE product SET";
+				if (product.getChangeActive() == true) {
+					SQLquery += " product.active = " + product.getActive() + ",";
+				}
+				if (product.getNewPrice() != null) {
+					SQLquery +=  " product.actual_price = " + product.getNewPrice() + ",";
+				}
+				SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE product.idproduct = " + product.getIdProduct();
+				stmt.executeUpdate(SQLquery);
+				if (product.getChangeActive() == true) {
+					product.setChangeActive(false);
+				}
+				if (product.getNewPrice() != null) {
+					product.setActualPrice(product.getNewPrice());
+					product.setNewPrice(null);
+				}
 			}
 			nb_update_products += 1;
 			if (saveProgressBar != null) saveProgressBar.setProgress((double)nb_update_products/nb_products);
