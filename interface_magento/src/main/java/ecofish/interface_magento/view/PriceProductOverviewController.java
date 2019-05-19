@@ -9,6 +9,7 @@ import ecofish.interface_magento.service.CategoryService;
 import ecofish.interface_magento.service.FamilyService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
+import ecofish.interface_magento.service.ViewService;
 import ecofish.interface_magento.util.TextFormatterDouble;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -85,6 +86,31 @@ public class PriceProductOverviewController{
     private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
     private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
 	
+	private static Integer getNumberVisibleRow(TableView<?> table) {
+		Integer numberColumnRow = 0;
+		Integer newNumberColumnRow = numberColumnRow;
+		for (TableColumn<?, ?> column : table.getColumns()) {
+			Integer temp_newNumberColumnRow = getNumberColumnRow(column, numberColumnRow);
+			if (temp_newNumberColumnRow > newNumberColumnRow) {
+				newNumberColumnRow = temp_newNumberColumnRow;
+			}
+		}
+		numberColumnRow = newNumberColumnRow;
+		Integer numberVisibleRow = (int) ((table.getPrefHeight() - numberColumnRow * 20) / table.getFixedCellSize());
+		return numberVisibleRow;
+	}
+	
+	private static Integer getNumberColumnRow(TableColumn<?, ?> column, Integer actualNumberColumnRow) {
+		Integer newNumberColumnRow = actualNumberColumnRow;
+		for (TableColumn<?, ?> subColumn : column.getColumns()) {
+			Integer temp_newNumberColumnRow = getNumberColumnRow(subColumn, actualNumberColumnRow);
+			if (temp_newNumberColumnRow > newNumberColumnRow) {
+				newNumberColumnRow = temp_newNumberColumnRow;
+			}
+		}
+		return newNumberColumnRow + 1;
+	}
+    
 	@FXML
 	private void handleUpdatePriceButton() {
 		System.out.println(this.newPriceTextField.getText());
@@ -121,6 +147,7 @@ public class PriceProductOverviewController{
 		this.saveProgressBar.setVisible(true);
 		this.saveProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		ProductService.updateDatabase(this.saveProgressBar);
+		StageService.showView(ViewService.getView("StatusProductOverview"));	// En test pour ensuite refresh sa propre scene
 	}
 	
 	@FXML
@@ -149,7 +176,7 @@ public class PriceProductOverviewController{
 		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("actualPrice"));
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("newPrice"));
 		this.productTable.setFixedCellSize(25);
-		setNumberVisibleRow();
+		this.numberVisibleRow = getNumberVisibleRow(this.productTable);
 		this.productTable.setItems(ProductService.getActiveProducts(null, null));
 		this.productTable.refresh();
 		this.productTable.getSortOrder().add(this.nameColumn);
@@ -225,31 +252,6 @@ public class PriceProductOverviewController{
 			if(keyEvent.getCode() == KeyCode.ESCAPE) this.productTable.requestFocus();
 		});
 		
-	}
-	
-	private void setNumberVisibleRow() {
-		Integer numberColumnRow = 0;
-		Integer newNumberColumnRow = numberColumnRow;
-		for (TableColumn<Product, ?> column : this.productTable.getColumns()) {
-			Integer temp_newNumberColumnRow = getNumberColumnRow(column, numberColumnRow);
-			if (temp_newNumberColumnRow > newNumberColumnRow) {
-				newNumberColumnRow = temp_newNumberColumnRow;
-			}
-		}
-		numberColumnRow = newNumberColumnRow;
-		Integer numberVisibleRow = (int) ((this.productTable.getPrefHeight() - numberColumnRow * 20) / this.productTable.getFixedCellSize());
-		this.numberVisibleRow = numberVisibleRow;
-	}
-	
-	private Integer getNumberColumnRow(TableColumn<?, ?> column, Integer actualNumberColumnRow) {
-		Integer newNumberColumnRow = actualNumberColumnRow;
-		for (TableColumn<?, ?> subColumn : column.getColumns()) {
-			Integer temp_newNumberColumnRow = getNumberColumnRow(subColumn, actualNumberColumnRow);
-			if (temp_newNumberColumnRow > newNumberColumnRow) {
-				newNumberColumnRow = temp_newNumberColumnRow;
-			}
-		}
-		return newNumberColumnRow + 1;
 	}
 	
 	private void showProduct(Product product) {
