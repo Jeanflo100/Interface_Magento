@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+//import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class StageService {
@@ -21,8 +22,7 @@ public class StageService {
 	}
 	
 	private Stage primaryStage;
-
-	private BorderPane mainLayout;
+	public BorderPane mainLayout;
 
 	public static BorderPane getMainLayoutBorderPane() {
 		return StageServiceHolder.INSTANCE.mainLayout;
@@ -37,16 +37,18 @@ public class StageService {
 		primaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
 		primaryStage.setScene(new Scene(StageServiceHolder.INSTANCE.mainLayout));
 		primaryStage.setResizable(false);
-		//primaryStage.show();
+		//primaryStage.initStyle(StageStyle.TRANSPARENT);
+		primaryStage.show();
 		StageServiceHolder.INSTANCE.primaryStage = primaryStage;
 	}
 
 	public static void showView(Pane rootElementPane) {
 		Node rootElementNode = rootElementPane;
-		StageServiceHolder.INSTANCE.primaryStage.hide();
+		if (ViewService.isNewView()) StageServiceHolder.INSTANCE.primaryStage.hide();
 		StageServiceHolder.INSTANCE.mainLayout.setPrefSize(rootElementPane.getPrefWidth(), StageServiceHolder.INSTANCE.mainLayout.getTop().getBoundsInParent().getHeight() + rootElementPane.getPrefHeight());
 		StageServiceHolder.INSTANCE.mainLayout.setCenter(rootElementNode);
 		StageServiceHolder.INSTANCE.primaryStage.sizeToScene();
+		StageServiceHolder.INSTANCE.primaryStage.centerOnScreen();
 		StageServiceHolder.INSTANCE.primaryStage.show();
 	}
 
