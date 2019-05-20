@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 
 import ecofish.interface_magento.daos.DataSourceFactory;
+import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.ViewService;
 import javafx.application.Application;
@@ -20,6 +21,8 @@ public class InterfaceMagento extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		//initDatabase(); 	// enlever exception si delete
 		StageService.initPrimaryStage(primaryStage);
+		StageService.createSecondaryStage();
+		ProductService.getProducts();
 		StageService.showView(ViewService.getView("StatusProductOverview"));
 	}
 

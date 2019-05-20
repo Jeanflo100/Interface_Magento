@@ -6,8 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-//import javafx.stage.StageStyle;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class StageService {
@@ -22,6 +23,7 @@ public class StageService {
 	}
 	
 	private Stage primaryStage;
+	private Stage secondaryStage;
 	public BorderPane mainLayout;
 
 	public static BorderPane getMainLayoutBorderPane() {
@@ -37,9 +39,16 @@ public class StageService {
 		primaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
 		primaryStage.setScene(new Scene(StageServiceHolder.INSTANCE.mainLayout));
 		primaryStage.setResizable(false);
-		//primaryStage.initStyle(StageStyle.TRANSPARENT);
-		primaryStage.show();
 		StageServiceHolder.INSTANCE.primaryStage = primaryStage;
+	}
+	
+	public static void createSecondaryStage() {
+		Stage secondaryStage = new Stage();
+		secondaryStage.initOwner(StageService.getPrimaryStage());
+		secondaryStage.initModality(Modality.WINDOW_MODAL);
+		secondaryStage.initStyle(StageStyle.UNDECORATED);
+		secondaryStage.setScene(new Scene(ViewService.getView("LoadingProduct")));
+		StageServiceHolder.INSTANCE.secondaryStage = secondaryStage;
 	}
 
 	public static void showView(Pane rootElementPane) {
@@ -51,11 +60,18 @@ public class StageService {
 		StageServiceHolder.INSTANCE.primaryStage.centerOnScreen();
 		StageServiceHolder.INSTANCE.primaryStage.show();
 	}
+	
+	public static void showSecondaryStage(Boolean show) {
+		if (show) {
+			StageServiceHolder.INSTANCE.secondaryStage.show();
+			while (!StageServiceHolder.INSTANCE.secondaryStage.isShowing());
+		}
+		else StageServiceHolder.INSTANCE.secondaryStage.close();
+	}
 
 	public static void closeStage() {
 		StageServiceHolder.INSTANCE.primaryStage
 				.fireEvent(new WindowEvent(StageServiceHolder.INSTANCE.primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
-
 	}
 
 }

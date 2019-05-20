@@ -10,43 +10,62 @@ import ecofish.interface_magento.daos.DataSourceFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.text.Text;
 
-public class ProductService{
+public class ProductService {
 	
 	private ObservableList<Product> products;
 	private ObservableList<Product> activeProducts;
 	private ObservableList<Product> inactiveProducts;
 	
+	private ProgressBar loadingProductProgressBar;
+	private Text loadingProductText;
+	
 	/*private static String currentCategory;
 	private static String currentFamily;*/
 	// + faire getters et setters --> generaliser cela
+	
+	public static void setLoadingComponents(ProgressBar progressBar, Text text) {
+		ProductServiceHolder.INSTANCE.loadingProductProgressBar = progressBar;
+		ProductServiceHolder.INSTANCE.loadingProductText = text;
+	}
 	
 	private ProductService() {
 		products = FXCollections.observableArrayList();
 		activeProducts = FXCollections.observableArrayList();
 		inactiveProducts = FXCollections.observableArrayList();
-		getProducts();
 	}
 	
-	private void getProducts() {
+	public static void getProducts() {
+		if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		if (ProductServiceHolder.INSTANCE.loadingProductText != null) ProductServiceHolder.INSTANCE.loadingProductText.setText("Loading Products...");
+		StageService.showSecondaryStage(true);
 		try(Connection connection = DataSourceFactory.getDataSource().getConnection()){
 			String sqlQuery = "SELECT * FROM product";
 			try(Statement statement = connection.createStatement()){
-				try(ResultSet resultSet = statement.executeQuery(sqlQuery)){
-					/*resultSet.last();
-					System.out.println(resultSet.getRow() - 1);		// ou requete SELECT COUNT(*)
-					resultSet.first();*/
-					while(resultSet.next()) {
-						Product product = new Product(
-								resultSet.getInt("idproduct"),
-								resultSet.getString("name"),
-								resultSet.getString("category"),
-								resultSet.getString("family"),
-								resultSet.getString("quality"),
-								resultSet.getString("size"),
-								resultSet.getDouble("actual_price"),
-								resultSet.getBoolean("active"));
-						products.add(product);
+				try(ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM product")) {
+					retour.next();
+					Integer nb_products = retour.getInt("nb_products");
+					Integer nb_loading_products = 0;
+					try(ResultSet resultSet = statement.executeQuery(sqlQuery)){					
+						while(resultSet.next()) {
+							Product product = new Product(
+									resultSet.getInt("idproduct"),
+									resultSet.getString("name"),
+									resultSet.getString("category"),
+									resultSet.getString("family"),
+									resultSet.getString("quality"),
+									resultSet.getString("size"),
+									resultSet.getDouble("actual_price"),
+									resultSet.getBoolean("active"));
+							ProductServiceHolder.INSTANCE.products.add(product);
+							nb_loading_products += 1;
+							if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) {
+								ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress((double)nb_loading_products/nb_products);
+							}
+						}
+						
 					}
 				}
 			}
@@ -54,9 +73,13 @@ public class ProductService{
 		catch (SQLException e){
 			System.out.println("Error when getting products list");
 		}
+		StageService.showSecondaryStage(false);
 	}
 	
-	public static void updateDatabase(ProgressBar saveProgressBar) throws SQLException {
+	public static void updateDatabase() throws SQLException {
+		if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		if (ProductServiceHolder.INSTANCE.loadingProductText != null) ProductServiceHolder.INSTANCE.loadingProductText.setText("Update Products...");
+		StageService.showSecondaryStage(true);
 		Connection connection = DataSourceFactory.getDataSource().getConnection();
 		Statement stmt = connection.createStatement();
 		Integer nb_products = ProductServiceHolder.INSTANCE.products.size();
@@ -81,10 +104,13 @@ public class ProductService{
 				}
 			}
 			nb_update_products += 1;
-			if (saveProgressBar != null) saveProgressBar.setProgress((double)nb_update_products/nb_products);
+			if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) {
+				ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress((double)nb_update_products/nb_products);
+			}
 		}
 		stmt.close();
 		connection.close();
+		StageService.showSecondaryStage(false);
 	}
 	
 	public static ObservableList<Product> getActiveProducts(String category, String family){

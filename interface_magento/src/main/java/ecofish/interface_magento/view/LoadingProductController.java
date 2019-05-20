@@ -1,8 +1,6 @@
 package ecofish.interface_magento.view;
 
-
-import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
+import ecofish.interface_magento.service.ProductService;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
@@ -11,21 +9,15 @@ import javafx.scene.text.Text;
 public class LoadingProductController {
 	
 	@FXML
-	ProgressBar loadingProductProgressBar;
+	public ProgressBar loadingProductProgressBar;
 	
 	@FXML
-	Text loadingProductText;
-	
-	public void showStatusProductView(){
-		StageService.showView(ViewService.getView("StatusProductOverview"));
-	}
-	
-	public void showPriceProductView(){
-		StageService.showView(ViewService.getView("PriceProductOverview"));
-	}
+	public Text loadingProductText;
 
-	public void closeApplication() {
-		StageService.closeStage();
+	@FXML
+	public void initialize() {
+		System.out.println("Loading products");
+		ProductService.setLoadingComponents(loadingProductProgressBar, loadingProductText);
 	}
-
+	
 }

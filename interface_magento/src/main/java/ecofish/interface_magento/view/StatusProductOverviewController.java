@@ -111,7 +111,7 @@ public class StatusProductOverviewController{
 	@FXML
 	private void initialize() {
 		System.out.println("initialize");
-		
+				
 		this.inactiveProductTable.setItems(ProductService.getInactiveProducts(null, null));
 		this.nameInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));

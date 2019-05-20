@@ -28,7 +28,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
+//import javafx.scene.control.ProgressIndicator;
 
 public class PriceProductOverviewController{
 	
@@ -147,11 +147,12 @@ public class PriceProductOverviewController{
 	
 	@FXML
 	private void handleSaveChangesButton() throws SQLException {
-		this.saveProgressBar.setVisible(true);
-		this.saveProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-		ProductService.updateDatabase(this.saveProgressBar);
-		this.successfulBackupText.setVisible(true);
+		//this.saveProgressBar.setVisible(true);
+		//this.saveProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		ProductService.updateDatabase();
+		//this.successfulBackupText.setVisible(true);
 		ViewService.clearViews();
+		StageService.showView(ViewService.getView("StatusProductOverview"));
 	}
 	
 	@FXML
