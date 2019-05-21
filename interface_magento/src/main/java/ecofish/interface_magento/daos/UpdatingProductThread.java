@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 public class UpdatingProductThread implements Runnable {
 
@@ -19,6 +20,8 @@ public class UpdatingProductThread implements Runnable {
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;
  
+    private Boolean error;
+    
     public UpdatingProductThread() {
     	this.products = ProductService.getProducts();
     	this.loadingProductProgressBar = ProductService.getLoadingProductProgressBar();
@@ -27,6 +30,8 @@ public class UpdatingProductThread implements Runnable {
     	this.loadingProductProgressBar.set(0.0);
     	this.loadingProductText.set("Update Products...");
 
+    	this.error = false;
+    	
 		StageService.showSecondaryStage(true);
     }
  
@@ -58,23 +63,35 @@ public class UpdatingProductThread implements Runnable {
 				}
 				nb_update_products += 1;
 				loadingProductProgressBar.set((double)nb_update_products/nb_products);
-	
-				try {
-					Thread.sleep(10);
-					System.out.println("passage SQL");
+				/*try {
+					Thread.sleep(30);
 					System.out.println(loadingProductProgressBar);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}
+				}*/
 			}
 			stmt.close();
 			connection.close();
-		} catch (SQLException e) {}
+		}
+		catch (SQLException e) {
+			System.out.println("Error when updating products list");
+			error = true;
+		}
 
 		Platform.runLater(() -> {
 			ViewService.clearViews();
+			if (error == true) {
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.initOwner(StageService.getSecondaryStage());
+				alert.setTitle("FAILURE");
+				alert.setHeaderText("Error when updating products");
+				alert.showAndWait();
+				StageService.showView(ViewService.getView("PriceProductOverview"));
+			}
+			else {				
+				StageService.showView(ViewService.getView("StatusProductOverview"));
+			}
 			StageService.showSecondaryStage(false);
-			StageService.showView(ViewService.getView("StatusProductOverview"));
         });
 		
     }
