@@ -33,6 +33,10 @@ public class StageService {
 	public static Stage getPrimaryStage() {
 		return StageServiceHolder.INSTANCE.primaryStage;
 	}
+	
+	public static Stage getSecondaryStage() {
+		return StageServiceHolder.INSTANCE.secondaryStage;
+	}
 
 	public static void initPrimaryStage(Stage primaryStage) {
 		primaryStage.setTitle("Ecofish Products");
@@ -44,6 +48,7 @@ public class StageService {
 	
 	public static void createSecondaryStage() {
 		Stage secondaryStage = new Stage();
+		secondaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
 		secondaryStage.initOwner(StageService.getPrimaryStage());
 		secondaryStage.initModality(Modality.WINDOW_MODAL);
 		secondaryStage.initStyle(StageStyle.UNDECORATED);

@@ -224,10 +224,12 @@ public class StatusProductOverviewController{
 		this.currentFamily = family;
 		this.inactiveProductTable.setItems(ProductService.getInactiveProducts(this.currentCategory, this.currentFamily));
 		this.activeProductTable.setItems(ProductService.getActiveProducts(this.currentCategory, this.currentFamily));
-		this.inactiveProductTable.getSelectionModel().selectFirst();
-		this.activeProductTable.getSelectionModel().selectFirst();
+		sortInactiveProductTable();
+		sortActiveProductTable();
 		this.inactiveProductTable.refresh();
 		this.activeProductTable.refresh();
+		this.inactiveProductTable.getSelectionModel().selectFirst();
+		this.activeProductTable.getSelectionModel().selectFirst();
 		this.inactiveProductTable.requestFocus();
 	}
 	

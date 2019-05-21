@@ -1,6 +1,9 @@
 package ecofish.interface_magento.service;
 
 import ecofish.interface_magento.model.Product;
+
+import java.util.Optional;
+
 import ecofish.interface_magento.daos.LoadingProductThread;
 import ecofish.interface_magento.daos.UpdatingProductThread;
 import javafx.beans.property.DoubleProperty;
@@ -9,6 +12,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class ProductService {
 	
@@ -43,45 +48,6 @@ public class ProductService {
 		loadingProductText = new SimpleStringProperty("");
 	}
 	
-	/*public static void loadProducts() {
-		//if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-		//if (ProductServiceHolder.INSTANCE.loadingProductText != null) ProductServiceHolder.INSTANCE.loadingProductText.setText("Loading Products...");
-		StageService.showSecondaryStage(true);
-		try(Connection connection = DataSourceFactory.getDataSource().getConnection()){
-			String sqlQuery = "SELECT * FROM product";
-			try(Statement statement = connection.createStatement()){
-				try(ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM product")) {
-					retour.next();
-					Integer nb_products = retour.getInt("nb_products");
-					Integer nb_loading_products = 0;
-					try(ResultSet resultSet = statement.executeQuery(sqlQuery)){					
-						while(resultSet.next()) {
-							Product product = new Product(
-									resultSet.getInt("idproduct"),
-									resultSet.getString("name"),
-									resultSet.getString("category"),
-									resultSet.getString("family"),
-									resultSet.getString("quality"),
-									resultSet.getString("size"),
-									resultSet.getDouble("actual_price"),
-									resultSet.getBoolean("active"));
-							ProductServiceHolder.INSTANCE.products.add(product);
-							nb_loading_products += 1;
-							if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) {
-								ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress((double)nb_loading_products/nb_products);
-							}
-						}
-						
-					}
-				}
-			}
-		}
-		catch (SQLException e){
-			System.out.println("Error when getting products list");
-		}
-		StageService.showSecondaryStage(false);
-	}*/
-	
 	public static void loadProduct() {
 		LoadingProductThread loadingProduct = new LoadingProductThread();
 		new Thread(loadingProduct).start();
@@ -91,63 +57,6 @@ public class ProductService {
 		UpdatingProductThread updatingProduct = new UpdatingProductThread();
 		new Thread(updatingProduct).start();
 	}
-	
-	/*public static void updateDatabase(DoubleProperty ratio) throws SQLException {
-		DoubleProperty ratio =  new SimpleDoubleProperty(0.0);
-		//ProductServiceHolder.INSTANCE.loadingProductProgressBar.progressProperty().bind(ratio);
-		progressBar.progressProperty().bind(ratio);
-		if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-		if (ProductServiceHolder.INSTANCE.loadingProductText != null) ProductServiceHolder.INSTANCE.loadingProductText.setText("Update Products...");
-		StageService.showSecondaryStage(true);
-		Connection connection = DataSourceFactory.getDataSource().getConnection();
-		Statement stmt = connection.createStatement();
-		Integer nb_products = ProductServiceHolder.INSTANCE.products.size();
-		Integer nb_update_products = 0;
-		for (Product product : ProductServiceHolder.INSTANCE.products) {
-			if (product.getChangeActive() == true || product.getNewPrice() != null) {
-				String SQLquery = "UPDATE product SET";
-				if (product.getChangeActive() == true) {
-					SQLquery += " product.active = " + product.getActive() + ",";
-				}
-				if (product.getNewPrice() != null) {
-					SQLquery +=  " product.actual_price = " + product.getNewPrice() + ",";
-				}
-				SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE product.idproduct = " + product.getIdProduct();
-				stmt.executeUpdate(SQLquery);
-				if (product.getChangeActive() == true) {
-					product.setChangeActive(false);
-				}
-				if (product.getNewPrice() != null) {
-					product.setActualPrice(product.getNewPrice());
-					product.setNewPrice(null);
-				}
-			}
-			nb_update_products += 1;
-			//ratio.set((double)nb_update_products/nb_products);
-			ratio = new SimpleDoubleProperty((double)nb_update_products/nb_products);
-			try {
-				TimeUnit.SECONDS.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) {
-				ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress((double)nb_update_products/nb_products);
-				try {
-					TimeUnit.SECONDS.sleep(1);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		stmt.close();
-		connection.close();
-		StageService.showSecondaryStage(false);
-	}*/
 	
 	public static ObservableList<Product> getActiveProducts(String category, String family){
 		ProductServiceHolder.INSTANCE.activeProducts.clear();
@@ -194,6 +103,19 @@ public class ProductService {
 	}
 	
 	public static void changeStatusProduct(Product product) {
+		if (product.getNewPrice() != null) {
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.initOwner(StageService.getPrimaryStage());
+			alert.setTitle("WARNING");
+			alert.setHeaderText("This product has a new price.\r\n" + 
+								"If the product is disabled, the new price will be deleted.\r\n" + 
+								"Continue?");
+			Optional<ButtonType> option = alert.showAndWait();
+			if (option.get() != ButtonType.OK) {
+				return;
+	    	}
+			product.setNewPrice(null);
+		}
 		product.setActive(!product.getActive());
 		product.setChangeActive(!product.getChangeActive());
 		if (product.getActive()) {
