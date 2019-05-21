@@ -110,7 +110,6 @@ public class PriceProductOverviewController{
     
 	@FXML
 	private void handleUpdatePriceButton() {
-		System.out.println(this.newPriceTextField.getText());
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
 			Double actualPrice = this.currentProduct.getActualPrice();
 			Double newPrice = Double.parseDouble(this.newPriceTextField.getText());
@@ -118,25 +117,17 @@ public class PriceProductOverviewController{
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 				alert.initOwner(StageService.getPrimaryStage());
 				alert.setTitle("WARNING");
-				alert.setHeaderText("The difference between the old and the new price is more than 10%, continue ?");
+				alert.setHeaderText("The difference between the actual and the new price is more than 10%, continue ?");
 				Optional<ButtonType> option = alert.showAndWait();
 				if (option.get() != ButtonType.OK) {
 					return;
 		    	}
 			}
-			this.currentProduct.setNewPrice(newPrice);
-			this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
-			this.newPriceTextField.clear();
-			this.productTable.refresh();
+			updateNewPrice(newPrice);
+			this.newPriceTextField.clear();	
 		}
 		this.productTable.requestFocus();
-		this.productTable.getSelectionModel().selectNext();
-		if(this.numberVisibleRow/2 - this.productTable.getSelectionModel().getSelectedIndex() <= 0) {
-			this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRow/2);
-		}
-		else {
-			this.productTable.scrollTo(0);
-		}
+		selectNextProduct();
 	}
 	
 	@FXML
@@ -181,7 +172,6 @@ public class PriceProductOverviewController{
 		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
 			@Override
 			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
-				System.out.println("passage");
 				showProduct(newValue);
 			}
 		});
@@ -229,7 +219,7 @@ public class PriceProductOverviewController{
 		this.newPriceTextField.setTextFormatter(textFormatter.getTextFormatterDouble());
 
 		this.productTable.setOnKeyTyped(keyEvent -> {
-			if (!keyEvent.getCharacter().equals("\r") && !keyEvent.getCharacter().equals(" ")) {
+			if (!keyEvent.getCharacter().equals("\r") && !keyEvent.getCharacter().equals(" ") && !keyEvent.getCharacter().equals("") && !keyEvent.getCharacter().equals("")) {
 				this.newPriceTextField.requestFocus();
 				this.newPriceTextField.clear();
 				this.newPriceTextField.appendText(keyEvent.getCharacter());
@@ -239,6 +229,10 @@ public class PriceProductOverviewController{
 		this.productTable.setOnKeyPressed(keyEvent -> {
 			if (keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) {
 				this.newPriceTextField.requestFocus();
+			}
+			else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
+				updateNewPrice(null);
+				selectNextProduct();
 			}
 		});
 		
@@ -284,8 +278,8 @@ public class PriceProductOverviewController{
 		this.currentCategory = category;
 		this.currentFamily = family;
 		this.productTable.setItems(ProductService.getActiveProducts(this.currentCategory, this.currentFamily));
-		this.productTable.refresh();
 		sortProductTable();
+		this.productTable.refresh();
 		this.productTable.getSelectionModel().selectFirst();
 		this.productTable.requestFocus();
 		this.productTable.scrollTo(currentProduct);
@@ -298,6 +292,24 @@ public class PriceProductOverviewController{
 		this.qualityColumn.setSortable(false);
 		this.sizeColumn.setSortable(false);
 		this.nameColumn.setSortable(false);
+	}
+	
+	private void selectNextProduct() {
+		this.productTable.getSelectionModel().selectNext();
+		if(this.numberVisibleRow/2 - this.productTable.getSelectionModel().getSelectedIndex() <= 0) {
+			this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRow/2);
+		}
+		else {
+			this.productTable.scrollTo(0);
+		}
+	}
+	
+	private void updateNewPrice(Double newPrice) {
+		if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
+		this.currentProduct.setNewPrice(newPrice);
+		if (this.currentProduct.getNewPrice() != null) this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
+		else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
+		this.productTable.refresh();
 	}
 	
 }
