@@ -1,6 +1,9 @@
 package ecofish.interface_magento.service;
 
 import ecofish.interface_magento.model.Product;
+
+import java.util.Optional;
+
 import ecofish.interface_magento.daos.LoadingProductThread;
 import ecofish.interface_magento.daos.UpdatingProductThread;
 import javafx.beans.property.DoubleProperty;
@@ -9,6 +12,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 public class ProductService {
 	
@@ -98,6 +103,19 @@ public class ProductService {
 	}
 	
 	public static void changeStatusProduct(Product product) {
+		if (product.getNewPrice() != null) {
+			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+			alert.initOwner(StageService.getPrimaryStage());
+			alert.setTitle("WARNING");
+			alert.setHeaderText("This product has a new price.\r\n" + 
+								"If the product is disabled, the new price will be deleted.\r\n" + 
+								"Continue?");
+			Optional<ButtonType> option = alert.showAndWait();
+			if (option.get() != ButtonType.OK) {
+				return;
+	    	}
+			product.setNewPrice(null);
+		}
 		product.setActive(!product.getActive());
 		product.setChangeActive(!product.getChangeActive());
 		if (product.getActive()) {
