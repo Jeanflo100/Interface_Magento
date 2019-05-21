@@ -219,9 +219,10 @@ public class PriceProductOverviewController{
 		this.newPriceTextField.setTextFormatter(textFormatter.getTextFormatterDouble());
 
 		this.productTable.setOnKeyTyped(keyEvent -> {
-			if (!keyEvent.getCharacter().equals("\r") && !keyEvent.getCharacter().equals(" ") && !keyEvent.getCharacter().equals("") && !keyEvent.getCharacter().equals("")) {
+			if(keyEvent.getCharacter().matches("[.0-9]")) {
 				this.newPriceTextField.requestFocus();
 				this.newPriceTextField.clear();
+				if (keyEvent.getCharacter().contentEquals(".")) this.newPriceTextField.appendText("0");
 				this.newPriceTextField.appendText(keyEvent.getCharacter());
 			}
 		});
