@@ -64,11 +64,10 @@ public class StageService {
 	public static void showSecondaryStage(Boolean show) {
 		if (show) {
 			StageServiceHolder.INSTANCE.secondaryStage.show();
-			while (!StageServiceHolder.INSTANCE.secondaryStage.isShowing());
 		}
 		else StageServiceHolder.INSTANCE.secondaryStage.close();
 	}
-
+	
 	public static void closeStage() {
 		StageServiceHolder.INSTANCE.primaryStage
 				.fireEvent(new WindowEvent(StageServiceHolder.INSTANCE.primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));

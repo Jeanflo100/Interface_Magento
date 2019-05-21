@@ -9,7 +9,6 @@ import ecofish.interface_magento.service.CategoryService;
 import ecofish.interface_magento.service.FamilyService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
 import ecofish.interface_magento.util.TextFormatterDouble;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -27,8 +26,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-//import javafx.scene.control.ProgressIndicator;
 
 public class PriceProductOverviewController{
 	
@@ -74,9 +71,6 @@ public class PriceProductOverviewController{
 	
 	@FXML
 	Text successfulBackupText;
-	
-	@FXML
-	public ProgressBar saveProgressBar;
 	
 	private Integer numberVisibleRow;
 	
@@ -147,12 +141,7 @@ public class PriceProductOverviewController{
 	
 	@FXML
 	private void handleSaveChangesButton() throws SQLException {
-		//this.saveProgressBar.setVisible(true);
-		//this.saveProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-		ProductService.updateDatabase();
-		//this.successfulBackupText.setVisible(true);
-		ViewService.clearViews();
-		StageService.showView(ViewService.getView("StatusProductOverview"));
+		ProductService.updateProduct();
 	}
 	
 	@FXML

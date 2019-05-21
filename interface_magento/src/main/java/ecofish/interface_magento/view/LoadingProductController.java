@@ -17,7 +17,9 @@ public class LoadingProductController {
 	@FXML
 	public void initialize() {
 		System.out.println("Loading products");
-		ProductService.setLoadingComponents(loadingProductProgressBar, loadingProductText);
+		//ProductService.setLoadingComponents(loadingProductProgressBar, loadingProductText);
+		this.loadingProductProgressBar.progressProperty().bind(ProductService.getLoadingProductProgressBar());
+		this.loadingProductText.textProperty().bind(ProductService.getLoadingProductText());
 	}
 	
 }

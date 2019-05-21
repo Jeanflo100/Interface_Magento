@@ -1,17 +1,14 @@
 package ecofish.interface_magento.service;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import ecofish.interface_magento.model.Product;
-import ecofish.interface_magento.daos.DataSourceFactory;
+import ecofish.interface_magento.daos.LoadingProductThread;
+import ecofish.interface_magento.daos.UpdatingProductThread;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.text.Text;
 
 public class ProductService {
 	
@@ -19,27 +16,36 @@ public class ProductService {
 	private ObservableList<Product> activeProducts;
 	private ObservableList<Product> inactiveProducts;
 	
-	private ProgressBar loadingProductProgressBar;
-	private Text loadingProductText;
+	private DoubleProperty loadingProductProgressBar;
+	private StringProperty loadingProductText;
 	
 	/*private static String currentCategory;
 	private static String currentFamily;*/
 	// + faire getters et setters --> generaliser cela
 	
-	public static void setLoadingComponents(ProgressBar progressBar, Text text) {
-		ProductServiceHolder.INSTANCE.loadingProductProgressBar = progressBar;
-		ProductServiceHolder.INSTANCE.loadingProductText = text;
+	public static ObservableList<Product> getProducts() {
+		return ProductServiceHolder.INSTANCE.products;
+	}
+	
+	public static DoubleProperty getLoadingProductProgressBar() {
+		return ProductServiceHolder.INSTANCE.loadingProductProgressBar;
+	}
+	
+	public static StringProperty getLoadingProductText() {
+		return ProductServiceHolder.INSTANCE.loadingProductText;
 	}
 	
 	private ProductService() {
 		products = FXCollections.observableArrayList();
 		activeProducts = FXCollections.observableArrayList();
 		inactiveProducts = FXCollections.observableArrayList();
+		loadingProductProgressBar = new SimpleDoubleProperty(0.0);
+		loadingProductText = new SimpleStringProperty("");
 	}
 	
-	public static void getProducts() {
-		if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
-		if (ProductServiceHolder.INSTANCE.loadingProductText != null) ProductServiceHolder.INSTANCE.loadingProductText.setText("Loading Products...");
+	/*public static void loadProducts() {
+		//if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+		//if (ProductServiceHolder.INSTANCE.loadingProductText != null) ProductServiceHolder.INSTANCE.loadingProductText.setText("Loading Products...");
 		StageService.showSecondaryStage(true);
 		try(Connection connection = DataSourceFactory.getDataSource().getConnection()){
 			String sqlQuery = "SELECT * FROM product";
@@ -74,9 +80,22 @@ public class ProductService {
 			System.out.println("Error when getting products list");
 		}
 		StageService.showSecondaryStage(false);
+	}*/
+	
+	public static void loadProduct() {
+		LoadingProductThread loadingProduct = new LoadingProductThread();
+		new Thread(loadingProduct).start();
 	}
 	
-	public static void updateDatabase() throws SQLException {
+	public static void updateProduct() {
+		UpdatingProductThread updatingProduct = new UpdatingProductThread();
+		new Thread(updatingProduct).start();
+	}
+	
+	/*public static void updateDatabase(DoubleProperty ratio) throws SQLException {
+		DoubleProperty ratio =  new SimpleDoubleProperty(0.0);
+		//ProductServiceHolder.INSTANCE.loadingProductProgressBar.progressProperty().bind(ratio);
+		progressBar.progressProperty().bind(ratio);
 		if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 		if (ProductServiceHolder.INSTANCE.loadingProductText != null) ProductServiceHolder.INSTANCE.loadingProductText.setText("Update Products...");
 		StageService.showSecondaryStage(true);
@@ -104,14 +123,31 @@ public class ProductService {
 				}
 			}
 			nb_update_products += 1;
+			//ratio.set((double)nb_update_products/nb_products);
+			ratio = new SimpleDoubleProperty((double)nb_update_products/nb_products);
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			if (ProductServiceHolder.INSTANCE.loadingProductProgressBar != null) {
 				ProductServiceHolder.INSTANCE.loadingProductProgressBar.setProgress((double)nb_update_products/nb_products);
+				try {
+					TimeUnit.SECONDS.sleep(1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		stmt.close();
 		connection.close();
 		StageService.showSecondaryStage(false);
-	}
+	}*/
 	
 	public static ObservableList<Product> getActiveProducts(String category, String family){
 		ProductServiceHolder.INSTANCE.activeProducts.clear();
