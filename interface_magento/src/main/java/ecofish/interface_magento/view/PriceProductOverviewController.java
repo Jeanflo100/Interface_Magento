@@ -5,8 +5,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import ecofish.interface_magento.model.Product;
-import ecofish.interface_magento.service.CategoryService;
-import ecofish.interface_magento.service.FamilyService;
+import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.util.TextFormatterDouble;
@@ -197,7 +196,7 @@ public class PriceProductOverviewController{
 		
 		this.productTable.getSelectionModel().selectFirst();
 				
-		this.categoryComboBox.setItems(CategoryService.getCategory());
+		this.categoryComboBox.setItems(FilterService.getCategories());
 		this.familyComboBox.setDisable(true);
 		
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -214,7 +213,7 @@ public class PriceProductOverviewController{
 				updateProductTable(currentCategory, newValue);
 			}
 		});
-		
+
 		TextFormatterDouble textFormatter = new TextFormatterDouble();
 		this.newPriceTextField.setTextFormatter(textFormatter.getTextFormatterDouble());
 
@@ -271,7 +270,7 @@ public class PriceProductOverviewController{
 		}
 		else {
 			this.familyComboBox.setDisable(false);
-			this.familyComboBox.setItems(FamilyService.getFamily(category));
+			this.familyComboBox.setItems(FilterService.getFamilies(category));
 		}
 	}
 	

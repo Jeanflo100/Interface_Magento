@@ -3,6 +3,7 @@ package ecofish.interface_magento.daos;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.ProductService;
@@ -11,15 +12,13 @@ import ecofish.interface_magento.service.ViewService;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
 public class UpdatingProductThread implements Runnable {
 
-	private ObservableList<Product> products;
+	private ArrayList<Product> products;
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;
- 
     private Boolean error;
     
     public UpdatingProductThread() {
