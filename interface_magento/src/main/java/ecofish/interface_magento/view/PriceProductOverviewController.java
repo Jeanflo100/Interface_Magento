@@ -306,11 +306,13 @@ public class PriceProductOverviewController{
 	}
 	
 	private void updateNewPrice(Double newPrice) {
-		if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
-		this.currentProduct.setNewPrice(newPrice);
-		if (this.currentProduct.getNewPrice() != null) this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
-		else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
-		this.productTable.refresh();
+		if (this.currentProduct != null) {
+			if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
+			this.currentProduct.setNewPrice(newPrice);
+			if (this.currentProduct.getNewPrice() != null) this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
+			else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
+			this.productTable.refresh();
+		}
 	}
 	
 }
