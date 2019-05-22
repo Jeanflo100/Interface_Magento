@@ -49,14 +49,14 @@ public class LoadingProductThread implements Runnable {
 			ResultSet resultSet = statement.executeQuery(sqlQuery);				
 			while(resultSet.next()) {
 				Product product = new Product(
-						resultSet.getInt("idproduct"),
-						resultSet.getString("name"),
-						resultSet.getString("category"),
-						resultSet.getString("family"),
-						resultSet.getString("quality"),
-						resultSet.getString("size"),
-						resultSet.getDouble("actual_price"),
-						resultSet.getBoolean("active"));
+						resultSet.getString("sku"),
+						resultSet.getString("product_name"),
+						resultSet.getString("product_category"),
+						resultSet.getString("product_family"),
+						null,	/*resultSet.getString("quality"),*/
+						null,	/*resultSet.getString("size"),*/
+						resultSet.getDouble("product_basic_price"),
+						resultSet.getBoolean("status"));
 				products.add(product);
 				nb_loading_products += 1;
 				loadingProductProgressBar.set((double)nb_loading_products/nb_products);

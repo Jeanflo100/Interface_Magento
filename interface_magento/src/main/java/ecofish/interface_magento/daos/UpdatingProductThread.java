@@ -46,17 +46,17 @@ public class UpdatingProductThread implements Runnable {
 				if (product.getChangeActive() == true || product.getNewPrice() != null) {
 					String SQLquery = "UPDATE product SET";
 					if (product.getChangeActive() == true) {
-						SQLquery += " product.active = " + product.getActive() + ",";
+						SQLquery += " product.status = " + product.getActive() + ",";
 					}
-					if (product.getNewPrice() != null) {
-						SQLquery +=  " product.actual_price = " + product.getNewPrice() + ",";
+					if (product.getActive() == true && product.getNewPrice() != null) {
+						SQLquery +=  " product.product_basic_price = " + product.getNewPrice() + ",";
 					}
-					SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE product.idproduct = " + product.getIdProduct();
+					SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE product.sku = " + product.getSku();
 					stmt.executeUpdate(SQLquery);
 					if (product.getChangeActive() == true) {
 						product.setChangeActive(false);
 					}
-					if (product.getNewPrice() != null) {
+					if (product.getActive() == true && product.getNewPrice() != null) {
 						product.setActualPrice(product.getNewPrice());
 						product.setNewPrice(null);
 					}
