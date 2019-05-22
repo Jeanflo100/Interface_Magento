@@ -219,9 +219,10 @@ public class PriceProductOverviewController{
 		this.newPriceTextField.setTextFormatter(textFormatter.getTextFormatterDouble());
 
 		this.productTable.setOnKeyTyped(keyEvent -> {
-			if (!keyEvent.getCharacter().equals("\r") && !keyEvent.getCharacter().equals(" ") && !keyEvent.getCharacter().equals("") && !keyEvent.getCharacter().equals("")) {
+			if(keyEvent.getCharacter().matches("[.0-9]")) {
 				this.newPriceTextField.requestFocus();
 				this.newPriceTextField.clear();
+				if (keyEvent.getCharacter().contentEquals(".")) this.newPriceTextField.appendText("0");
 				this.newPriceTextField.appendText(keyEvent.getCharacter());
 			}
 		});
@@ -305,11 +306,13 @@ public class PriceProductOverviewController{
 	}
 	
 	private void updateNewPrice(Double newPrice) {
-		if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
-		this.currentProduct.setNewPrice(newPrice);
-		if (this.currentProduct.getNewPrice() != null) this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
-		else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
-		this.productTable.refresh();
+		if (this.currentProduct != null) {
+			if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
+			this.currentProduct.setNewPrice(newPrice);
+			if (this.currentProduct.getNewPrice() != null) this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
+			else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
+			this.productTable.refresh();
+		}
 	}
 	
 }

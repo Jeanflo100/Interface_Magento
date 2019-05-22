@@ -46,7 +46,7 @@ public class LoadingProductThread implements Runnable {
 			retour.next();
 			Integer nb_products = retour.getInt("nb_products");
 			Integer nb_loading_products = 0;
-			ResultSet resultSet = statement.executeQuery(sqlQuery);				
+			ResultSet resultSet = statement.executeQuery(sqlQuery);
 			while(resultSet.next()) {
 				Product product = new Product(
 						resultSet.getInt("idproduct"),
