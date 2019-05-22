@@ -2,8 +2,7 @@ package ecofish.interface_magento.view;
 
 
 import ecofish.interface_magento.model.Product;
-import ecofish.interface_magento.service.CategoryService;
-import ecofish.interface_magento.service.FamilyService;
+import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.ViewService;
@@ -187,7 +186,7 @@ public class StatusProductOverviewController{
 		    }
 		});
 		
-		this.categoryComboBox.setItems(CategoryService.getCategory());
+		this.categoryComboBox.setItems(FilterService.getCategories());
 		this.familyComboBox.setDisable(true);
 		
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
@@ -215,7 +214,7 @@ public class StatusProductOverviewController{
 		}
 		else {
 			this.familyComboBox.setDisable(false);
-			this.familyComboBox.setItems(FamilyService.getFamily(category));
+			this.familyComboBox.setItems(FilterService.getFamilies(category));
 		}
 	}
 	
