@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.HashSet;
 
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.ProductService;
@@ -12,15 +15,14 @@ import ecofish.interface_magento.service.ViewService;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
 public class LoadingProductThread implements Runnable {
 
-	private ObservableList<Product> products;
+	private ArrayList<Product> products;
+	private Hashtable<String, HashSet<String>> group = new Hashtable<String, HashSet<String>>();
     private DoubleProperty loadingProductProgressBar;
-    private StringProperty loadingProductText;
-    
+    private StringProperty loadingProductText;   
     private Boolean error;
  
     public LoadingProductThread() {
@@ -39,14 +41,17 @@ public class LoadingProductThread implements Runnable {
     public void run() {
 
     	try {
+    		
     		Connection connection = DataSourceFactory.getDataSource().getConnection();
-			String sqlQuery = "SELECT * FROM product";
 			Statement statement = connection.createStatement();
+			
 			ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM product");
 			retour.next();
 			Integer nb_products = retour.getInt("nb_products");
 			Integer nb_loading_products = 0;
-			ResultSet resultSet = statement.executeQuery(sqlQuery);
+			HashSet<String> familySet = new HashSet<>();
+			
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM product");
 			while(resultSet.next()) {
 				Product product = new Product(
 						resultSet.getInt("idproduct"),
@@ -58,6 +63,13 @@ public class LoadingProductThread implements Runnable {
 						resultSet.getDouble("actual_price"),
 						resultSet.getBoolean("active"));
 				products.add(product);
+				
+				String category = resultSet.getString("category");
+				String family = resultSet.getString("family");
+				if (group.containsKey(category)) familySet = group.get(category);
+				familySet.add(family);
+				group.put(category, familySet);
+				
 				nb_loading_products += 1;
 				loadingProductProgressBar.set((double)nb_loading_products/nb_products);
 				/*try {
@@ -67,6 +79,7 @@ public class LoadingProductThread implements Runnable {
 					e.printStackTrace();
 				}*/
 			}
+
 		}
 		catch (SQLException e){
 			System.out.println("Error when getting products list");

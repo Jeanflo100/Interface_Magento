@@ -6,6 +6,5 @@ CREATE TABLE product (
   quality VARCHAR(100) NOT NULL,
   size VARCHAR(100) NOT NULL,
   actual_price DOUBLE NOT NULL,
-  new_price DOUBLE NULL,
   active BOOLEAN NOT NULL,
   PRIMARY KEY (idproduct));

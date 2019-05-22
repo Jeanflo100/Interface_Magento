@@ -2,6 +2,7 @@ package ecofish.interface_magento.service;
 
 import ecofish.interface_magento.model.Product;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import ecofish.interface_magento.daos.LoadingProductThread;
@@ -17,7 +18,7 @@ import javafx.scene.control.ButtonType;
 
 public class ProductService {
 	
-	private ObservableList<Product> products;
+	private ArrayList<Product> products;
 	private ObservableList<Product> activeProducts;
 	private ObservableList<Product> inactiveProducts;
 	
@@ -28,7 +29,7 @@ public class ProductService {
 	private static String currentFamily;*/
 	// + faire getters et setters --> generaliser cela
 	
-	public static ObservableList<Product> getProducts() {
+	public static ArrayList<Product> getProducts() {
 		return ProductServiceHolder.INSTANCE.products;
 	}
 	
@@ -41,7 +42,7 @@ public class ProductService {
 	}
 	
 	private ProductService() {
-		products = FXCollections.observableArrayList();
+		products = new ArrayList<Product>();
 		activeProducts = FXCollections.observableArrayList();
 		inactiveProducts = FXCollections.observableArrayList();
 		loadingProductProgressBar = new SimpleDoubleProperty(0.0);
