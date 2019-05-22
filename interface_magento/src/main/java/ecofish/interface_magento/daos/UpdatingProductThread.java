@@ -19,7 +19,6 @@ public class UpdatingProductThread implements Runnable {
 	private ArrayList<Product> products;
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;
- 
     private Boolean error;
     
     public UpdatingProductThread() {

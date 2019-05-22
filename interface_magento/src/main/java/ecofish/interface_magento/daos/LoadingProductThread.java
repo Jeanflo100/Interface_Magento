@@ -5,10 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.HashSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import ecofish.interface_magento.model.Product;
+import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.ViewService;
@@ -20,13 +21,14 @@ import javafx.scene.control.Alert;
 public class LoadingProductThread implements Runnable {
 
 	private ArrayList<Product> products;
-	private Hashtable<String, HashSet<String>> group = new Hashtable<String, HashSet<String>>();
+	private TreeMap<String, TreeSet<String>> groups;
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;   
     private Boolean error;
  
     public LoadingProductThread() {
     	this.products = ProductService.getProducts();
+    	this.groups = FilterService.getGroups();
     	this.loadingProductProgressBar = ProductService.getLoadingProductProgressBar();
     	this.loadingProductText = ProductService.getLoadingProductText();
     	
@@ -49,8 +51,8 @@ public class LoadingProductThread implements Runnable {
 			retour.next();
 			Integer nb_products = retour.getInt("nb_products");
 			Integer nb_loading_products = 0;
-			HashSet<String> familySet = new HashSet<>();
-			
+			TreeSet<String> familySet;
+
 			ResultSet resultSet = statement.executeQuery("SELECT * FROM product");
 			while(resultSet.next()) {
 				Product product = new Product(
@@ -63,12 +65,12 @@ public class LoadingProductThread implements Runnable {
 						resultSet.getDouble("actual_price"),
 						resultSet.getBoolean("active"));
 				products.add(product);
-				
+
 				String category = resultSet.getString("category");
 				String family = resultSet.getString("family");
-				if (group.containsKey(category)) familySet = group.get(category);
+				familySet = groups.containsKey(category) ? groups.get(category) : new TreeSet<>();
 				familySet.add(family);
-				group.put(category, familySet);
+				groups.put(category, familySet);
 				
 				nb_loading_products += 1;
 				loadingProductProgressBar.set((double)nb_loading_products/nb_products);

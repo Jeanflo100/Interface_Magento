@@ -10,7 +10,7 @@ public class ViewService {
 	
 	public static String actualView;
 	private static Boolean newView = false;
-	private static Hashtable<String, FXMLLoader> views = new Hashtable<>(); 		// Possiblement réutiliser avec un parametre "nouveau" pour si recreer une instance ou reprendre la precedente
+	private static Hashtable<String, FXMLLoader> views = new Hashtable<>();
 
 	public static <T> T getView(String id) {
 		actualView = id;
@@ -25,7 +25,6 @@ public class ViewService {
 			newView = true;
 		}
 		return loader.getRoot();
-		//return getLoader(id).getRoot();
 	}
 
 	private static FXMLLoader getLoader(String id) {
