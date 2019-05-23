@@ -45,6 +45,7 @@ public class LoadingProductThread implements Runnable {
     	try {
     		
     		Connection connection = DataSourceFactory.getDataSource().getConnection();
+    		System.out.println("connexion successful");
 			Statement statement = connection.createStatement();
 			
 			ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM product");
