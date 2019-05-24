@@ -68,6 +68,8 @@ public class StatusProductOverviewController{
 	
 	private String currentFamily;
 	
+	private Boolean newCategorySelected;
+	
     private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("inactive-to-active");
     private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
 	
@@ -94,8 +96,9 @@ public class StatusProductOverviewController{
 	@FXML
 	private void resetCategory() {
 		if (this.currentCategory != null) {
+			this.familyComboBox.setDisable(true);
 			this.categoryComboBox.getSelectionModel().clearSelection();
-			updateFamilyComboBox(null);
+			showProductTables();
 		}
 	}
 	
@@ -103,8 +106,31 @@ public class StatusProductOverviewController{
 	private void resetFamily() {
 		if (this.currentFamily != null) {
 			this.familyComboBox.getSelectionModel().clearSelection();
-			updateProductTable(this.currentCategory, null);
+			showProductTables();
 		}
+	}
+	
+	@FXML
+	private void showFamily() {
+		if (this.currentCategory != null) {
+			if (this.newCategorySelected == true) {
+				this.newCategorySelected = false;
+				this.familyComboBox.setItems(FilterService.getFamilies(this.currentCategory));
+				this.familyComboBox.setDisable(false);
+			}
+			this.familyComboBox.requestFocus();
+			this.familyComboBox.show();
+		}
+	}
+	
+	@FXML
+	private void showProductTables() {
+		if (!this.inactiveProductTable.getItems().isEmpty()) this.inactiveProductTable.requestFocus();
+		else if (!this.activeProductTable.getItems().isEmpty()) this.activeProductTable.requestFocus();
+		this.inactiveProductTable.getSelectionModel().selectFirst();
+		this.activeProductTable.getSelectionModel().selectFirst();
+		this.inactiveProductTable.scrollTo(this.currentInactiveProduct);
+		this.activeProductTable.scrollTo(this.currentActiveProduct);
 	}
 	
 	@FXML
@@ -188,12 +214,12 @@ public class StatusProductOverviewController{
 		
 		this.categoryComboBox.setItems(FilterService.getCategories());
 		this.familyComboBox.setDisable(true);
-		
+		this.newCategorySelected = false;
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				newCategorySelected = true;
 				updateProductTable(newValue, null);
-				updateFamilyComboBox(newValue);
 			}
 		});
 		
@@ -206,18 +232,6 @@ public class StatusProductOverviewController{
 		
 	}
 	
-	private void updateFamilyComboBox(String category) {
-		//this.familyComboBox.show();
-		if (this.currentCategory == null) {
-			this.familyComboBox.setDisable(true);
-			resetFamily();
-		}
-		else {
-			this.familyComboBox.setDisable(false);
-			this.familyComboBox.setItems(FilterService.getFamilies(category));
-		}
-	}
-	
 	private void updateProductTable(String category, String family) {
 		this.currentCategory = category;
 		this.currentFamily = family;
@@ -227,9 +241,6 @@ public class StatusProductOverviewController{
 		sortActiveProductTable();
 		this.inactiveProductTable.refresh();
 		this.activeProductTable.refresh();
-		this.inactiveProductTable.getSelectionModel().selectFirst();
-		this.activeProductTable.getSelectionModel().selectFirst();
-		this.inactiveProductTable.requestFocus();
 	}
 	
 	private void sortInactiveProductTable() {

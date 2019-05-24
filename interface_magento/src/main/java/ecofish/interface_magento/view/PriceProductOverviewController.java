@@ -1,7 +1,6 @@
 package ecofish.interface_magento.view;
 
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 import ecofish.interface_magento.model.Product;
@@ -79,6 +78,8 @@ public class PriceProductOverviewController{
 	
 	private String currentFamily;
 	
+	private Boolean newCategorySelected;
+	
     private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
     private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
 	
@@ -130,15 +131,16 @@ public class PriceProductOverviewController{
 	}
 	
 	@FXML
-	private void handleSaveChangesButton() throws SQLException {
+	private void handleSaveChangesButton() {
 		ProductService.updateProduct();
 	}
 	
 	@FXML
 	private void resetCategory() {
 		if (this.currentCategory != null) {
+			this.familyComboBox.setDisable(true);
 			this.categoryComboBox.getSelectionModel().clearSelection();
-			updateFamilyComboBox(null);
+			showProductTable();
 		}
 	}
 	
@@ -146,8 +148,28 @@ public class PriceProductOverviewController{
 	private void resetFamily() {
 		if (this.currentFamily != null) {
 			this.familyComboBox.getSelectionModel().clearSelection();
-			updateProductTable(this.currentCategory, null);
+			showProductTable();
 		}
+	}
+	
+	@FXML
+	private void showFamily() {
+		if (this.currentCategory != null) {
+			if (this.newCategorySelected == true) {
+				this.newCategorySelected = false;
+				this.familyComboBox.setItems(FilterService.getFamilies(this.currentCategory));
+				this.familyComboBox.setDisable(false);
+			}
+			this.familyComboBox.requestFocus();
+			this.familyComboBox.show();
+		}
+	}
+	
+	@FXML
+	private void showProductTable() {
+		if (!this.productTable.getItems().isEmpty()) this.productTable.requestFocus();
+		this.productTable.getSelectionModel().selectFirst();
+		this.productTable.scrollTo(this.currentProduct);
 	}
 	
 	@FXML
@@ -198,12 +220,13 @@ public class PriceProductOverviewController{
 				
 		this.categoryComboBox.setItems(FilterService.getCategories());
 		this.familyComboBox.setDisable(true);
+		this.newCategorySelected = false;
 		
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				newCategorySelected = true;
 				updateProductTable(newValue, null);
-				updateFamilyComboBox(newValue);
 			}
 		});
 		
@@ -263,26 +286,12 @@ public class PriceProductOverviewController{
 		
 	}
 	
-	private void updateFamilyComboBox(String category) {
-		if (this.currentCategory == null) {
-			this.familyComboBox.setDisable(true);
-			resetFamily();
-		}
-		else {
-			this.familyComboBox.setDisable(false);
-			this.familyComboBox.setItems(FilterService.getFamilies(category));
-		}
-	}
-	
 	private void updateProductTable(String category, String family) {
 		this.currentCategory = category;
 		this.currentFamily = family;
 		this.productTable.setItems(ProductService.getActiveProducts(this.currentCategory, this.currentFamily));
 		sortProductTable();
 		this.productTable.refresh();
-		this.productTable.getSelectionModel().selectFirst();
-		this.productTable.requestFocus();
-		this.productTable.scrollTo(currentProduct);
 	}
 	
 	private void sortProductTable() {
