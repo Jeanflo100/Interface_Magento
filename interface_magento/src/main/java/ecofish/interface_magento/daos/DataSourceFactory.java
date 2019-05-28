@@ -11,9 +11,9 @@ public class DataSourceFactory {
 	public static DataSource getDataSource() {
 		if (dataSource == null) {
 			dataSource = new MysqlDataSource();
-			dataSource.setURL("jdbc:mysql://127.0.0.1:3306/ecofish products");
-			dataSource.setUser("root");
-			dataSource.setPassword("");
+			dataSource.setURL("jdbc:mysql://77.72.0.118:3308/nvwebcou_Ecofish_dump");
+			dataSource.setUser("nvwebcou_Eco_dump");
+			dataSource.setPassword("qYF8d0nsqgC(");
 		}
 		return dataSource;
 	}

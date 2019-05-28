@@ -73,7 +73,8 @@ public class UpdatingProductThread implements Runnable {
 			connection.close();
 		}
 		catch (SQLException e) {
-			System.out.println("Error when updating products list");
+			System.out.println("Error when updating products list :");
+			System.out.println(e.getMessage());
 			error = true;
 		}
 

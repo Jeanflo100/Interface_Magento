@@ -84,7 +84,8 @@ public class LoadingProductThread implements Runnable {
 
 		}
 		catch (SQLException e){
-			System.out.println("Error when getting products list");
+			System.out.println("Error when getting products list :");
+			System.out.println(e.getMessage());
 			error = true;
 		}
 
