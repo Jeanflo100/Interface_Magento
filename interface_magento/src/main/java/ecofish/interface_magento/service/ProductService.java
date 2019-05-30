@@ -4,6 +4,7 @@ import ecofish.interface_magento.model.Product;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.TreeSet;
 
 import ecofish.interface_magento.daos.LoadingProductThread;
 import ecofish.interface_magento.daos.UpdatingProductThread;
@@ -17,21 +18,15 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 public class ProductService {
-	
-	private ArrayList<Product> products;
-	private ObservableList<Product> activeProducts;
-	private ObservableList<Product> inactiveProducts;
+
+	private TreeSet<Product> updatingProducts;
+	private ArrayList<Product> activeProducts;
+	private ArrayList<Product> inactiveProducts;
+	private ObservableList<Product> activeProductsFiltered;
+	private ObservableList<Product> inactiveProductsFiltered;
 	
 	private DoubleProperty loadingProductProgressBar;
 	private StringProperty loadingProductText;
-	
-	/*private static String currentCategory;
-	private static String currentFamily;*/
-	// + faire getters et setters --> generaliser cela
-	
-	public static ArrayList<Product> getProducts() {
-		return ProductServiceHolder.INSTANCE.products;
-	}
 	
 	public static DoubleProperty getLoadingProductProgressBar() {
 		return ProductServiceHolder.INSTANCE.loadingProductProgressBar;
@@ -41,10 +36,12 @@ public class ProductService {
 		return ProductServiceHolder.INSTANCE.loadingProductText;
 	}
 	
-	private ProductService() {
-		products = new ArrayList<Product>();
-		activeProducts = FXCollections.observableArrayList();
-		inactiveProducts = FXCollections.observableArrayList();
+	protected ProductService() {
+		updatingProducts = new TreeSet<Product>();
+		activeProducts = new ArrayList<Product>();
+		inactiveProducts = new ArrayList<Product>();
+		activeProductsFiltered = FXCollections.observableArrayList();
+		inactiveProductsFiltered = FXCollections.observableArrayList();
 		loadingProductProgressBar = new SimpleDoubleProperty(0.0);
 		loadingProductText = new SimpleStringProperty("");
 	}
@@ -55,11 +52,34 @@ public class ProductService {
 	}
 	
 	public static void updateProduct() {
-		UpdatingProductThread updatingProduct = new UpdatingProductThread();
-		new Thread(updatingProduct).start();
+		if (!ProductServiceHolder.INSTANCE.updatingProducts.isEmpty()) {
+			UpdatingProductThread updatingProduct = new UpdatingProductThread();
+			new Thread(updatingProduct).start();			
+		}
+		else {
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.initOwner(StageService.getPrimaryStage());
+			alert.setTitle("INFORMATION");
+			alert.setHeaderText("No product to update");
+			alert.setContentText("No product have been changed");
+			alert.showAndWait();
+		}
 	}
 	
-	public static ObservableList<Product> getActiveProducts(String category, String family){
+	public static void updateUpdatingProducts(Product product) {
+		if (product.getChangeActive() == false && product.getNewPrice() == null) {
+			ProductServiceHolder.INSTANCE.updatingProducts.remove(product);
+		}
+		else {
+			ProductServiceHolder.INSTANCE.updatingProducts.add(product);
+		}
+	}
+	
+	public static TreeSet<Product> getUpdatingProducts() {
+		return ProductServiceHolder.INSTANCE.updatingProducts;
+	}
+	
+	/*public static ObservableList<Product> getActiveProducts(String category, String family){
 		ProductServiceHolder.INSTANCE.activeProducts.clear();
 		for (Product product : ProductServiceHolder.INSTANCE.products) {
 			if (product.getActive().equals(true)) {
@@ -79,28 +99,42 @@ public class ProductService {
 			}
 		}
 		return ProductServiceHolder.INSTANCE.activeProducts;
+	}*/
+	
+	public static ArrayList<Product> getActiveProducts(){
+		return ProductServiceHolder.INSTANCE.activeProducts;
 	}
 	
-	public static ObservableList<Product> getInactiveProducts(String category, String family){
-		ProductServiceHolder.INSTANCE.inactiveProducts.clear();
-		for (Product product : ProductServiceHolder.INSTANCE.products) {
-			if (product.getActive().equals(false)) {
-				if ((category != null) && (family != null)){
-					if ((product.getCategory().contentEquals(category)) && (product.getFamily().contentEquals(family))) {
-						ProductServiceHolder.INSTANCE.inactiveProducts.add(product);
-					}
-				}
-				else if (category != null) {
-					if (product.getCategory().equals(category)) {
-						ProductServiceHolder.INSTANCE.inactiveProducts.add(product);
-					}
-				}
-				else {
-					ProductServiceHolder.INSTANCE.inactiveProducts.add(product);
+	public static ArrayList<Product> getInactiveProducts(){
+		return ProductServiceHolder.INSTANCE.inactiveProducts;
+	}
+	
+	public static ObservableList<Product> getActiveProductsFiltered(String category, String family){
+		return getProductsFiltered(ProductServiceHolder.INSTANCE.activeProductsFiltered, ProductServiceHolder.INSTANCE.activeProducts, category, family);
+	}
+	
+	public static ObservableList<Product> getInactiveProductsFiltered(String category, String family){
+		return getProductsFiltered(ProductServiceHolder.INSTANCE.inactiveProductsFiltered, ProductServiceHolder.INSTANCE.inactiveProducts, category, family);
+	}
+	
+	private static ObservableList<Product> getProductsFiltered(ObservableList<Product> productsFiltered, ArrayList<Product> products, String category, String family) {
+		productsFiltered.clear();
+		for (Product product : products) {
+			if ((category != null) && (family != null)){
+				if ((product.getCategory().contentEquals(category)) && (product.getFamily().contentEquals(family))) {
+					productsFiltered.add(product);
 				}
 			}
+			else if (category != null) {
+				if (product.getCategory().equals(category)) {
+					productsFiltered.add(product);
+				}
+			}
+			else {
+				productsFiltered.add(product);
+			}
 		}
-		return ProductServiceHolder.INSTANCE.inactiveProducts;
+		return productsFiltered;
 	}
 	
 	public static void changeStatusProduct(Product product) {
@@ -121,86 +155,21 @@ public class ProductService {
 		product.setChangeActive(!product.getChangeActive());
 		if (product.getActive()) {
 			ProductServiceHolder.INSTANCE.inactiveProducts.remove(product);
+			ProductServiceHolder.INSTANCE.inactiveProductsFiltered.remove(product);
 			ProductServiceHolder.INSTANCE.activeProducts.add(product);
+			ProductServiceHolder.INSTANCE.activeProductsFiltered.add(product);
 		}
 		else {
 			ProductServiceHolder.INSTANCE.inactiveProducts.add(product);
+			ProductServiceHolder.INSTANCE.inactiveProductsFiltered.add(product);
 			ProductServiceHolder.INSTANCE.activeProducts.remove(product);
+			ProductServiceHolder.INSTANCE.activeProductsFiltered.remove(product);
 		}
+		ProductService.updateUpdatingProducts(product);
 	}
 	
 	private static class ProductServiceHolder {
 		private static ProductService INSTANCE = new ProductService();
 	}
-	
-	/*public static ObservableList<Product> getActiveProducts(String category, String family){
-		// requête SQL afin d'avoir les produicts actifs avec filtrage possible sur catégorie et famille
-		ProductServiceHolder.INSTANCE.activeProducts.clear();
-		try(Connection connection = DataSourceFactory.getDataSource().getConnection()){
-			String sqlQuery = "SELECT * FROM product WHERE product.active = true";
-			if (category != null) {
-				sqlQuery += " and product.category = \"" + category + "\"";
-				if (family != null) {
-					sqlQuery += " and product.family = \"" + family + "\"";
-				}
-			}
-			System.out.println(sqlQuery);
-			try(Statement statement = connection.createStatement()){
-				try(ResultSet resultSet = statement.executeQuery(sqlQuery)){
-					while(resultSet.next()) {
-						Product product = new Product(
-								resultSet.getInt("idproduct"),
-								resultSet.getString("name"),
-								resultSet.getString("category"),
-								resultSet.getString("family"),
-								resultSet.getString("quality"),
-								resultSet.getString("size"),
-								resultSet.getDouble("actual_price"),
-								resultSet.getBoolean("active"));
-						ProductServiceHolder.INSTANCE.activeProducts.add(product);
-					}
-				}
-			}
-		}
-		catch (SQLException e){
-			System.out.println("Error when getting active products list");
-		}
-		return ProductServiceHolder.INSTANCE.activeProducts;
-	}
-	
-	public static ObservableList<Product> getInactiveProducts(String category, String family){
-		// requête SQL afin d'avoir les produicts actifs avec filtrage possible sur catégorie et famille
-		ProductServiceHolder.INSTANCE.inactiveProducts.clear();
-		try(Connection connection = DataSourceFactory.getDataSource().getConnection()){
-			String sqlQuery = "SELECT * FROM product WHERE product.active = false";
-			if (category != null) {
-				sqlQuery += " and product.category = \"" + category + "\"";
-				if (family != null) {
-					sqlQuery += " and product.family = \"" + family + "\"";
-				}
-			}
-			System.out.println(sqlQuery);
-			try(Statement statement = connection.createStatement()){
-				try(ResultSet resultSet = statement.executeQuery(sqlQuery)){
-					while(resultSet.next()) {
-						Product product = new Product(
-								resultSet.getInt("idproduct"),
-								resultSet.getString("name"),
-								resultSet.getString("category"),
-								resultSet.getString("family"),
-								resultSet.getString("quality"),
-								resultSet.getString("size"),
-								resultSet.getDouble("actual_price"),
-								resultSet.getBoolean("active"));
-						ProductServiceHolder.INSTANCE.inactiveProducts.add(product);
-					}
-				}
-			}
-		}
-		catch (SQLException e){
-			System.out.println("Error when getting inactive products list");
-		}
-		return ProductServiceHolder.INSTANCE.inactiveProducts;
-	}*/
 	
 }

@@ -7,7 +7,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
+import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
@@ -20,14 +22,16 @@ import javafx.scene.control.Alert;
 
 public class LoadingProductThread implements Runnable {
 
-	private ArrayList<Product> products;
+	private ArrayList<Product> activeProducts;
+	private ArrayList<Product> inactiveProducts;
 	private TreeMap<String, TreeSet<String>> groups;
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;   
     private Boolean error;
  
     public LoadingProductThread() {
-    	this.products = ProductService.getProducts();
+    	this.activeProducts = ProductService.getActiveProducts();
+    	this.inactiveProducts = ProductService.getInactiveProducts();
     	this.groups = FilterService.getGroups();
     	this.loadingProductProgressBar = ProductService.getLoadingProductProgressBar();
     	this.loadingProductText = ProductService.getLoadingProductText();
@@ -64,7 +68,12 @@ public class LoadingProductThread implements Runnable {
 						resultSet.getString("size"),
 						resultSet.getDouble("actual_price"),
 						resultSet.getBoolean("active"));
-				products.add(product);
+				if (product.getActive()) {
+					this.activeProducts.add(product);
+				}
+				else {
+					this.inactiveProducts.add(product);
+				}
 
 				String category = resultSet.getString("category");
 				String family = resultSet.getString("family");
@@ -84,8 +93,7 @@ public class LoadingProductThread implements Runnable {
 
 		}
 		catch (SQLException e){
-			System.out.println("Error when getting products list :");
-			System.out.println(e.getMessage());
+			Logging.LOGGER.log(Level.WARNING, "Error when getting products list :\n" + e.getMessage());
 			error = true;
 		}
 

@@ -1,8 +1,14 @@
 package ecofish.interface_magento.service;
 
+import java.util.Optional;
+import java.util.logging.Level;
+
 import ecofish.interface_magento.InterfaceMagento;
+import ecofish.interface_magento.log.Logging;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -43,6 +49,20 @@ public class StageService {
 		primaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
 		primaryStage.setScene(new Scene(StageServiceHolder.INSTANCE.mainLayout));
 		primaryStage.setResizable(false);
+		primaryStage.setOnCloseRequest(event -> {
+			if (!ProductService.getUpdatingProducts().isEmpty()) {
+				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+				alert.initOwner(StageService.getPrimaryStage());
+				alert.setTitle("ATTENTION");
+				alert.setHeaderText("Changes have not been updated in the database, continue?");
+				Optional<ButtonType> option = alert.showAndWait();
+				if (option.get() == ButtonType.CANCEL) {
+					event.consume();
+					return;
+		    	}
+			}
+			Logging.LOGGER.log(Level.INFO, "Closing application");
+		});
 		StageServiceHolder.INSTANCE.primaryStage = primaryStage;
 	}
 	
@@ -74,8 +94,7 @@ public class StageService {
 	}
 	
 	public static void closeStage() {
-		StageServiceHolder.INSTANCE.primaryStage
-				.fireEvent(new WindowEvent(StageServiceHolder.INSTANCE.primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
+		StageServiceHolder.INSTANCE.primaryStage.fireEvent(new WindowEvent(StageServiceHolder.INSTANCE.primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
 	}
 
 }

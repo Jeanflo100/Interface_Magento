@@ -174,7 +174,6 @@ public class PriceProductOverviewController{
 	
 	@FXML
 	private void initialize() {
-		System.out.println("initialize");
 		this.productTable.setPlaceholder(new Label("No active products"));
 		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
@@ -183,7 +182,7 @@ public class PriceProductOverviewController{
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("newPrice"));
 		this.productTable.setFixedCellSize(25);
 		this.numberVisibleRow = getNumberVisibleRow(this.productTable);
-		this.productTable.setItems(ProductService.getActiveProducts(null, null));
+		this.productTable.setItems(ProductService.getActiveProductsFiltered(null, null));
 		this.productTable.refresh();
 		this.productTable.getSortOrder().add(this.nameColumn);
 		this.productTable.getSortOrder().add(this.sizeColumn);
@@ -289,7 +288,7 @@ public class PriceProductOverviewController{
 	private void updateProductTable(String category, String family) {
 		this.currentCategory = category;
 		this.currentFamily = family;
-		this.productTable.setItems(ProductService.getActiveProducts(this.currentCategory, this.currentFamily));
+		this.productTable.setItems(ProductService.getActiveProductsFiltered(this.currentCategory, this.currentFamily));
 		sortProductTable();
 		this.productTable.refresh();
 	}
@@ -317,6 +316,7 @@ public class PriceProductOverviewController{
 		if (this.currentProduct != null) {
 			if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
 			this.currentProduct.setNewPrice(newPrice);
+			ProductService.updateUpdatingProducts(this.currentProduct);
 			if (this.currentProduct.getNewPrice() != null) this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
 			else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
 			this.productTable.refresh();
