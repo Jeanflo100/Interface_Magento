@@ -74,6 +74,8 @@ public class PriceProductOverviewController{
 	
 	private Product currentProduct;
 	
+	private FilterService filterService;
+	
 	private String currentCategory;
 	
 	private String currentFamily;
@@ -157,7 +159,7 @@ public class PriceProductOverviewController{
 		if (this.currentCategory != null) {
 			if (this.newCategorySelected == true) {
 				this.newCategorySelected = false;
-				this.familyComboBox.setItems(FilterService.getFamilies(this.currentCategory));
+				this.familyComboBox.setItems(this.filterService.getFamilies(this.currentCategory));
 				this.familyComboBox.setDisable(false);
 			}
 			this.familyComboBox.requestFocus();
@@ -217,13 +219,17 @@ public class PriceProductOverviewController{
 		
 		this.productTable.getSelectionModel().selectFirst();
 				
-		this.categoryComboBox.setItems(FilterService.getCategories());
+		this.filterService = new FilterService();
+		this.categoryComboBox.setItems(this.filterService.getCategories());
 		this.familyComboBox.setDisable(true);
 		this.newCategorySelected = false;
 		
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!categoryComboBox.isShowing()) {
+					categoryComboBox.show();
+				}
 				newCategorySelected = true;
 				updateProductTable(newValue, null);
 			}
@@ -232,6 +238,9 @@ public class PriceProductOverviewController{
 		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!familyComboBox.isShowing()) {
+					familyComboBox.show();
+				}
 				updateProductTable(currentCategory, newValue);
 			}
 		});
@@ -252,7 +261,7 @@ public class PriceProductOverviewController{
 			if (keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) {
 				this.newPriceTextField.requestFocus();
 			}
-			else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
+			else if (keyEvent.getCode() == KeyCode.DELETE || keyEvent.getCode() == KeyCode.BACK_SPACE) {
 				updateNewPrice(null);
 				selectNextProduct();
 			}

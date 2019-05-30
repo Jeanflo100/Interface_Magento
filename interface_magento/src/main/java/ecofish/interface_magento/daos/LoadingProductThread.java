@@ -93,7 +93,7 @@ public class LoadingProductThread implements Runnable {
 
 		}
 		catch (SQLException e){
-			Logging.LOGGER.log(Level.WARNING, "Error when getting products list :\n" + e.getMessage());
+			Logging.LOGGER.log(Level.WARNING, "Error when getting products list:\n" + e.getMessage());
 			error = true;
 		}
 

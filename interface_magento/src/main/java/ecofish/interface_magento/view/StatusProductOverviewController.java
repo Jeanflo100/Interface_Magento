@@ -64,6 +64,8 @@ public class StatusProductOverviewController{
 	
 	private Product currentActiveProduct;
 	
+	private FilterService filterService;
+	
 	private String currentCategory;
 	
 	private String currentFamily;
@@ -112,7 +114,7 @@ public class StatusProductOverviewController{
 		if (this.currentCategory != null) {
 			if (this.newCategorySelected == true) {
 				this.newCategorySelected = false;
-				this.familyComboBox.setItems(FilterService.getFamilies(this.currentCategory));
+				this.familyComboBox.setItems(this.filterService.getFamilies(this.currentCategory));
 				this.familyComboBox.setDisable(false);
 			}
 			this.familyComboBox.requestFocus();
@@ -207,12 +209,16 @@ public class StatusProductOverviewController{
 		    }
 		});
 		
-		this.categoryComboBox.setItems(FilterService.getCategories());
+		this.filterService = new FilterService();
+		this.categoryComboBox.setItems(this.filterService.getCategories());
 		this.familyComboBox.setDisable(true);
 		this.newCategorySelected = false;
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!categoryComboBox.isShowing()) {
+					categoryComboBox.show();
+				}
 				newCategorySelected = true;
 				updateProductTable(newValue, null);
 			}
@@ -221,6 +227,9 @@ public class StatusProductOverviewController{
 		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!familyComboBox.isShowing()) {
+					familyComboBox.show();
+				}
 				updateProductTable(currentCategory, newValue);
 			}
 		});

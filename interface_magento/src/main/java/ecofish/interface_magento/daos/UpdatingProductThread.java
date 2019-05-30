@@ -84,18 +84,19 @@ public class UpdatingProductThread implements Runnable {
 			error = true;
 		}
 		
-		for (Product product : this.updatedProducts) {
-			this.updatingProducts.remove(product);
+		if (!this.updatedProducts.isEmpty()) {
+			for (Product product : this.updatedProducts) {
+				this.updatingProducts.remove(product);
+			}
+			String updatedProductsLog = "";
+			String separatorLog = " | ";
+			for (Product product : this.updatedProducts) {
+				updatedProductsLog += product.getIdProduct() + separatorLog;
+			}
+			updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(separatorLog));
+			Logging.LOGGER.log(Level.INFO, this.nb_update_products + "/" + this.nb_products + " products have been updated: " + updatedProductsLog);
 		}
-		
-		String updatedProductsLog = "";
-		String separatorLog = " | ";
-		for (Product product : this.updatedProducts) {
-			updatedProductsLog += product.getIdProduct() + separatorLog;
-		}
-		updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(separatorLog));
-		Logging.LOGGER.log(Level.INFO, this.nb_update_products + "/" + this.nb_products + " products have been updated: " + updatedProductsLog);
-
+			
 		Platform.runLater(() -> {
 			ViewService.clearViews();
 			if (error == true) {
@@ -103,7 +104,7 @@ public class UpdatingProductThread implements Runnable {
 				alert.initOwner(StageService.getSecondaryStage());
 				alert.setTitle("FAILURE");
 				alert.setHeaderText("Error when updating products");
-				alert.setContentText("Only " + this.nb_update_products + "/" + this.nb_products + " products have been updated");
+				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
 				alert.showAndWait();
 				StageService.showView(ViewService.getView("PriceProductOverview"));
 			}

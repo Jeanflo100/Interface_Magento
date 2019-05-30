@@ -61,7 +61,7 @@ public class InterfaceMagento extends Application {
 			stmt.close();
 			connection.close();
 		} catch (SQLException e) {
-			Logging.LOGGER.log(Level.WARNING, "Failure on initialization of the database : " + e.getMessage());
+			Logging.LOGGER.log(Level.WARNING, "Failure on initialization of the database:\n" + e.getMessage());
 		}
 	}
 	

@@ -79,28 +79,6 @@ public class ProductService {
 		return ProductServiceHolder.INSTANCE.updatingProducts;
 	}
 	
-	/*public static ObservableList<Product> getActiveProducts(String category, String family){
-		ProductServiceHolder.INSTANCE.activeProducts.clear();
-		for (Product product : ProductServiceHolder.INSTANCE.products) {
-			if (product.getActive().equals(true)) {
-				if ((category != null) && (family != null)){
-					if ((product.getCategory().contentEquals(category)) && (product.getFamily().contentEquals(family))) {
-						ProductServiceHolder.INSTANCE.activeProducts.add(product);
-					}
-				}
-				else if (category != null) {
-					if (product.getCategory().equals(category)) {
-						ProductServiceHolder.INSTANCE.activeProducts.add(product);
-					}
-				}
-				else {
-					ProductServiceHolder.INSTANCE.activeProducts.add(product);
-				}
-			}
-		}
-		return ProductServiceHolder.INSTANCE.activeProducts;
-	}*/
-	
 	public static ArrayList<Product> getActiveProducts(){
 		return ProductServiceHolder.INSTANCE.activeProducts;
 	}
