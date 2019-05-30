@@ -61,7 +61,7 @@ public class StageService {
 					return;
 		    	}
 			}
-			Logging.LOGGER.log(Level.INFO, "Closing application");
+			Logging.LOGGER.log(Level.INFO, "Closing application" + "\n");
 		});
 		StageServiceHolder.INSTANCE.primaryStage = primaryStage;
 	}

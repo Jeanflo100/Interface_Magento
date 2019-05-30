@@ -216,7 +216,7 @@ public class StatusProductOverviewController{
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!categoryComboBox.isShowing()) {
+				if (!categoryComboBox.isShowing() && categoryComboBox.getSelectionModel().getSelectedItem() != null) {
 					categoryComboBox.show();
 				}
 				newCategorySelected = true;
@@ -227,7 +227,7 @@ public class StatusProductOverviewController{
 		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!familyComboBox.isShowing()) {
+				if (!familyComboBox.isShowing() && familyComboBox.getSelectionModel().getSelectedItem() != null) {
 					familyComboBox.show();
 				}
 				updateProductTable(currentCategory, newValue);
