@@ -117,7 +117,7 @@ public class Product implements Comparable<Product>{
 	
 	@Override
 	public String toString() {
-		return name + "\nSize : " + size + "\nQuality : " + quality;
+		return "Name : " + name + "\n" + "Size : " + size + "\n" + "Quality : " + quality + "\n";
 	}
 
 	@Override
