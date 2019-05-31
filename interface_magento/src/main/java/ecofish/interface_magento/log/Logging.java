@@ -1,5 +1,7 @@
 package ecofish.interface_magento.log;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.logging.FileHandler;
@@ -41,6 +43,14 @@ public class Logging{
 			LOGGER.addHandler(logFileHandler);
 		}
 
+	}
+	
+	public static void openLoggingFile() {
+		try {
+			Desktop.getDesktop().open(new File("./Interface_Magento.log"));
+		} catch (IOException e) {
+			Logging.LOGGER.log(Level.WARNING, "Error when opening logs file:\n" + e.getMessage());
+		}
 	}
 	
 }
