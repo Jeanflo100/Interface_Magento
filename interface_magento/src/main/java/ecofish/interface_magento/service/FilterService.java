@@ -8,38 +8,34 @@ import javafx.collections.ObservableList;
 
 public class FilterService {
 
-	private TreeMap<String, TreeSet<String>> groups;
+	private static TreeMap<String, TreeSet<String>> groups;
 	private ObservableList<String> categories;
 	private ObservableList<String> families;
 	
-	private FilterService() {
-		groups = new TreeMap<String, TreeSet<String>>();
-		categories = FXCollections.observableArrayList();
-		families = FXCollections.observableArrayList();
+	public FilterService() {
+		this.categories = FXCollections.observableArrayList();
+		this.families = FXCollections.observableArrayList();
 	}
 	
 	public static TreeMap<String, TreeSet<String>> getGroups(){
-		return FilterServiceHolder.INSTANCE.groups;
+		if (groups == null) groups = new TreeMap<String, TreeSet<String>>();
+		return groups;
 	}
 	
-	public static ObservableList<String> getCategories(){
-		FilterServiceHolder.INSTANCE.categories.clear();
-		for (String category : FilterServiceHolder.INSTANCE.groups.keySet()) {
-			FilterServiceHolder.INSTANCE.categories.add(category);
+	public ObservableList<String> getCategories(){
+		this.categories.clear();
+		for (String category : groups.keySet()) {
+			this.categories.add(category);
 		}
-		return FilterServiceHolder.INSTANCE.categories;
+		return this.categories;
 	}
 	
-	public static ObservableList<String> getFamilies(String category){
-		FilterServiceHolder.INSTANCE.families.clear();
-		for (String family : FilterServiceHolder.INSTANCE.groups.get(category)) {
-			FilterServiceHolder.INSTANCE.families.add(family);
+	public ObservableList<String> getFamilies(String category){
+		this.families.clear();
+		for (String family : groups.get(category)) {
+			this.families.add(family);
 		}
-		return FilterServiceHolder.INSTANCE.families;
-	}
-	
-	private static class FilterServiceHolder {
-		private static FilterService INSTANCE = new FilterService();
+		return this.families;
 	}
 	
 }

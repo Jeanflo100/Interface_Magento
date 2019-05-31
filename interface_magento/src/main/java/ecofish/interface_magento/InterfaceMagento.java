@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
 
 import ecofish.interface_magento.daos.DataSourceFactory;
+import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import javafx.application.Application;
@@ -13,13 +15,11 @@ import javafx.stage.Stage;
 
 public class InterfaceMagento extends Application {
 
-	public InterfaceMagento() {
-
-	}
-
 	@Override
 	public void start(Stage primaryStage) {
-		//initDatabase(); 	// enlever exception si delete
+		//initDatabase();
+		Logging.setLoggingFile();
+		Logging.LOGGER.log(Level.INFO, "Launching application");
 		StageService.initPrimaryStage(primaryStage);
 		StageService.createSecondaryStage();
 		ProductService.loadProduct();
@@ -61,7 +61,7 @@ public class InterfaceMagento extends Application {
 			stmt.close();
 			connection.close();
 		} catch (SQLException e) {
-			System.out.println("Echec de l'initialisation de la database");
+			Logging.LOGGER.log(Level.WARNING, "Failure on initialization of the database:\n" + e.getMessage());
 		}
 	}
 	

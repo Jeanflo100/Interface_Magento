@@ -24,6 +24,11 @@
 						
 					</items>
 				</Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#openLogsFile" text="Open logs" />
+              </items>
+            </Menu>
 			</menus>
 		</MenuBar>
 	</top>

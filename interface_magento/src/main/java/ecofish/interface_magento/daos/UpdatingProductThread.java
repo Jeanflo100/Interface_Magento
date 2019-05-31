@@ -3,8 +3,10 @@ package ecofish.interface_magento.daos;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.TreeSet;
+import java.util.logging.Level;
 
+import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
@@ -16,22 +18,28 @@ import javafx.scene.control.Alert;
 
 public class UpdatingProductThread implements Runnable {
 
-	private ArrayList<Product> products;
+	private TreeSet<Product> updatingProducts;
+	private TreeSet<Product> updatedProducts;
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;
+    private Integer nb_products;
+    private Integer nb_update_products;
     private Boolean error;
     
     public UpdatingProductThread() {
-    	this.products = ProductService.getProducts();
+    	this.updatingProducts = ProductService.getUpdatingProducts();
+    	this.updatedProducts = new TreeSet<Product>();
     	this.loadingProductProgressBar = ProductService.getLoadingProductProgressBar();
     	this.loadingProductText = ProductService.getLoadingProductText();
     	
     	this.loadingProductProgressBar.set(0.0);
     	this.loadingProductText.set("Update Products...");
 
+    	this.nb_products = this.updatingProducts.size();
+    	this.nb_update_products = 0;
     	this.error = false;
     	
-		StageService.showSecondaryStage(true);
+		StageService.showSecondaryStage(true);		
     }
  
     public void run() {
@@ -39,9 +47,7 @@ public class UpdatingProductThread implements Runnable {
 		try {
 			Connection connection = DataSourceFactory.getDataSource().getConnection();
 			Statement stmt = connection.createStatement();
-			Integer nb_products = products.size();
-			Integer nb_update_products = 0;
-			for (Product product : products) {
+			for (Product product : updatingProducts) {
 				if (product.getChangeActive() == true || product.getNewPrice() != null) {
 					String SQLquery = "UPDATE product SET";
 					if (product.getChangeActive() == true) {
@@ -59,9 +65,10 @@ public class UpdatingProductThread implements Runnable {
 						product.setActualPrice(product.getNewPrice());
 						product.setNewPrice(null);
 					}
+					this.updatedProducts.add(product);
 				}
-				nb_update_products += 1;
-				loadingProductProgressBar.set((double)nb_update_products/nb_products);
+				this.nb_update_products += 1;
+				this.loadingProductProgressBar.set((double)this.nb_update_products/this.nb_products);
 				/*try {
 					Thread.sleep(30);
 					System.out.println(loadingProductProgressBar);
@@ -73,11 +80,23 @@ public class UpdatingProductThread implements Runnable {
 			connection.close();
 		}
 		catch (SQLException e) {
-			System.out.println("Error when updating products list :");
-			System.out.println(e.getMessage());
+			Logging.LOGGER.log(Level.WARNING, "Error when updating products list:\n" + e.getMessage());
 			error = true;
 		}
-
+		
+		if (!this.updatedProducts.isEmpty()) {
+			for (Product product : this.updatedProducts) {
+				this.updatingProducts.remove(product);
+			}
+			String updatedProductsLog = "";
+			String separatorLog = " | ";
+			for (Product product : this.updatedProducts) {
+				updatedProductsLog += product.getIdProduct() + separatorLog;
+			}
+			updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(separatorLog));
+			Logging.LOGGER.log(Level.INFO, this.nb_update_products + "/" + this.nb_products + " products have been updated: " + updatedProductsLog);
+		}
+			
 		Platform.runLater(() -> {
 			ViewService.clearViews();
 			if (error == true) {
@@ -85,10 +104,17 @@ public class UpdatingProductThread implements Runnable {
 				alert.initOwner(StageService.getSecondaryStage());
 				alert.setTitle("FAILURE");
 				alert.setHeaderText("Error when updating products");
+				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
 				alert.showAndWait();
 				StageService.showView(ViewService.getView("PriceProductOverview"));
 			}
-			else {				
+			else {
+				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.initOwner(StageService.getSecondaryStage());
+				alert.setTitle("SUCCESS");
+				alert.setHeaderText("Success in updating products");
+				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
+				alert.showAndWait();
 				StageService.showView(ViewService.getView("StatusProductOverview"));
 			}
 			StageService.showSecondaryStage(false);

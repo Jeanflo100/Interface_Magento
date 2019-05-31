@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="770.0" stylesheets="@StatusProductOverview.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="770.0" stylesheets="@StatusProductOverview.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
    <children>
       <TableView fx:id="inactiveProductTable" editable="true" layoutX="36.0" layoutY="34.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
          <columns>
