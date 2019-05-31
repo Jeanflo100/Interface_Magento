@@ -1,7 +1,7 @@
 package ecofish.interface_magento.model;
 
 
-public class Product{
+public class Product implements Comparable<Product>{
 	
 	private String sku;
 	private String name;
@@ -98,6 +98,22 @@ public class Product{
 	@Override
 	public String toString() {
 		return name + "\nSize : " + size + "\nQuality : " + quality;
+	}
+
+	@Override
+	public int compareTo(Product product) {
+		if (this.getName().compareTo(product.getName()) != 0) {
+			return this.getName().compareTo(product.getName());
+		}
+		else if (this.getSize().compareTo(product.getSize()) != 0) {
+			return this.getSize().compareTo(product.getSize());
+		}
+		else if (this.getQuality().compareTo(product.getQuality()) != 0) {
+			return this.getQuality().compareTo(product.getQuality());
+		}
+		else {
+			return this.getSku().compareTo(product.getSku()); 
+		}
 	}
 	
 }

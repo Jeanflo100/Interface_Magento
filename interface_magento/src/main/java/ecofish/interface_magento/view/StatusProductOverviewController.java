@@ -64,6 +64,8 @@ public class StatusProductOverviewController{
 	
 	private Product currentActiveProduct;
 	
+	private FilterService filterService;
+	
 	private String currentCategory;
 	
 	private String currentFamily;
@@ -75,20 +77,17 @@ public class StatusProductOverviewController{
 	
 	@FXML
 	private void handleUpdatePriceButton() {
-		System.out.println("UpdatePrice bouton");
 		StageService.showView(ViewService.getView("PriceProductOverview"));
 	}
 	
 	@FXML
 	private void handleLeftToRightButton() {
-		System.out.println("LeftToRight Button");
 		if (currentInactiveProduct != null) ProductService.changeStatusProduct(currentInactiveProduct);
 		sortActiveProductTable();
 	}
 	
 	@FXML
 	private void handleRightToLeftButton() {
-		System.out.println("RightToLeft Button");
 		if (currentActiveProduct != null) ProductService.changeStatusProduct(currentActiveProduct);
 		sortInactiveProductTable();
 	}
@@ -115,7 +114,7 @@ public class StatusProductOverviewController{
 		if (this.currentCategory != null) {
 			if (this.newCategorySelected == true) {
 				this.newCategorySelected = false;
-				this.familyComboBox.setItems(FilterService.getFamilies(this.currentCategory));
+				this.familyComboBox.setItems(this.filterService.getFamilies(this.currentCategory));
 				this.familyComboBox.setDisable(false);
 			}
 			this.familyComboBox.requestFocus();
@@ -134,10 +133,8 @@ public class StatusProductOverviewController{
 	}
 	
 	@FXML
-	private void initialize() {
-		System.out.println("initialize");
-				
-		this.inactiveProductTable.setItems(ProductService.getInactiveProducts(null, null));
+	private void initialize() {				
+		this.inactiveProductTable.setItems(ProductService.getInactiveProductsFiltered(null, null));
 		this.nameInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.qualityInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
@@ -152,7 +149,7 @@ public class StatusProductOverviewController{
 		this.nameActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.qualityActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
-		this.activeProductTable.setItems(ProductService.getActiveProducts(null, null));
+		this.activeProductTable.setItems(ProductService.getActiveProductsFiltered(null, null));
 		this.activeProductTable.refresh();
 		this.activeProductTable.getSortOrder().add(this.nameActiveProductColumn);
 		this.activeProductTable.getSortOrder().add(this.sizeActiveProductColumn);
@@ -212,12 +209,16 @@ public class StatusProductOverviewController{
 		    }
 		});
 		
-		this.categoryComboBox.setItems(FilterService.getCategories());
+		this.filterService = new FilterService();
+		this.categoryComboBox.setItems(this.filterService.getCategories());
 		this.familyComboBox.setDisable(true);
 		this.newCategorySelected = false;
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!categoryComboBox.isShowing() && categoryComboBox.getSelectionModel().getSelectedItem() != null) {
+					categoryComboBox.show();
+				}
 				newCategorySelected = true;
 				updateProductTable(newValue, null);
 			}
@@ -226,6 +227,9 @@ public class StatusProductOverviewController{
 		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!familyComboBox.isShowing() && familyComboBox.getSelectionModel().getSelectedItem() != null) {
+					familyComboBox.show();
+				}
 				updateProductTable(currentCategory, newValue);
 			}
 		});
@@ -235,8 +239,8 @@ public class StatusProductOverviewController{
 	private void updateProductTable(String category, String family) {
 		this.currentCategory = category;
 		this.currentFamily = family;
-		this.inactiveProductTable.setItems(ProductService.getInactiveProducts(this.currentCategory, this.currentFamily));
-		this.activeProductTable.setItems(ProductService.getActiveProducts(this.currentCategory, this.currentFamily));
+		this.inactiveProductTable.setItems(ProductService.getInactiveProductsFiltered(this.currentCategory, this.currentFamily));
+		this.activeProductTable.setItems(ProductService.getActiveProductsFiltered(this.currentCategory, this.currentFamily));
 		sortInactiveProductTable();
 		sortActiveProductTable();
 		this.inactiveProductTable.refresh();

@@ -74,6 +74,8 @@ public class PriceProductOverviewController{
 	
 	private Product currentProduct;
 	
+	private FilterService filterService;
+	
 	private String currentCategory;
 	
 	private String currentFamily;
@@ -157,7 +159,7 @@ public class PriceProductOverviewController{
 		if (this.currentCategory != null) {
 			if (this.newCategorySelected == true) {
 				this.newCategorySelected = false;
-				this.familyComboBox.setItems(FilterService.getFamilies(this.currentCategory));
+				this.familyComboBox.setItems(this.filterService.getFamilies(this.currentCategory));
 				this.familyComboBox.setDisable(false);
 			}
 			this.familyComboBox.requestFocus();
@@ -174,7 +176,6 @@ public class PriceProductOverviewController{
 	
 	@FXML
 	private void initialize() {
-		System.out.println("initialize");
 		this.productTable.setPlaceholder(new Label("No active products"));
 		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
@@ -183,7 +184,7 @@ public class PriceProductOverviewController{
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("newPrice"));
 		this.productTable.setFixedCellSize(25);
 		this.numberVisibleRow = getNumberVisibleRow(this.productTable);
-		this.productTable.setItems(ProductService.getActiveProducts(null, null));
+		this.productTable.setItems(ProductService.getActiveProductsFiltered(null, null));
 		this.productTable.refresh();
 		this.productTable.getSortOrder().add(this.nameColumn);
 		this.productTable.getSortOrder().add(this.sizeColumn);
@@ -218,13 +219,17 @@ public class PriceProductOverviewController{
 		
 		this.productTable.getSelectionModel().selectFirst();
 				
-		this.categoryComboBox.setItems(FilterService.getCategories());
+		this.filterService = new FilterService();
+		this.categoryComboBox.setItems(this.filterService.getCategories());
 		this.familyComboBox.setDisable(true);
 		this.newCategorySelected = false;
 		
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!categoryComboBox.isShowing() && categoryComboBox.getSelectionModel().getSelectedItem() != null) {
+					categoryComboBox.show();
+				}
 				newCategorySelected = true;
 				updateProductTable(newValue, null);
 			}
@@ -233,6 +238,9 @@ public class PriceProductOverviewController{
 		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!familyComboBox.isShowing() && familyComboBox.getSelectionModel().getSelectedItem() != null) {
+					familyComboBox.show();
+				}
 				updateProductTable(currentCategory, newValue);
 			}
 		});
@@ -253,7 +261,7 @@ public class PriceProductOverviewController{
 			if (keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) {
 				this.newPriceTextField.requestFocus();
 			}
-			else if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
+			else if (keyEvent.getCode() == KeyCode.DELETE || keyEvent.getCode() == KeyCode.BACK_SPACE) {
 				updateNewPrice(null);
 				selectNextProduct();
 			}
@@ -289,7 +297,7 @@ public class PriceProductOverviewController{
 	private void updateProductTable(String category, String family) {
 		this.currentCategory = category;
 		this.currentFamily = family;
-		this.productTable.setItems(ProductService.getActiveProducts(this.currentCategory, this.currentFamily));
+		this.productTable.setItems(ProductService.getActiveProductsFiltered(this.currentCategory, this.currentFamily));
 		sortProductTable();
 		this.productTable.refresh();
 	}
@@ -317,6 +325,7 @@ public class PriceProductOverviewController{
 		if (this.currentProduct != null) {
 			if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
 			this.currentProduct.setNewPrice(newPrice);
+			ProductService.updateUpdatingProducts(this.currentProduct);
 			if (this.currentProduct.getNewPrice() != null) this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
 			else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
 			this.productTable.refresh();
