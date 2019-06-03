@@ -12,7 +12,7 @@
           <CategoryAxis fx:id="testCategoryAxis" side="BOTTOM" />
         </xAxis>
         <yAxis>
-          <NumberAxis fx:id="testNumberAxis" side="LEFT" />
+          <NumberAxis fx:id="testNumberAxis" side="LEFT" tickLabelFill="#b50e0e" />
         </yAxis>
       </LineChart>
    </children>
