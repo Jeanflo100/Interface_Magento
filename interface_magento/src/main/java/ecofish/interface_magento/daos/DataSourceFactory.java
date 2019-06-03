@@ -2,10 +2,14 @@ package ecofish.interface_magento.daos;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+
 import org.ini4j.Wini;
 
 import javax.sql.DataSource;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import ecofish.interface_magento.log.Logging;
 
 public class DataSourceFactory {
 
@@ -37,8 +41,7 @@ public class DataSourceFactory {
 			name = ini.get("database", "name");
 		}
 		catch (IOException e){
-			System.out.println("Error when recovering database connection data :");
-			System.out.println(e.getMessage());
+			Logging.LOGGER.log(Level.WARNING, "Error when recovering database connection data:\n" + e.getMessage());
 		}
 	}
 	

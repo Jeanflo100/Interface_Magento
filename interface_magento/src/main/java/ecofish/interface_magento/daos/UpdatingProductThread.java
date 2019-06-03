@@ -24,6 +24,8 @@ public class UpdatingProductThread implements Runnable {
     private StringProperty loadingProductText;
     private Integer nb_products;
     private Integer nb_update_products;
+    private String updatedProductsLog;
+	private String separatorLog;
     private Boolean error;
     
     public UpdatingProductThread() {
@@ -37,6 +39,8 @@ public class UpdatingProductThread implements Runnable {
 
     	this.nb_products = this.updatingProducts.size();
     	this.nb_update_products = 0;
+    	this.updatedProductsLog = "";
+    	this.separatorLog = " | ";
     	this.error = false;
     	
 		StageService.showSecondaryStage(true);		
@@ -58,13 +62,18 @@ public class UpdatingProductThread implements Runnable {
 					}
 					SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE product.idproduct = " + product.getIdProduct();
 					stmt.executeUpdate(SQLquery);
+					this.updatedProductsLog += "\n" + product.getIdProduct() + " (" + product.getCategory() + " - " + product.getFamily() + " - " + product.getName()
+												+ " - " + product.getSize() + " - " + product.getQuality() + "): ";
 					if (product.getChangeActive() == true) {
+						this.updatedProductsLog += "Status = " + (product.getActive() == true ? "not active" : "active") + " -> " + (product.getActive() == true ? "active" : "not active") + this.separatorLog;
 						product.setChangeActive(false);
 					}
 					if (product.getNewPrice() != null) {
+						this.updatedProductsLog += "Price = " + product.getActualPrice() + "£ -> " + product.getNewPrice() + "£" + this.separatorLog;
 						product.setActualPrice(product.getNewPrice());
 						product.setNewPrice(null);
 					}
+					updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(separatorLog));
 					this.updatedProducts.add(product);
 				}
 				this.nb_update_products += 1;
@@ -88,12 +97,6 @@ public class UpdatingProductThread implements Runnable {
 			for (Product product : this.updatedProducts) {
 				this.updatingProducts.remove(product);
 			}
-			String updatedProductsLog = "";
-			String separatorLog = " | ";
-			for (Product product : this.updatedProducts) {
-				updatedProductsLog += product.getIdProduct() + separatorLog;
-			}
-			updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(separatorLog));
 			Logging.LOGGER.log(Level.INFO, this.nb_update_products + "/" + this.nb_products + " products have been updated: " + updatedProductsLog);
 		}
 			

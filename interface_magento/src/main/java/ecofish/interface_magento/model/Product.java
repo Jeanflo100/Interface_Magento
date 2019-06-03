@@ -122,7 +122,13 @@ public class Product implements Comparable<Product>{
 
 	@Override
 	public int compareTo(Product product) {
-		if (this.getName().compareTo(product.getName()) != 0) {
+		if (this.getCategory().compareTo(product.getCategory()) != 0) {
+			return this.getCategory().compareTo(product.getCategory());
+		}
+		else if (this.getFamily().compareTo(product.getFamily()) != 0) {
+			return this.getFamily().compareTo(product.getFamily());
+		}
+		else if (this.getName().compareTo(product.getName()) != 0) {
 			return this.getName().compareTo(product.getName());
 		}
 		else if (this.getSize().compareTo(product.getSize()) != 0) {

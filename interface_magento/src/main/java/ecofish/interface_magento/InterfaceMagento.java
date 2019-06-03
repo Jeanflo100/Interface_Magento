@@ -10,6 +10,7 @@ import ecofish.interface_magento.daos.DataSourceFactory;
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
+import ecofish.interface_magento.service.ViewService;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -18,7 +19,9 @@ public class InterfaceMagento extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		//initDatabase();
-		Logging.setLoggingFile();
+		//StageService.initPrimaryStage(primaryStage);
+		//StageService.showView(ViewService.getView("test"));
+		Logging.setLogging();
 		Logging.LOGGER.log(Level.INFO, "Launching application");
 		StageService.initPrimaryStage(primaryStage);
 		StageService.createSecondaryStage();

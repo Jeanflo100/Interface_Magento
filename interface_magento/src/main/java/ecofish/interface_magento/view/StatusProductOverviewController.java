@@ -19,7 +19,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Label;
 
-public class StatusProductOverviewController{
+public class StatusProductOverviewController {
 
 	@FXML
 	TableView<Product> inactiveProductTable;

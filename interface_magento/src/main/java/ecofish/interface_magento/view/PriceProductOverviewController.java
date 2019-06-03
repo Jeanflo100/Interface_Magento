@@ -25,7 +25,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 
-public class PriceProductOverviewController{
+public class PriceProductOverviewController {
 	
 	@FXML
 	ComboBox<String> categoryComboBox;
