@@ -1,6 +1,9 @@
 package ecofish.interface_magento.model;
 
-
+/**
+ * Product model containing information useful for the application
+ * @author Jean-Florian Tassart
+ */
 public class Product implements Comparable<Product>{
 	
 	private Integer idProduct;
@@ -13,26 +16,6 @@ public class Product implements Comparable<Product>{
 	private Double actualPrice;
 	private Boolean active;
 	private Boolean changeActive;
-	
-	/*public Product() {
-		this.name = "";
-		this.quality = "";
-		this.size = "";
-		this.actualPrice = null;
-		this.newPrice = null;
-		this.active = true;
-	}*/
-	
-	public Product(Integer idProduct, String name, String quality, String size, Double actualPrice, Boolean active) {
-		this.idProduct = idProduct;
-		this.name = name;
-		this.quality = quality;
-		this.size = size;
-		this.actualPrice = actualPrice;
-		this.newPrice = null;
-		this.active = active;
-		this.changeActive = false;
-	}
 	
 	public Product(Integer idProduct, String name, String category, String family, String quality, String size, Double actualPrice, Boolean active) {
 		this.idProduct = idProduct;

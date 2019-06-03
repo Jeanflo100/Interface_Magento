@@ -12,6 +12,10 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+/**
+ * Setting up logs writting
+ * @author Jean-Florian Tassart
+ */
 public class Logging{
 	
 	public static final Logger LOGGER = Logger.getLogger(Logging.class.getName());
@@ -20,16 +24,25 @@ public class Logging{
 	private static Handler logConsoleHandler = null;
 	private static Handler logFileHandler = null;
 	
+	/**
+	 * Initialization of the different handlers to write logs
+	 */
 	public static void setLogging() {
 		setLoggingConsole();
 		setLoggingFile();
 	}
 	
+	/**
+	 * Initialization of the display of logs in the console
+	 */
 	private static void setLoggingConsole() {
 		logConsoleHandler = new ConsoleHandler();
 		LOGGER.addHandler(logConsoleHandler);
 	}
 	
+	/**
+	 * Initialization of the display of logs in a file
+	 */
 	private static void setLoggingFile() {
 		
 		logFormatter = new Formatter() {
@@ -57,6 +70,9 @@ public class Logging{
 
 	}
 	
+	/**
+	 * Open the file containing the logs
+	 */
 	public static void openLoggingFile() {
 		try {
 			Desktop.getDesktop().open(new File("./Interface_Magento.log"));

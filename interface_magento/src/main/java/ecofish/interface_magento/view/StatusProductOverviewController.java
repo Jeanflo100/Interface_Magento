@@ -19,6 +19,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.control.Label;
 
+/**
+ * View controller asoociated to the change in product status
+ * @author Jean-Florian Tassart
+ */
 public class StatusProductOverviewController {
 
 	@FXML
@@ -75,23 +79,35 @@ public class StatusProductOverviewController {
     private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("inactive-to-active");
     private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
 	
+    /**
+     * Go to product price view
+     */
 	@FXML
 	private void handleUpdatePriceButton() {
 		StageService.showView(ViewService.getView("PriceProductOverview"));
 	}
 	
+	/**
+	 * Pass the product from the inactive table to the active table
+	 */
 	@FXML
 	private void handleLeftToRightButton() {
 		if (currentInactiveProduct != null) ProductService.changeStatusProduct(currentInactiveProduct);
 		sortActiveProductTable();
 	}
 	
+	/**
+	 * Pass the product from the active table to the inactive table
+	 */
 	@FXML
 	private void handleRightToLeftButton() {
 		if (currentActiveProduct != null) ProductService.changeStatusProduct(currentActiveProduct);
 		sortInactiveProductTable();
 	}
 	
+	/**
+	 * Reset the filter by category
+	 */
 	@FXML
 	private void resetCategory() {
 		if (this.currentCategory != null) {
@@ -101,6 +117,9 @@ public class StatusProductOverviewController {
 		}
 	}
 	
+	/**
+	 * Reset the filter by family
+	 */
 	@FXML
 	private void resetFamily() {
 		if (this.currentFamily != null) {
@@ -109,6 +128,9 @@ public class StatusProductOverviewController {
 		}
 	}
 	
+	/**
+	 * Show the list of family
+	 */
 	@FXML
 	private void showFamily() {
 		if (this.currentCategory != null) {
@@ -122,6 +144,9 @@ public class StatusProductOverviewController {
 		}
 	}
 	
+	/**
+	 * Show the product tables
+	 */
 	@FXML
 	private void showProductTables() {
 		if (!this.inactiveProductTable.getItems().isEmpty()) this.inactiveProductTable.requestFocus();
@@ -132,6 +157,9 @@ public class StatusProductOverviewController {
 		this.activeProductTable.scrollTo(this.currentActiveProduct);
 	}
 	
+	/**
+	 * Initialization of the view
+	 */
 	@FXML
 	private void initialize() {				
 		this.inactiveProductTable.setItems(ProductService.getInactiveProductsFiltered(null, null));
@@ -236,6 +264,11 @@ public class StatusProductOverviewController {
 		
 	}
 	
+	/**
+	 * Update product table with filtering by category and family
+	 * @param category - filtering by category
+	 * @param family - filtering by family
+	 */
 	private void updateProductTable(String category, String family) {
 		this.currentCategory = category;
 		this.currentFamily = family;
@@ -247,6 +280,9 @@ public class StatusProductOverviewController {
 		this.activeProductTable.refresh();
 	}
 	
+	/**
+	 * Sort products in the inactive table
+	 */
 	private void sortInactiveProductTable() {
 		this.nameInactiveProductColumn.setSortable(true);
 		this.sizeInactiveProductColumn.setSortable(true);
@@ -256,6 +292,9 @@ public class StatusProductOverviewController {
 		this.nameInactiveProductColumn.setSortable(false);
 	}
 	
+	/**
+	 * Sort products in the active table
+	 */
 	private void sortActiveProductTable() {
 		this.nameActiveProductColumn.setSortable(true);
 		this.sizeActiveProductColumn.setSortable(true);

@@ -17,13 +17,23 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
+/**
+ * Set up window management
+ * @author Jean-Florian Tassart
+ */
 public class StageService {
 
+	/**
+	 * Initializes the main layout
+	 */
 	private StageService() {
 		mainLayout = ViewService.getView("MainLayout");
-
 	}
 
+	/**
+	 * Get a static class
+	 * @author Jean-Florian Tassart
+	 */
 	private static class StageServiceHolder {
 		private static final StageService INSTANCE = new StageService();
 	}
@@ -32,18 +42,34 @@ public class StageService {
 	private Stage secondaryStage;
 	public BorderPane mainLayout;
 
+	/**
+	 * Returns the window layout
+	 * @return The window layout
+	 */
 	public static BorderPane getMainLayoutBorderPane() {
 		return StageServiceHolder.INSTANCE.mainLayout;
 	}
 	
+	/**
+	 * Returns the primary window
+	 * @return The primary window
+	 */
 	public static Stage getPrimaryStage() {
 		return StageServiceHolder.INSTANCE.primaryStage;
 	}
 	
+	/**
+	 * Returns the secondary window
+	 * @return The secondary window
+	 */
 	public static Stage getSecondaryStage() {
 		return StageServiceHolder.INSTANCE.secondaryStage;
 	}
 
+	/**
+	 * Initialization of the primary stage
+	 * @param primaryStage - stage provided by the mother class
+	 */
 	public static void initPrimaryStage(Stage primaryStage) {
 		primaryStage.setTitle("Ecofish Products");
 		primaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
@@ -66,6 +92,9 @@ public class StageService {
 		StageServiceHolder.INSTANCE.primaryStage = primaryStage;
 	}
 	
+	/**
+	 * Creation and initialization of the secondary stage
+	 */
 	public static void createSecondaryStage() {
 		Stage secondaryStage = new Stage();
 		secondaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
@@ -76,6 +105,10 @@ public class StageService {
 		StageServiceHolder.INSTANCE.secondaryStage = secondaryStage;
 	}
 
+	/**
+	 * Change view of primary stage
+	 * @param rootElementPane - new view to show in stage
+	 */
 	public static void showView(Pane rootElementPane) {
 		Node rootElementNode = rootElementPane;
 		if (ViewService.isNewView()) StageServiceHolder.INSTANCE.primaryStage.hide();
@@ -86,6 +119,10 @@ public class StageService {
 		StageServiceHolder.INSTANCE.primaryStage.show();
 	}
 	
+	/**
+	 * Display or not the secondary stage
+	 * @param show - show if true, close if false
+	 */
 	public static void showSecondaryStage(Boolean show) {
 		if (show) {
 			StageServiceHolder.INSTANCE.secondaryStage.show();
@@ -93,6 +130,9 @@ public class StageService {
 		else StageServiceHolder.INSTANCE.secondaryStage.close();
 	}
 	
+	/**
+	 * Triggers the closing of the application
+	 */
 	public static void closeStage() {
 		StageServiceHolder.INSTANCE.primaryStage.fireEvent(new WindowEvent(StageServiceHolder.INSTANCE.primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
 	}

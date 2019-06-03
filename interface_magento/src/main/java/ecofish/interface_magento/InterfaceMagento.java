@@ -14,8 +14,15 @@ import ecofish.interface_magento.service.ViewService;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * Main class of application launch
+ * @author Jean-Florian Tassart
+ */
 public class InterfaceMagento extends Application {
 
+	/**
+	 * Initialization of the application
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		//initDatabase();
@@ -28,10 +35,18 @@ public class InterfaceMagento extends Application {
 		ProductService.loadProduct();
 	}
 
+	/**
+	 * Calling the main method javafx start to launch the application
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException {
 		launch(args);
 	}
 	
+	/**
+	 * Initialization of the test database
+	 */
 	public void initDatabase() {
 		try{
 			Connection connection = DataSourceFactory.getDataSource().getConnection();

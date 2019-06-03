@@ -16,6 +16,10 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 
+/**
+ * Updating products to the database
+ * @author Jean-Florian Tassart
+ */
 public class UpdatingProductThread implements Runnable {
 
 	private TreeSet<Product> updatingProducts;
@@ -28,6 +32,9 @@ public class UpdatingProductThread implements Runnable {
 	private String separatorLog;
     private Boolean error;
     
+    /**
+     * Initialization of parameters
+     */
     public UpdatingProductThread() {
     	this.updatingProducts = ProductService.getUpdatingProducts();
     	this.updatedProducts = new TreeSet<Product>();
@@ -46,6 +53,9 @@ public class UpdatingProductThread implements Runnable {
 		StageService.showSecondaryStage(true);		
     }
  
+    /**
+     * Product updates
+     */
     public void run() {
 
 		try {

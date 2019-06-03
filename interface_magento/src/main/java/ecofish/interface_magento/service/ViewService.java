@@ -6,12 +6,21 @@ import java.util.Hashtable;
 import ecofish.interface_magento.InterfaceMagento;
 import javafx.fxml.FXMLLoader;
 
+/**
+ * Retrieve FXML files from application views
+ * @author Jean-Florian Tassart
+ */
 public class ViewService {
 	
 	public static String actualView;
 	private static Boolean newView = false;
 	private static Hashtable<String, FXMLLoader> views = new Hashtable<>();
 
+	/**
+	 * Provides an instance of the view
+	 * @param id - name of view to show
+	 * @return An instance of the view
+	 */
 	public static <T> T getView(String id) {
 		actualView = id;
 		FXMLLoader loader;
@@ -27,6 +36,11 @@ public class ViewService {
 		return loader.getRoot();
 	}
 
+	/**
+	 * Load the view required
+	 * @param id - name of view to retrieve
+	 * @return the file loaded of the view
+	 */
 	private static FXMLLoader getLoader(String id) {
 		try {
 			FXMLLoader loader = new FXMLLoader();
@@ -40,10 +54,17 @@ public class ViewService {
 
 	}
 	
+	/**
+	 * Clear instances of stored views
+	 */
 	public static void clearViews() {
 		views.clear();
 	}
 	
+	/**
+	 * Indicates whether the returned view is a new loaded or an old one that was stored
+	 * @return true if it's a new view, false else
+	 */
 	public static Boolean isNewView() {
 		return newView;
 	}

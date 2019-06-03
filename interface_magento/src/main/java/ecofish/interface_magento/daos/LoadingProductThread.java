@@ -20,6 +20,10 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 
+/**
+ * Thread retrieving products from the database
+ * @author Jean-Florian Tassart
+ */
 public class LoadingProductThread implements Runnable {
 
 	private ArrayList<Product> activeProducts;
@@ -29,6 +33,9 @@ public class LoadingProductThread implements Runnable {
     private StringProperty loadingProductText;   
     private Boolean error;
  
+    /**
+     * Initialization of parameters
+     */
     public LoadingProductThread() {
     	this.activeProducts = ProductService.getActiveProducts();
     	this.inactiveProducts = ProductService.getInactiveProducts();
@@ -44,6 +51,9 @@ public class LoadingProductThread implements Runnable {
 		StageService.showSecondaryStage(true);
     }
  
+    /**
+     * Product recovery
+     */
     public void run() {
 
     	try {

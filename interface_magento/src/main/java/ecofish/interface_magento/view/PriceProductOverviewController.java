@@ -25,6 +25,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 
+/**
+ * View controller asoociated to the change in product price
+ * @author Jean-Florian Tassart
+ */
 public class PriceProductOverviewController {
 	
 	@FXML
@@ -85,6 +89,11 @@ public class PriceProductOverviewController {
     private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
     private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
 	
+    /**
+     * Returns the number of rows of the table visible on the screen
+     * @param table - table concerned
+     * @return The number of visible rows
+     */
 	private static Integer getNumberVisibleRow(TableView<?> table) {
 		Integer numberColumnRow = 0;
 		Integer newNumberColumnRow = numberColumnRow;
@@ -99,6 +108,12 @@ public class PriceProductOverviewController {
 		return numberVisibleRow;
 	}
 	
+	/**
+	 * Recursive function returning the number of column rows
+	 * @param column - column currently concerned
+	 * @param actualNumberColumnRow - current number of subcolumn rows
+	 * @return total number of subcolumn rows
+	 */
 	private static Integer getNumberColumnRow(TableColumn<?, ?> column, Integer actualNumberColumnRow) {
 		Integer newNumberColumnRow = actualNumberColumnRow;
 		for (TableColumn<?, ?> subColumn : column.getColumns()) {
@@ -110,6 +125,9 @@ public class PriceProductOverviewController {
 		return newNumberColumnRow + 1;
 	}
     
+	/**
+	 * Checking conditions before updating the price
+	 */
 	@FXML
 	private void handleUpdatePriceButton() {
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
@@ -132,11 +150,17 @@ public class PriceProductOverviewController {
 		selectNextProduct();
 	}
 	
+	/**
+	 * Update products in the database
+	 */
 	@FXML
 	private void handleSaveChangesButton() {
 		ProductService.updateProduct();
 	}
 	
+	/**
+	 * Reset the filter by category
+	 */
 	@FXML
 	private void resetCategory() {
 		if (this.currentCategory != null) {
@@ -146,6 +170,9 @@ public class PriceProductOverviewController {
 		}
 	}
 	
+	/**
+	 * Reset the filter by family
+	 */
 	@FXML
 	private void resetFamily() {
 		if (this.currentFamily != null) {
@@ -154,6 +181,9 @@ public class PriceProductOverviewController {
 		}
 	}
 	
+	/**
+	 * Show the list of family
+	 */
 	@FXML
 	private void showFamily() {
 		if (this.currentCategory != null) {
@@ -167,6 +197,9 @@ public class PriceProductOverviewController {
 		}
 	}
 	
+	/**
+	 * Show the product table
+	 */
 	@FXML
 	private void showProductTable() {
 		if (!this.productTable.getItems().isEmpty()) this.productTable.requestFocus();
@@ -174,6 +207,9 @@ public class PriceProductOverviewController {
 		this.productTable.scrollTo(this.currentProduct);
 	}
 	
+	/**
+	 * Initialization of the view
+	 */
 	@FXML
 	private void initialize() {
 		this.productTable.setPlaceholder(new Label("No active products"));
@@ -274,6 +310,10 @@ public class PriceProductOverviewController {
 		
 	}
 	
+	/**
+	 * Show informations of product selected
+	 * @param product - product currently selected
+	 */
 	private void showProduct(Product product) {
 		this.currentProduct = product;
 		if (this.currentProduct == null) {
@@ -294,6 +334,11 @@ public class PriceProductOverviewController {
 		
 	}
 	
+	/**
+	 * Update product table with filtering by category and family
+	 * @param category - filtering by category
+	 * @param family - filtering by family
+	 */
 	private void updateProductTable(String category, String family) {
 		this.currentCategory = category;
 		this.currentFamily = family;
@@ -302,6 +347,9 @@ public class PriceProductOverviewController {
 		this.productTable.refresh();
 	}
 	
+	/**
+	 * Sort products in the table
+	 */
 	private void sortProductTable() {
 		this.nameColumn.setSortable(true);
 		this.sizeColumn.setSortable(true);
@@ -311,6 +359,9 @@ public class PriceProductOverviewController {
 		this.nameColumn.setSortable(false);
 	}
 	
+	/**
+	 * Customize the display of the selection in the table to have the currently selected product in the center of the table
+	 */
 	private void selectNextProduct() {
 		this.productTable.getSelectionModel().selectNext();
 		if(this.numberVisibleRow/2 - this.productTable.getSelectionModel().getSelectedIndex() <= 0) {
@@ -321,6 +372,10 @@ public class PriceProductOverviewController {
 		}
 	}
 	
+	/**
+	 * Update the price of the current product
+	 * @param newPrice - price to be updated on the product 
+	 */
 	private void updateNewPrice(Double newPrice) {
 		if (this.currentProduct != null) {
 			if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
