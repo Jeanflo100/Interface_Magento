@@ -52,9 +52,7 @@ public class LoadingProductThread implements Runnable {
     		System.out.println("connexion successful");
 			Statement statement = connection.createStatement();
 			
-			ResultSet retour = statement.executeQuery("SELECT COUNT(DISTINCT mg_catalog_product_entity_int.entity_id) AS nb_products FROM mg_catalog_product_entity_int");
-			//ResultSet retour = statement.executeQuery("SELECT COUNT(mg_catalog_product_entity.entity_id) AS nb_products FROM mg_catalog_product_entity");
-			//ResultSet retour = statement.executeQuery("SELECT COUNT(mg_catalog_product_entity.sku) AS nb_products FROM mg_catalog_product_entity");
+			ResultSet retour = statement.executeQuery("SELECT COUNT(mg_catalog_product_entity.sku) AS nb_products FROM mg_catalog_product_entity");
 			retour.next();
 			Integer nb_products = retour.getInt("nb_products");
 			System.out.println(nb_products);
@@ -218,8 +216,8 @@ public class LoadingProductThread implements Runnable {
 						resultSet.getString("name"),
 						resultSet.getString("category"),
 						family_tmp,
-						null,	/*resultSet.getString("size"),*/
-						null,	/*resultSet.getString("quality"),*/
+						"",	/*resultSet.getString("size"),*/
+						"",	/*resultSet.getString("quality"),*/
 						resultSet.getDouble("price"),
 						resultSet.getBoolean("status"));
 				if (product.getActive()) {

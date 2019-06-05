@@ -49,15 +49,18 @@ public class UpdatingProductThread implements Runnable {
 			Statement stmt = connection.createStatement();
 			for (Product product : updatingProducts) {
 				if (product.getChangeActive() == true || product.getNewPrice() != null) {
-					String SQLquery = "UPDATE mg_catalog_product_entity_decimal SET";
+					//String SQLquery = "UPDATE mg_catalog_product_entity_decimal SET"
+					String SQLquery;
 					if (product.getChangeActive() == true) {
-						SQLquery += " product.status = " + product.getActive() + ",";
+						SQLquery =  "UPDATE mg_catalog_product_entity_int SET mg_catalog_product_entity_int.value = " + product.getActive() + " WHERE mg_catalog_product_entity_int.attribute_id = 87 AND mg_catalog_product_entity_int.entity_id = (SELECT mg_catalog_product_entity.entity_id FROM mg_catalog_product_entity WHERE mg_catalog_product_entity.sku = '" + product.getSku() + "')\n";
+						stmt.executeUpdate(SQLquery);
 					}
 					if (product.getActive() == true && product.getNewPrice() != null) {
-						SQLquery +=  " mg_catalog_product_entity_decimal.value = " + product.getNewPrice() + ",";
+						SQLquery =  "UPDATE mg_catalog_product_entity_decimal SET mg_catalog_product_entity_decimal.value = " + product.getNewPrice() + " WHERE mg_catalog_product_entity_decimal.attribute_id = 67 AND mg_catalog_product_entity_decimal.entity_id = (SELECT mg_catalog_product_entity.entity_id FROM mg_catalog_product_entity WHERE mg_catalog_product_entity.sku = '" + product.getSku() + "')\n";
+						stmt.executeUpdate(SQLquery);
 					}
-					SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE mg_catalog_product_entity_decimal.attribute_id = 149 AND mg_catalog_product_entity_decimal.entity_id = (SELECT entity_id FROM mg_catalog_product_entity WHERE mg_catalog_product_entity.sku = " + product.getSku() + " )";
-					stmt.executeUpdate(SQLquery);
+					//SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE mg_catalog_product_entity_decimal.attribute_id = 67 AND mg_catalog_product_entity_decimal.entity_id = (SELECT mg_catalog_product_entity.entity_id AS nb_products FROM mg_catalog_product_entity WHERE mg_catalog_product_entity.sku = '" + product.getSku() + "')";
+					//stmt.executeUpdate(SQLquery);
 					if (product.getChangeActive() == true) {
 						product.setChangeActive(false);
 					}
