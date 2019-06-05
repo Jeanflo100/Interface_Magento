@@ -49,14 +49,14 @@ public class UpdatingProductThread implements Runnable {
 			Statement stmt = connection.createStatement();
 			for (Product product : updatingProducts) {
 				if (product.getChangeActive() == true || product.getNewPrice() != null) {
-					String SQLquery = "UPDATE product SET";
+					String SQLquery = "UPDATE mg_catalog_product_entity_decimal SET";
 					if (product.getChangeActive() == true) {
 						SQLquery += " product.status = " + product.getActive() + ",";
 					}
 					if (product.getActive() == true && product.getNewPrice() != null) {
-						SQLquery +=  " product.product_basic_price = " + product.getNewPrice() + ",";
+						SQLquery +=  " mg_catalog_product_entity_decimal.value = " + product.getNewPrice() + ",";
 					}
-					SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE product.sku = " + product.getSku();
+					SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE mg_catalog_product_entity_decimal.attribute_id = 149 AND mg_catalog_product_entity_decimal.entity_id = (SELECT entity_id FROM mg_catalog_product_entity WHERE mg_catalog_product_entity.sku = " + product.getSku() + " )";
 					stmt.executeUpdate(SQLquery);
 					if (product.getChangeActive() == true) {
 						product.setChangeActive(false);
