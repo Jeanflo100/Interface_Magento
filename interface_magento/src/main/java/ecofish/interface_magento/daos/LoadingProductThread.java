@@ -51,6 +51,11 @@ public class LoadingProductThread implements Runnable {
     		Connection connection = DataSourceFactory.getDataSource().getConnection();
 			Statement statement = connection.createStatement();
 			
+			/*ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS retour FROM mg_admin_user");
+			while(retour.next()) {
+				System.out.println(retour.getString("retour"));
+			}*/
+			
 			ResultSet nb_elements = statement.executeQuery("SELECT COUNT(productTable.sku) AS nb_products FROM mg_catalog_product_entity AS productTable");
 			nb_elements.next();
 			Integer nb_products = nb_elements.getInt("nb_products");
@@ -95,7 +100,7 @@ public class LoadingProductThread implements Runnable {
 					+ "				NOT IN (SELECT matchProductFamilyTable_tmp.attribute_id\n"
 					+ "						FROM mg_catalog_product_entity_int AS matchProductFamilyTable_tmp\n"
 					+ "						WHERE matchProductFamilyTable_tmp.entity_id = matchProductFamilyTable.entity_id))\n"
-			);
+					);
 			
 			while(resultSet.next()) {
 				String category = resultSet.getString("category");
@@ -122,12 +127,6 @@ public class LoadingProductThread implements Runnable {
 				
 				nb_loading_products += 1;
 				loadingProductProgressBar.set((double)nb_loading_products/nb_products);
-				/*try {
-					Thread.sleep(30);
-					System.out.println(loadingProductProgressBar);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}*/
 			}
 
 		}

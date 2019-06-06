@@ -52,15 +52,29 @@ public class UpdatingProductThread implements Runnable {
 					//String SQLquery = "UPDATE mg_catalog_product_entity_decimal SET"
 					String SQLquery;
 					if (product.getChangeActive() == true) {
-						SQLquery =  "UPDATE mg_catalog_product_entity_int SET mg_catalog_product_entity_int.value = " + product.getActive() + " WHERE mg_catalog_product_entity_int.attribute_id = 87 AND mg_catalog_product_entity_int.entity_id = (SELECT mg_catalog_product_entity.entity_id FROM mg_catalog_product_entity WHERE mg_catalog_product_entity.sku = '" + product.getSku() + "')\n";
-						stmt.executeUpdate(SQLquery);
+						stmt.executeUpdate(
+								"UPDATE mg_catalog_product_entity_int AS statusTable\n"
+								+ "SET statusTable.value = " + product.getActive() + " \n"
+								+ "WHERE statusTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+								+ "										FROM mg_eav_attribute AS attributeTable\n" 
+								+ "										WHERE attributeTable.attribute_code = 'status')\n"
+								+ "	AND statusTable.entity_id = (SELECT productTable.entity_id\n"
+								+ "									FROM mg_catalog_product_entity AS productTable\n"
+								+ "									WHERE productTable.sku = '" + product.getSku() + "')\n"
+								);
 					}
 					if (product.getActive() == true && product.getNewPrice() != null) {
-						SQLquery =  "UPDATE mg_catalog_product_entity_decimal SET mg_catalog_product_entity_decimal.value = " + product.getNewPrice() + " WHERE mg_catalog_product_entity_decimal.attribute_id = 67 AND mg_catalog_product_entity_decimal.entity_id = (SELECT mg_catalog_product_entity.entity_id FROM mg_catalog_product_entity WHERE mg_catalog_product_entity.sku = '" + product.getSku() + "')\n";
-						stmt.executeUpdate(SQLquery);
+						stmt.executeUpdate(
+								"UPDATE mg_catalog_product_entity_decimal AS priceTable\n"
+								+ "SET priceTable.value = " + product.getNewPrice() + " \n"
+								+ "WHERE priceTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+								+ "										FROM mg_eav_attribute AS attributeTable\n" 
+								+ "										WHERE attributeTable.attribute_code = 'price')\n"
+								+ "	AND priceTable.entity_id = (SELECT productTable.entity_id\n"
+								+ "									FROM mg_catalog_product_entity AS productTable\n"
+								+ "									WHERE productTable.sku = '" + product.getSku() + "')\n"
+								);
 					}
-					//SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE mg_catalog_product_entity_decimal.attribute_id = 67 AND mg_catalog_product_entity_decimal.entity_id = (SELECT mg_catalog_product_entity.entity_id AS nb_products FROM mg_catalog_product_entity WHERE mg_catalog_product_entity.sku = '" + product.getSku() + "')";
-					//stmt.executeUpdate(SQLquery);
 					if (product.getChangeActive() == true) {
 						product.setChangeActive(false);
 					}
@@ -72,12 +86,6 @@ public class UpdatingProductThread implements Runnable {
 				}
 				this.nb_update_products += 1;
 				this.loadingProductProgressBar.set((double)this.nb_update_products/this.nb_products);
-				/*try {
-					Thread.sleep(30);
-					System.out.println(loadingProductProgressBar);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}*/
 			}
 			stmt.close();
 			connection.close();
