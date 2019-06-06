@@ -7,7 +7,7 @@ import ecofish.interface_magento.InterfaceMagento;
 import javafx.fxml.FXMLLoader;
 
 /**
- * Retrieve FXML files from application views
+ * Load FXML files to get application views
  * @author Jean-Florian Tassart
  */
 public class ViewService {
@@ -17,9 +17,9 @@ public class ViewService {
 	private static Hashtable<String, FXMLLoader> views = new Hashtable<>();
 
 	/**
-	 * Provides an instance of the view
+	 * Load an instance of the view or provide the stored one if there is
 	 * @param id - name of view to show
-	 * @return An instance of the view
+	 * @return Instance of the view
 	 */
 	public static <T> T getView(String id) {
 		actualView = id;
@@ -37,7 +37,7 @@ public class ViewService {
 	}
 
 	/**
-	 * Load the view required
+	 * Load the FXML file from the requested view
 	 * @param id - name of view to retrieve
 	 * @return the file loaded of the view
 	 */
@@ -62,7 +62,7 @@ public class ViewService {
 	}
 	
 	/**
-	 * Indicates whether the returned view is a new loaded or an old one that was stored
+	 * Indicates whether the last returned view is a new one loaded or an old one which was stored
 	 * @return true if it's a new view, false else
 	 */
 	public static Boolean isNewView() {

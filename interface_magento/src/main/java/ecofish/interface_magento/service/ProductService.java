@@ -33,16 +33,16 @@ public class ProductService {
 	private StringProperty loadingProductText;
 	
 	/**
-	 * Provide the instance of the loading bar
-	 * @return Instance of the loading bar
+	 * Provides the instance of the loading bar of the loading window
+	 * @return Instance of the loading bar of the loading window
 	 */
 	public static DoubleProperty getLoadingProductProgressBar() {
 		return ProductServiceHolder.INSTANCE.loadingProductProgressBar;
 	}
 	
 	/**
-	 * Provide the instance of the text accompanying the loading bar
-	 * @return Instance of the text accompanying the loading bar
+	 * Provide the instance of the text accompanying the loading bar of the loading window
+	 * @return Instance of the text accompanying the loading bar of the loading window
 	 */
 	public static StringProperty getLoadingProductText() {
 		return ProductServiceHolder.INSTANCE.loadingProductText;
@@ -70,7 +70,7 @@ public class ProductService {
 	}
 	
 	/**
-	 * Launching the product updating thread
+	 * Launching the product updating thread after checking the presence of the product to be updated
 	 */
 	public static void updateProduct() {
 		if (!ProductServiceHolder.INSTANCE.updatingProducts.isEmpty()) {
@@ -88,8 +88,8 @@ public class ProductService {
 	}
 	
 	/**
-	 * Updates the list of products to be updated for the product passed as parameter
-	 * @param product - product to be updated in the list
+	 * Updates the list of products to be updated
+	 * @param product - adds, leaves or removes the product from the list if updates are still present or not
 	 */
 	public static void updateUpdatingProducts(Product product) {
 		if (product.getChangeActive() == false && product.getNewPrice() == null) {
@@ -126,8 +126,8 @@ public class ProductService {
 	
 	/**
 	 * Filters the list of active products by category and family then returns the result
-	 * @param category - filtering by category
-	 * @param family - filtering by family
+	 * @param category - the category to be used for filtering
+	 * @param family - the family to be used for filtering
 	 * @return The list after filtering
 	 */
 	public static ObservableList<Product> getActiveProductsFiltered(String category, String family){
@@ -136,8 +136,8 @@ public class ProductService {
 	
 	/**
 	 * Filters the list of inactive products by category and family then returns the result
-	 * @param category - filtering by category
-	 * @param family - filtering by family
+	 * @param category - the category to be used for filtering
+	 * @param family - the family to be used for filtering
 	 * @return The list after filtering
 	 */
 	public static ObservableList<Product> getInactiveProductsFiltered(String category, String family){
@@ -145,11 +145,11 @@ public class ProductService {
 	}
 	
 	/**
-	 * Filters a given list of products by category and family
+	 * Filters the given list of products by category and family then returns the result
 	 * @param productsFiltered - list containing products filtred
 	 * @param products - list of products to be filtered
-	 * @param category - filtering by category
-	 * @param family - filtering by family
+	 * @param category - the category to be used for filtering
+	 * @param family - the family to be used for filtering
 	 * @return List filtred
 	 */
 	private static ObservableList<Product> getProductsFiltered(ObservableList<Product> productsFiltered, ArrayList<Product> products, String category, String family) {
@@ -174,6 +174,7 @@ public class ProductService {
 	
 	/**
 	 * Changes the status of the product passed as a parameter
+	 * If the product had a new price, a confirmation will be displayed to confirm the deletion or not of the price and therefore the change of status
 	 * @param product - product whose status needs to be changed
 	 */
 	public static void changeStatusProduct(Product product) {
@@ -208,7 +209,7 @@ public class ProductService {
 	}
 	
 	/**
-	 * Get a static class
+	 * Make the class static
 	 * @author Jean-Florian Tassart
 	 */
 	private static class ProductServiceHolder {

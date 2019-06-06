@@ -1,7 +1,7 @@
 package ecofish.interface_magento.model;
 
 /**
- * Product model containing information useful for the application
+ * Product model
  * @author Jean-Florian Tassart
  */
 public class Product implements Comparable<Product>{
@@ -17,6 +17,17 @@ public class Product implements Comparable<Product>{
 	private Boolean active;
 	private Boolean changeActive;
 	
+	/**
+	 * Constructor of product
+	 * @param idProduct - unique product ID
+	 * @param name - product name
+	 * @param category - product category
+	 * @param family - product family
+	 * @param quality - product quality
+	 * @param size - product size
+	 * @param actualPrice - actual product price
+	 * @param active - active or inactive status product
+	 */
 	public Product(Integer idProduct, String name, String category, String family, String quality, String size, Double actualPrice, Boolean active) {
 		this.idProduct = idProduct;
 		this.name = name;
@@ -103,6 +114,9 @@ public class Product implements Comparable<Product>{
 		return "Name : " + name + "\n" + "Size : " + size + "\n" + "Quality : " + quality + "\n";
 	}
 
+	/**
+	 * Comparison order : category, family, name, size, quality, idProduct
+	 */
 	@Override
 	public int compareTo(Product product) {
 		if (this.getCategory().compareTo(product.getCategory()) != 0) {

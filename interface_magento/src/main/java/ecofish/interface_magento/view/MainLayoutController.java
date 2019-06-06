@@ -11,14 +11,14 @@ import ecofish.interface_magento.service.ViewService;
 public class MainLayoutController {
 	
 	/**
-	 * Shows the view with the status of the products 
+	 * Shows the view with products status
 	 */
 	public void showStatusProductView(){
 		StageService.showView(ViewService.getView("StatusProductOverview"));
 	}
 	
 	/**
-	 * Shows the view with the price of the products 
+	 * Shows the view with products price 
 	 */
 	public void showPriceProductView(){
 		StageService.showView(ViewService.getView("PriceProductOverview"));

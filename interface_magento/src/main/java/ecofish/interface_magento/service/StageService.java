@@ -31,7 +31,7 @@ public class StageService {
 	}
 
 	/**
-	 * Get a static class
+	 * Make the class static
 	 * @author Jean-Florian Tassart
 	 */
 	private static class StageServiceHolder {
@@ -43,31 +43,31 @@ public class StageService {
 	public BorderPane mainLayout;
 
 	/**
-	 * Returns the window layout
-	 * @return The window layout
+	 * Provides the instance of main layout
+	 * @return Instance of main layout
 	 */
 	public static BorderPane getMainLayoutBorderPane() {
 		return StageServiceHolder.INSTANCE.mainLayout;
 	}
 	
 	/**
-	 * Returns the primary window
-	 * @return The primary window
+	 * Provides the instance of main window
+	 * @return Instance of main window
 	 */
 	public static Stage getPrimaryStage() {
 		return StageServiceHolder.INSTANCE.primaryStage;
 	}
 	
 	/**
-	 * Returns the secondary window
-	 * @return The secondary window
+	 * Provides the instance of secondary window
+	 * @return Instance of secondary window
 	 */
 	public static Stage getSecondaryStage() {
 		return StageServiceHolder.INSTANCE.secondaryStage;
 	}
 
 	/**
-	 * Initialization of the primary stage
+	 * Initialization of main window
 	 * @param primaryStage - stage provided by the mother class
 	 */
 	public static void initPrimaryStage(Stage primaryStage) {
@@ -93,7 +93,7 @@ public class StageService {
 	}
 	
 	/**
-	 * Creation and initialization of the secondary stage
+	 * Creation and initialization of secondary window
 	 */
 	public static void createSecondaryStage() {
 		Stage secondaryStage = new Stage();
@@ -106,8 +106,8 @@ public class StageService {
 	}
 
 	/**
-	 * Change view of primary stage
-	 * @param rootElementPane - new view to show in stage
+	 * Change view of primary window
+	 * @param rootElementPane - new view to show in window
 	 */
 	public static void showView(Pane rootElementPane) {
 		Node rootElementNode = rootElementPane;

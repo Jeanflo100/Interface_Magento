@@ -52,7 +52,7 @@ public class LoadingProductThread implements Runnable {
     }
  
     /**
-     * Product recovery
+     * Loads products then display a window of success or failure
      */
     public void run() {
 

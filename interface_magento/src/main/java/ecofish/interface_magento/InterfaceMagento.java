@@ -26,13 +26,13 @@ public class InterfaceMagento extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		//initDatabase();
-		StageService.initPrimaryStage(primaryStage);
-		StageService.showView(ViewService.getView("test"));
-		/*Logging.setLogging();
+		//StageService.initPrimaryStage(primaryStage);
+		//StageService.showView(ViewService.getView("test"));
+		Logging.setLogging();
 		Logging.LOGGER.log(Level.INFO, "Launching application");
 		StageService.initPrimaryStage(primaryStage);
 		StageService.createSecondaryStage();
-		ProductService.loadProduct();*/
+		ProductService.loadProduct();
 	}
 
 	/**

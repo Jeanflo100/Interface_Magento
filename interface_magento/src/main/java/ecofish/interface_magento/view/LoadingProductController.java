@@ -6,7 +6,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 
 /**
- * View controller associated with exchanges with the database
+ * View controller associated on view of the exchanges with the database
  * @author Jean-Florian Tassart
  */
 public class LoadingProductController {
@@ -18,7 +18,7 @@ public class LoadingProductController {
 	public Text loadingProductText;
 
 	/**
-	 * Links the view monitoring components to the ProductService class
+	 * Links the view components to the ProductService class
 	 */
 	@FXML
 	public void initialize() {

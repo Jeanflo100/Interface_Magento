@@ -54,7 +54,7 @@ public class UpdatingProductThread implements Runnable {
     }
  
     /**
-     * Product updates
+     * Updates products then display a window of success or failure
      */
     public void run() {
 

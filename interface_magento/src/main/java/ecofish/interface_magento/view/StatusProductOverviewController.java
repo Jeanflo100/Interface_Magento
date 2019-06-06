@@ -80,7 +80,7 @@ public class StatusProductOverviewController {
     private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
 	
     /**
-     * Go to product price view
+     * Go to show product price view
      */
 	@FXML
 	private void handleUpdatePriceButton() {
@@ -145,7 +145,7 @@ public class StatusProductOverviewController {
 	}
 	
 	/**
-	 * Show the product tables
+	 * Select the product tables
 	 */
 	@FXML
 	private void showProductTables() {
@@ -161,29 +161,62 @@ public class StatusProductOverviewController {
 	 * Initialization of the view
 	 */
 	@FXML
-	private void initialize() {				
-		this.inactiveProductTable.setItems(ProductService.getInactiveProductsFiltered(null, null));
+	private void initialize() {
+		initInactiveTable();
+		initActiveTable();
+		initItemSelection();
+		initKeyPresses();
+		setComponents();
+	}
+	
+	/**
+	 * Set up inactive table features
+	 */
+	private void initInactiveTable() {
+		this.inactiveProductTable.setPlaceholder(new Label("No inactive products"));
 		this.nameInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.qualityInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
-		this.inactiveProductTable.setPlaceholder(new Label("No inactive products"));
-		this.inactiveProductTable.refresh();
-		this.inactiveProductTable.getSortOrder().add(this.nameInactiveProductColumn);
-		this.inactiveProductTable.getSortOrder().add(this.sizeInactiveProductColumn);
-		this.inactiveProductTable.getSortOrder().add(this.qualityInactiveProductColumn);
-		sortInactiveProductTable();
-
+		this.inactiveProductTable.setRowFactory(productTable -> new TableRow<Product>() {
+		    @Override
+		    protected void updateItem(Product product, boolean empty) {
+		        super.updateItem(product, empty);
+		        if (product != null && product.getChangeActive() == true) {
+		        	this.pseudoClassStateChanged(activeToInactive, true);
+		        }
+		        else {
+		        	this.pseudoClassStateChanged(activeToInactive, false);
+		        }
+		    }
+		});
+	}
+	
+	/**
+	 * Set up active table features
+	 */
+	private void initActiveTable() {
 		this.activeProductTable.setPlaceholder(new Label("No active products"));
 		this.nameActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.qualityActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
-		this.activeProductTable.setItems(ProductService.getActiveProductsFiltered(null, null));
-		this.activeProductTable.refresh();
-		this.activeProductTable.getSortOrder().add(this.nameActiveProductColumn);
-		this.activeProductTable.getSortOrder().add(this.sizeActiveProductColumn);
-		this.activeProductTable.getSortOrder().add(this.qualityActiveProductColumn);
-		sortActiveProductTable();
-		
+		this.activeProductTable.setRowFactory(productTable -> new TableRow<Product>() {
+		    @Override
+		    protected void updateItem(Product product, boolean empty) {
+		        super.updateItem(product, empty);
+		        if (product != null && product.getChangeActive() == true) {
+		        	this.pseudoClassStateChanged(inactiveToActive, true);
+		        }
+		        else {
+		        	this.pseudoClassStateChanged(inactiveToActive, false);
+		        }
+		    }
+		});
+	}
+	
+	/**
+	 * Adding action on the item selected
+	 */
+	private void initItemSelection() {
 		this.inactiveProductTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
 			@Override
 			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
@@ -198,49 +231,6 @@ public class StatusProductOverviewController {
 			}
 		});
 		
-		this.inactiveProductTable.getSelectionModel().selectFirst();
-		this.activeProductTable.getSelectionModel().selectFirst();
-		
-		this.inactiveProductTable.setOnKeyPressed(keyEvent -> {
-			if(keyEvent.getCode() == KeyCode.RIGHT) this.activeProductTable.requestFocus();
-			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleLeftToRightButton();
-		});
-		
-		this.activeProductTable.setOnKeyPressed(keyEvent -> {
-			if(keyEvent.getCode() == KeyCode.LEFT) this.inactiveProductTable.requestFocus();
-			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleRightToLeftButton();
-		});
-		
-		this.inactiveProductTable.setRowFactory(productTable -> new TableRow<Product>() {
-		    @Override
-		    protected void updateItem(Product product, boolean empty) {
-		        super.updateItem(product, empty);
-		        if (product != null && product.getChangeActive() == true) {
-		        	this.pseudoClassStateChanged(activeToInactive, true);
-		        }
-		        else {
-		        	this.pseudoClassStateChanged(activeToInactive, false);
-		        }
-		    }
-		});
-		
-		this.activeProductTable.setRowFactory(productTable -> new TableRow<Product>() {
-		    @Override
-		    protected void updateItem(Product product, boolean empty) {
-		        super.updateItem(product, empty);
-		        if (product != null && product.getChangeActive() == true) {
-		        	this.pseudoClassStateChanged(inactiveToActive, true);
-		        }
-		        else {
-		        	this.pseudoClassStateChanged(inactiveToActive, false);
-		        }
-		    }
-		});
-		
-		this.filterService = new FilterService();
-		this.categoryComboBox.setItems(this.filterService.getCategories());
-		this.familyComboBox.setDisable(true);
-		this.newCategorySelected = false;
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -261,13 +251,53 @@ public class StatusProductOverviewController {
 				updateProductTable(currentCategory, newValue);
 			}
 		});
+	}
+	
+	/**
+	 * Added faster navigation using the keys
+	 */
+	private void initKeyPresses() {
+		this.inactiveProductTable.setOnKeyPressed(keyEvent -> {
+			if(keyEvent.getCode() == KeyCode.RIGHT) this.activeProductTable.requestFocus();
+			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleLeftToRightButton();
+		});
 		
+		this.activeProductTable.setOnKeyPressed(keyEvent -> {
+			if(keyEvent.getCode() == KeyCode.LEFT) this.inactiveProductTable.requestFocus();
+			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleRightToLeftButton();
+		});
+	}
+	
+	/**
+	 * Adding data to the view components
+	 */
+	private void setComponents() {
+		this.inactiveProductTable.setItems(ProductService.getInactiveProductsFiltered(null, null));
+		this.inactiveProductTable.refresh();
+		this.inactiveProductTable.getSortOrder().add(this.nameInactiveProductColumn);
+		this.inactiveProductTable.getSortOrder().add(this.sizeInactiveProductColumn);
+		this.inactiveProductTable.getSortOrder().add(this.qualityInactiveProductColumn);
+		sortInactiveProductTable();
+		this.inactiveProductTable.getSelectionModel().selectFirst();
+
+		this.activeProductTable.setItems(ProductService.getActiveProductsFiltered(null, null));
+		this.activeProductTable.refresh();
+		this.activeProductTable.getSortOrder().add(this.nameActiveProductColumn);
+		this.activeProductTable.getSortOrder().add(this.sizeActiveProductColumn);
+		this.activeProductTable.getSortOrder().add(this.qualityActiveProductColumn);
+		sortActiveProductTable();
+		this.activeProductTable.getSelectionModel().selectFirst();
+		
+		this.filterService = new FilterService();
+		this.categoryComboBox.setItems(this.filterService.getCategories());
+		this.familyComboBox.setDisable(true);
+		this.newCategorySelected = false;
 	}
 	
 	/**
 	 * Update product table with filtering by category and family
-	 * @param category - filtering by category
-	 * @param family - filtering by family
+	 * @param category - the category to be used for filtering
+	 * @param family - the family to be used for filtering
 	 */
 	private void updateProductTable(String category, String family) {
 		this.currentCategory = category;
