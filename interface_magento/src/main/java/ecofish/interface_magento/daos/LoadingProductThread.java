@@ -49,173 +49,62 @@ public class LoadingProductThread implements Runnable {
     	try {
     		
     		Connection connection = DataSourceFactory.getDataSource().getConnection();
-    		System.out.println("connexion successful");
 			Statement statement = connection.createStatement();
 			
-			ResultSet retour = statement.executeQuery("SELECT COUNT(mg_catalog_product_entity.sku) AS nb_products FROM mg_catalog_product_entity");
-			retour.next();
-			Integer nb_products = retour.getInt("nb_products");
-			System.out.println(nb_products);
+			ResultSet nb_elements = statement.executeQuery("SELECT COUNT(productTable.sku) AS nb_products FROM mg_catalog_product_entity AS productTable");
+			nb_elements.next();
+			Integer nb_products = nb_elements.getInt("nb_products");
 			Integer nb_loading_products = 0;
-			
-			// Sku
-			/*ResultSet result = statement.executeQuery("SELECT sku AS result FROM mg_catalog_product_entity");
-			while(result.next()) {
-				System.out.println(result.getString("result"));
-				System.out.println("--------");
-			}*/
-			
-			// Name
-			/*ResultSet result = statement.executeQuery("SELECT value AS result FROM mg_catalog_product_entity_varchar WHERE attribute_id = 63");
-			while(result.next()) {
-				System.out.println(result.getString("result"));
-				System.out.println("--------");
-			}*/
-			
-			// Category
-			/*ResultSet result = statement.executeQuery("SELECT value AS result FROM mg_catalog_category_entity_varchar where attribute_id = 33");
-			while(result.next()) {
-				System.out.println(result.getString("result"));
-				System.out.println("--------");
-			}*/
-			
-			// Price
-			/*ResultSet result = statement.executeQuery("SELECT value AS result FROM mg_catalog_product_entity_decimal WHERE attribute_id = 67");
-			while(result.next()) {
-				System.out.println(result.getString("result"));
-				System.out.println("--------");
-			}*/
-			
-			// Status
-			/*ResultSet result = statement.executeQuery("SELECT value AS result FROM mg_catalog_product_entity_int WHERE attribute_id = 87");
-			while(result.next()) {
-				System.out.println(result.getString("result"));
-				System.out.println("--------");
-			}*/
-			
-			// Family
-			/*ResultSet result = statement.executeQuery("SELECT DISTINCT value AS result FROM mg_eav_attribute_option_value WHERE option_id IN (SELECT value FROM mg_catalog_product_entity_int WHERE attribute_id = 149)");
-			while(result.next()) {
-				System.out.println(result.getString("result"));
-				System.out.println("--------");
-			}*/
-			
-			// 
-			/*ResultSet result = statement.executeQuery("SELECT value AS result FROM mg_eav_attribute_option_value");
-			while(result.next()) {
-				System.out.println(result.getString("result"));
-				System.out.println("--------");
-			}*/
-			
-			/*ResultSet result = statement.executeQuery("SELECT DISTINCT mg_catalog_product_entity.sku AS idProduct, mg_catalog_product_entity_varchar.value AS name, mg_catalog_product_entity_decimal.value AS price, mg_catalog_product_entity_int.value AS status, mg_catalog_category_entity_varchar.value AS category, mg_eav_attribute_option_value.value AS family \r\n" + 
-					"FROM mg_catalog_product_entity\r\n" + 
-					"LEFT JOIN mg_catalog_product_entity_varchar USING (entity_id)\r\n" + 
-					"LEFT JOIN mg_catalog_product_entity_decimal USING (entity_id) \r\n" + 
-					"LEFT JOIN mg_catalog_product_entity_int USING (entity_id) \r\n" + 
-					"LEFT JOIN mg_catalog_category_product \r\n" +
-					"	ON mg_catalog_product_entity.entity_id = mg_catalog_category_product.product_id \r\n" + 
-					"LEFT JOIN mg_catalog_category_entity_varchar \r\n" +
-					"	ON mg_catalog_category_product.category_id = mg_catalog_category_entity_varchar.entity_id \r\n" + 
-					"LEFT JOIN mg_catalog_product_entity_int AS second_table \r\n" +
-					"	ON mg_catalog_product_entity.entity_id = second_table.entity_id \r\n" + 
-					"LEFT JOIN mg_eav_attribute_option_value \r\n" +
-					"	ON second_table.value = mg_eav_attribute_option_value.option_id \r\n" +
-					"		AND second_table.attribute_id = 149 " + 
-					"WHERE mg_catalog_product_entity_varchar.attribute_id = 63 " +
-					"	AND mg_catalog_product_entity_decimal.attribute_id = 67 " +
-					"	AND mg_catalog_product_entity_int.attribute_id = 87 " +
-					"	AND mg_catalog_category_entity_varchar.attribute_id = 33 " +
-					"	AND (( second_table.attribute_id = 149 AND mg_eav_attribute_option_value.store_id = 0 ) " +
-					"		OR 149 NOT IN (select attribute_id FROM mg_catalog_product_entity_int WHERE entity_id=second_table.entity_id))"
-			);
-			while(result.next()) {
-				System.out.println(result.getString("idProduct") + " " + result.getString("name") + " " + result.getString("price") + " " + result.getString("status") + " " + result.getString("category") + " " + result.getString("family"));
-				System.out.println("--------");
-			}
-			
-			ResultSet retour2 = statement.executeQuery("SELECT COUNT(DISTINCT mg_catalog_product_entity.sku) AS nb_products \r\n" +
-					"FROM mg_catalog_product_entity\r\n" + 
-					"LEFT JOIN mg_catalog_product_entity_varchar USING (entity_id)\r\n" + 
-					"LEFT JOIN mg_catalog_product_entity_decimal USING (entity_id) \r\n" + 
-					"LEFT JOIN mg_catalog_product_entity_int USING (entity_id) \r\n" + 
-					"LEFT JOIN mg_catalog_category_product \r\n" +
-					"	ON mg_catalog_product_entity.entity_id = mg_catalog_category_product.product_id \r\n" + 
-					"LEFT JOIN mg_catalog_category_entity_varchar \r\n" +
-					"	ON mg_catalog_category_product.category_id = mg_catalog_category_entity_varchar.entity_id \r\n" + 
-					"LEFT JOIN mg_catalog_product_entity_int AS second_table \r\n" +
-					"	ON mg_catalog_product_entity.entity_id = second_table.entity_id \r\n" + 
-					"LEFT JOIN mg_eav_attribute_option_value \r\n" +
-					"	ON second_table.value = mg_eav_attribute_option_value.option_id \r\n" +
-					"		AND second_table.attribute_id = 149 " + 
-					"WHERE mg_catalog_product_entity_varchar.attribute_id = 63 " +
-					"	AND mg_catalog_product_entity_decimal.attribute_id = 67 " +
-					"	AND mg_catalog_product_entity_int.attribute_id = 87 " +
-					"	AND mg_catalog_category_entity_varchar.attribute_id = 33 " +
-					"	AND (( second_table.attribute_id = 149 AND mg_eav_attribute_option_value.store_id = 0 ) " +
-					"		OR 149 NOT IN (select attribute_id FROM mg_catalog_product_entity_int WHERE entity_id=second_table.entity_id))"
-			);
-			retour2.next();
-			Integer nb_products2 = retour2.getInt("nb_products");
-			System.out.println(nb_products2);*/
-			
-			/*ResultSet result = statement.executeQuery("SELECT DISTINCT mg_catalog_product_entity.sku AS idProduct, mg_eav_attribute_option_value.value AS family " + 
-					"FROM mg_catalog_product_entity " + 
-					"LEFT JOIN mg_catalog_product_entity_int AS second_table USING (entity_id) " +
-					"LEFT JOIN mg_eav_attribute_option_value " +
-					"	ON second_table.value = mg_eav_attribute_option_value.option_id " +
-					"		AND second_table.attribute_id = 149 " + 
-					"WHERE ( second_table.attribute_id = 149 AND mg_eav_attribute_option_value.store_id = 0 ) " +
-					"	OR 149 NOT IN (select attribute_id FROM mg_catalog_product_entity_int WHERE entity_id=second_table.entity_id)"
-			);
-			while(result.next()) {
-				System.out.println(result.getString("idProduct") + " " + result.getString("family"));
-				System.out.println("--------");
-			}
-			
-			ResultSet retour2 = statement.executeQuery("SELECT entity_id AS nb_products \r\n" +
-					"FROM mg_catalog_product_entity " +
-					//"LEFT JOIN mg_catalog_product_entity_int AS second_table" +
-					//"	ON mg_catalog_product_entity.entity_id = second_table.entity_id " + 
-					//"LEFT JOIN mg_eav_attribute_option_value" +
-					//"	ON second_table.value = mg_eav_attribute_option_value.option_id " +
-					"WHERE sku is LG01009 "
-			);
-			retour2.next();
-			//Integer nb_products2 = retour2.getInt("nb_products");
-			System.out.println(retour2.getString("nb_products") + " " + retour2.getString("nb_products2"));*/
 			
 			TreeSet<String> familySet;
 
 			ResultSet resultSet = statement.executeQuery(
-					"SELECT DISTINCT mg_catalog_product_entity.sku AS sku, mg_catalog_product_entity_varchar.value AS name, mg_catalog_product_entity_decimal.value AS price, mg_catalog_product_entity_int.value AS status, mg_catalog_category_entity_varchar.value AS category, mg_eav_attribute_option_value.value AS family " + 
-					"FROM mg_catalog_product_entity " + 
-					"LEFT JOIN mg_catalog_product_entity_varchar USING (entity_id) " + 
-					"LEFT JOIN mg_catalog_product_entity_decimal USING (entity_id) " + 
-					"LEFT JOIN mg_catalog_product_entity_int USING (entity_id) " + 
-					"LEFT JOIN mg_catalog_category_product " +
-					"	ON mg_catalog_product_entity.entity_id = mg_catalog_category_product.product_id " + 
-					"LEFT JOIN mg_catalog_category_entity_varchar " +
-					"	ON mg_catalog_category_product.category_id = mg_catalog_category_entity_varchar.entity_id " + 
-					"LEFT JOIN mg_catalog_product_entity_int AS second_table " +
-					"	ON mg_catalog_product_entity.entity_id = second_table.entity_id " + 
-					"LEFT JOIN mg_eav_attribute_option_value " +
-					"	ON second_table.value = mg_eav_attribute_option_value.option_id " +
-					"		AND second_table.attribute_id = 149 " + 
-					"WHERE mg_catalog_product_entity_varchar.attribute_id = 63 " +
-					"	AND mg_catalog_product_entity_decimal.attribute_id = 67 " +
-					"	AND mg_catalog_product_entity_int.attribute_id = 87 " +
-					"	AND mg_catalog_category_entity_varchar.attribute_id = 33 " +
-					"	AND (( second_table.attribute_id = 149 AND mg_eav_attribute_option_value.store_id = 0 ) " +
-					"		OR 149 NOT IN (select attribute_id FROM mg_catalog_product_entity_int WHERE entity_id=second_table.entity_id)) "
+					"SELECT DISTINCT productTable.sku AS sku, nameTable.value AS name, priceTable.value AS price, statusTable.value AS status, categoryTable.value AS category, familyTable.value AS family\n"	
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_varchar AS nameTable USING (entity_id)\n"
+					+ "LEFT JOIN mg_catalog_product_entity_decimal AS priceTable USING (entity_id)\n"
+					+ "LEFT JOIN mg_catalog_product_entity_int AS statusTable USING (entity_id)\n"
+					+ "LEFT JOIN mg_catalog_category_product AS matchProductCategoryTable ON productTable.entity_id = matchProductCategoryTable.product_id\n"
+					+ "LEFT JOIN mg_catalog_category_entity_varchar AS categoryTable ON matchProductCategoryTable.category_id = categoryTable.entity_id\n"
+					+ "LEFT JOIN mg_catalog_product_entity_int AS matchProductFamilyTable ON productTable.entity_id = matchProductFamilyTable.entity_id\n"
+					+ "LEFT JOIN mg_eav_attribute_option_value AS familyTable ON (matchProductFamilyTable.value = familyTable.option_id\n"
+					+ "																AND matchProductFamilyTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "																											FROM mg_eav_attribute AS attributeTable\n"
+					+ "																											WHERE attributeTable.attribute_code = 'product_family'))\n"
+					+ "WHERE nameTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "										FROM mg_eav_attribute AS attributeTable\n"
+					+ "										LEFT JOIN mg_eav_entity_type AS attributeTypeTable USING (entity_type_id)\n"
+					+ "										WHERE (attributeTable.attribute_code = 'name' AND attributeTypeTable.entity_type_code = 'catalog_product'))\n"
+					+ "	AND priceTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "										FROM mg_eav_attribute AS attributeTable\n"
+					+ "										WHERE attributeTable.attribute_code = 'price')\n"
+					+ "	AND statusTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "										FROM mg_eav_attribute AS attributeTable\n"
+					+ "										WHERE attributeTable.attribute_code = 'status')\n"
+					+ "	AND categoryTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "										FROM mg_eav_attribute AS attributeTable\n"
+					+ "										LEFT JOIN mg_eav_entity_type AS attributeTypeTable USING (entity_type_id)\n"
+					+ "										WHERE (attributeTable.attribute_code = 'name' AND attributeTypeTable.entity_type_code = 'catalog_category'))\n"
+					+ "	AND ((matchProductFamilyTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "													FROM mg_eav_attribute AS attributeTable\n"
+					+ "													WHERE attributeTable.attribute_code = 'product_family')\n"
+					+ "			AND familyTable.store_id = false)\n"
+					+ "		OR (SELECT attributeTable.attribute_id\n"
+					+ " 		FROM mg_eav_attribute AS attributeTable\n"
+					+ "			WHERE attributeTable.attribute_code = 'product_family')\n"
+					+ "				NOT IN (SELECT matchProductFamilyTable_tmp.attribute_id\n"
+					+ "						FROM mg_catalog_product_entity_int AS matchProductFamilyTable_tmp\n"
+					+ "						WHERE matchProductFamilyTable_tmp.entity_id = matchProductFamilyTable.entity_id))\n"
 			);
 			
 			while(resultSet.next()) {
-				String family_tmp = resultSet.getString("family") == null ? "[No family]" : resultSet.getString("family");
+				String category = resultSet.getString("category");
+				String family = resultSet.getString("family") == null ? "[No family]" : resultSet.getString("family");
 				Product product = new Product(
 						resultSet.getString("sku"),
+						category,
+						family,
 						resultSet.getString("name"),
-						resultSet.getString("category"),
-						family_tmp,
 						"",	/*resultSet.getString("size"),*/
 						"",	/*resultSet.getString("quality"),*/
 						resultSet.getDouble("price"),
@@ -227,8 +116,6 @@ public class LoadingProductThread implements Runnable {
 					this.inactiveProducts.add(product);
 				}
 
-				String category = resultSet.getString("category");
-				String family = family_tmp;
 				familySet = groups.containsKey(category) ? groups.get(category) : new TreeSet<>();
 				familySet.add(family);
 				groups.put(category, familySet);

@@ -4,23 +4,23 @@ package ecofish.interface_magento.model;
 public class Product implements Comparable<Product>{
 	
 	private String sku;
-	private String name;
 	private String category;
 	private String family;
-	private String quality;
+	private String name;
 	private String size;
+	private String quality;
 	private Double newPrice;
 	private Double actualPrice;
 	private Boolean active;
 	private Boolean changeActive;
 	
-	public Product(String sku, String name, String category, String family, String quality, String size, Double actualPrice, Boolean active) {
+	public Product(String sku, String category, String family, String name, String size, String quality, Double actualPrice, Boolean active) {
 		this.sku = sku;
-		this.name = name;
 		this.category = category;
 		this.family = family;
-		this.quality = quality;
+		this.name = name;
 		this.size = size;
+		this.quality = quality;
 		this.actualPrice = actualPrice;
 		this.newPrice = null;
 		this.active = active;
@@ -31,12 +31,12 @@ public class Product implements Comparable<Product>{
 		this.name = name;
 	}
 	
-	public void setQuality(String quality) {
-		this.quality = quality;
-	}
-	
 	public void setSize(String size) {
 		this.size = size;
+	}
+	
+	public void setQuality(String quality) {
+		this.quality = quality;
 	}
 	
 	public void setNewPrice(Double newPrice) {
@@ -59,10 +59,6 @@ public class Product implements Comparable<Product>{
 		return sku;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
 	public String getCategory() {
 		return category;
 	}
@@ -71,12 +67,16 @@ public class Product implements Comparable<Product>{
 		return family;
 	}
 	
-	public String getQuality() {
-		return quality;
+	public String getName() {
+		return name;
 	}
 	
 	public String getSize() {
 		return size;
+	}
+	
+	public String getQuality() {
+		return quality;
 	}
 	
 	public Double getNewPrice() {
