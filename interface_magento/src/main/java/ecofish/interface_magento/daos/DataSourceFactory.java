@@ -45,11 +45,11 @@ public class DataSourceFactory {
 	private static void initDatabaseConnectionData() {
 		try {
 			Wini ini = new Wini(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "config.ini"));
-			server = ini.get("database", "server");
-			port = ini.get("database", "port");
-			username = ini.get("database", "username");
-			password = ini.get("database", "password");
-			name = ini.get("database", "name");
+			server = ini.get("database_test", "server");
+			port = ini.get("database_test", "port");
+			username = ini.get("database_test", "username");
+			password = ini.get("database_test", "password");
+			name = ini.get("database_test", "name");
 		}
 		catch (IOException e){
 			Logging.LOGGER.log(Level.WARNING, "Error when recovering database connection data:\n" + e.getMessage());
