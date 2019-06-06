@@ -1,6 +1,9 @@
 package ecofish.interface_magento.model;
 
-
+/**
+ * Product model
+ * @author Jean-Florian Tassart
+ */
 public class Product implements Comparable<Product>{
 	
 	private String sku;
@@ -14,8 +17,20 @@ public class Product implements Comparable<Product>{
 	private Boolean active;
 	private Boolean changeActive;
 	
+	/**
+	 * Constructor of product
+	 * @param sku - unique product ID
+	 * @param name - product name
+	 * @param category - product category
+	 * @param family - product family
+	 * @param quality - product quality
+	 * @param size - product size
+	 * @param actualPrice - actual product price
+	 * @param active - active or inactive status product
+	 */
 	public Product(String sku, String category, String family, String name, String size, String quality, Double actualPrice, Boolean active) {
 		this.sku = sku;
+		this.name = name;
 		this.category = category;
 		this.family = family;
 		this.name = name;
@@ -97,12 +112,21 @@ public class Product implements Comparable<Product>{
 	
 	@Override
 	public String toString() {
-		return name + "\nSize : " + size + "\nQuality : " + quality;
+		return "Name : " + name + "\n" + "Size : " + size + "\n" + "Quality : " + quality + "\n";
 	}
 
+	/**
+	 * Comparison order : category, family, name, size, quality, sku
+	 */
 	@Override
 	public int compareTo(Product product) {
-		if (this.getName().compareTo(product.getName()) != 0) {
+		if (this.getCategory().compareTo(product.getCategory()) != 0) {
+			return this.getCategory().compareTo(product.getCategory());
+		}
+		else if (this.getFamily().compareTo(product.getFamily()) != 0) {
+			return this.getFamily().compareTo(product.getFamily());
+		}
+		else if (this.getName().compareTo(product.getName()) != 0) {
 			return this.getName().compareTo(product.getName());
 		}
 		else if (this.getSize().compareTo(product.getSize()) != 0) {

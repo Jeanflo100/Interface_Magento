@@ -16,6 +16,10 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 
+/**
+ * Updating products to the database
+ * @author Jean-Florian Tassart
+ */
 public class UpdatingProductThread implements Runnable {
 
 	private TreeSet<Product> updatingProducts;
@@ -24,8 +28,13 @@ public class UpdatingProductThread implements Runnable {
     private StringProperty loadingProductText;
     private Integer nb_products;
     private Integer nb_update_products;
+    private String updatedProductsLog;
+	private String separatorLog;
     private Boolean error;
     
+    /**
+     * Initialization of parameters
+     */
     public UpdatingProductThread() {
     	this.updatingProducts = ProductService.getUpdatingProducts();
     	this.updatedProducts = new TreeSet<Product>();
@@ -37,11 +46,16 @@ public class UpdatingProductThread implements Runnable {
 
     	this.nb_products = this.updatingProducts.size();
     	this.nb_update_products = 0;
+    	this.updatedProductsLog = "";
+    	this.separatorLog = " | ";
     	this.error = false;
     	
 		StageService.showSecondaryStage(true);		
     }
  
+    /**
+     * Updates products then display a window of success or failure
+     */
     public void run() {
 
 		try {
@@ -49,8 +63,6 @@ public class UpdatingProductThread implements Runnable {
 			Statement stmt = connection.createStatement();
 			for (Product product : updatingProducts) {
 				if (product.getChangeActive() == true || product.getNewPrice() != null) {
-					//String SQLquery = "UPDATE mg_catalog_product_entity_decimal SET"
-					String SQLquery;
 					if (product.getChangeActive() == true) {
 						stmt.executeUpdate(
 								"UPDATE mg_catalog_product_entity_int AS statusTable\n"
@@ -75,13 +87,20 @@ public class UpdatingProductThread implements Runnable {
 								+ "									WHERE productTable.sku = '" + product.getSku() + "')\n"
 								);
 					}
+					
+					this.updatedProductsLog += "\n" + product.getSku() + " (" + product.getCategory() + " - " + product.getFamily() + " - " + product.getName()
+												+ " - " + product.getSize() + " - " + product.getQuality() + "): ";
 					if (product.getChangeActive() == true) {
+						this.updatedProductsLog += "Status = " + (product.getActive() == true ? "not active" : "active") + " -> " + (product.getActive() == true ? "active" : "not active") + this.separatorLog;
 						product.setChangeActive(false);
 					}
-					if (product.getActive() == true && product.getNewPrice() != null) {
+					if (product.getNewPrice() != null) {
+						this.updatedProductsLog += "Price = " + product.getActualPrice() + "£ -> " + product.getNewPrice() + "£" + this.separatorLog;
 						product.setActualPrice(product.getNewPrice());
 						product.setNewPrice(null);
 					}
+					updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(separatorLog));
+					
 					this.updatedProducts.add(product);
 				}
 				this.nb_update_products += 1;
@@ -99,12 +118,6 @@ public class UpdatingProductThread implements Runnable {
 			for (Product product : this.updatedProducts) {
 				this.updatingProducts.remove(product);
 			}
-			String updatedProductsLog = "";
-			String separatorLog = " | ";
-			for (Product product : this.updatedProducts) {
-				updatedProductsLog += product.getSku() + separatorLog;
-			}
-			updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(separatorLog));
 			Logging.LOGGER.log(Level.INFO, this.nb_update_products + "/" + this.nb_products + " products have been updated: " + updatedProductsLog);
 		}
 			

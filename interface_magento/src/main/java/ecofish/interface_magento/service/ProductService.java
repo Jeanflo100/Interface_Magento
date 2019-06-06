@@ -17,6 +17,10 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+/**
+ * Supplies the different products
+ * @author Jean-Florian Tassart
+ */
 public class ProductService {
 
 	private TreeSet<Product> updatingProducts;
@@ -28,15 +32,26 @@ public class ProductService {
 	private DoubleProperty loadingProductProgressBar;
 	private StringProperty loadingProductText;
 	
+	/**
+	 * Provides the instance of the loading bar of the loading window
+	 * @return Instance of the loading bar of the loading window
+	 */
 	public static DoubleProperty getLoadingProductProgressBar() {
 		return ProductServiceHolder.INSTANCE.loadingProductProgressBar;
 	}
 	
+	/**
+	 * Provide the instance of the text accompanying the loading bar of the loading window
+	 * @return Instance of the text accompanying the loading bar of the loading window
+	 */
 	public static StringProperty getLoadingProductText() {
 		return ProductServiceHolder.INSTANCE.loadingProductText;
 	}
 	
-	protected ProductService() {
+	/**
+	 * Initialization of parameters
+	 */
+	private ProductService() {
 		updatingProducts = new TreeSet<Product>();
 		activeProducts = new ArrayList<Product>();
 		inactiveProducts = new ArrayList<Product>();
@@ -46,11 +61,17 @@ public class ProductService {
 		loadingProductText = new SimpleStringProperty("");
 	}
 	
+	/**
+	 * Launching the product loading thread
+	 */
 	public static void loadProduct() {
 		LoadingProductThread loadingProduct = new LoadingProductThread();
 		new Thread(loadingProduct).start();
 	}
 	
+	/**
+	 * Launching the product updating thread after checking the presence of the product to be updated
+	 */
 	public static void updateProduct() {
 		if (!ProductServiceHolder.INSTANCE.updatingProducts.isEmpty()) {
 			UpdatingProductThread updatingProduct = new UpdatingProductThread();
@@ -66,6 +87,10 @@ public class ProductService {
 		}
 	}
 	
+	/**
+	 * Updates the list of products to be updated
+	 * @param product - adds, leaves or removes the product from the list if updates are still present or not
+	 */
 	public static void updateUpdatingProducts(Product product) {
 		if (product.getChangeActive() == false && product.getNewPrice() == null) {
 			ProductServiceHolder.INSTANCE.updatingProducts.remove(product);
@@ -75,26 +100,58 @@ public class ProductService {
 		}
 	}
 	
+	/**
+	 * Returns the list of products to be updated
+	 * @return List of products to be updated
+	 */
 	public static TreeSet<Product> getUpdatingProducts() {
 		return ProductServiceHolder.INSTANCE.updatingProducts;
 	}
 	
+	/**
+	 * Returns the list of products with active status
+	 * @return List of products with active status
+	 */
 	public static ArrayList<Product> getActiveProducts(){
 		return ProductServiceHolder.INSTANCE.activeProducts;
 	}
 	
+	/**
+	 * Returns the list of products with inactive status
+	 * @return List of products with inactive status
+	 */
 	public static ArrayList<Product> getInactiveProducts(){
 		return ProductServiceHolder.INSTANCE.inactiveProducts;
 	}
 	
+	/**
+	 * Filters the list of active products by category and family then returns the result
+	 * @param category - the category to be used for filtering
+	 * @param family - the family to be used for filtering
+	 * @return The list after filtering
+	 */
 	public static ObservableList<Product> getActiveProductsFiltered(String category, String family){
 		return getProductsFiltered(ProductServiceHolder.INSTANCE.activeProductsFiltered, ProductServiceHolder.INSTANCE.activeProducts, category, family);
 	}
 	
+	/**
+	 * Filters the list of inactive products by category and family then returns the result
+	 * @param category - the category to be used for filtering
+	 * @param family - the family to be used for filtering
+	 * @return The list after filtering
+	 */
 	public static ObservableList<Product> getInactiveProductsFiltered(String category, String family){
 		return getProductsFiltered(ProductServiceHolder.INSTANCE.inactiveProductsFiltered, ProductServiceHolder.INSTANCE.inactiveProducts, category, family);
 	}
 	
+	/**
+	 * Filters the given list of products by category and family then returns the result
+	 * @param productsFiltered - list containing products filtred
+	 * @param products - list of products to be filtered
+	 * @param category - the category to be used for filtering
+	 * @param family - the family to be used for filtering
+	 * @return List filtred
+	 */
 	private static ObservableList<Product> getProductsFiltered(ObservableList<Product> productsFiltered, ArrayList<Product> products, String category, String family) {
 		productsFiltered.clear();
 		for (Product product : products) {
@@ -115,6 +172,11 @@ public class ProductService {
 		return productsFiltered;
 	}
 	
+	/**
+	 * Changes the status of the product passed as a parameter
+	 * If the product had a new price, a confirmation will be displayed to confirm the deletion or not of the price and therefore the change of status
+	 * @param product - product whose status needs to be changed
+	 */
 	public static void changeStatusProduct(Product product) {
 		if (product.getNewPrice() != null) {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -146,6 +208,10 @@ public class ProductService {
 		ProductService.updateUpdatingProducts(product);
 	}
 	
+	/**
+	 * Make the class static
+	 * @author Jean-Florian Tassart
+	 */
 	private static class ProductServiceHolder {
 		private static ProductService INSTANCE = new ProductService();
 	}

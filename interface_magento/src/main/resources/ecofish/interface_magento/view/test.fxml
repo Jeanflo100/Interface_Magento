@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.testController">
+   <children>
+      <LineChart fx:id="testLineChart" animated="false" layoutX="67.0" layoutY="47.0" prefHeight="339.0" prefWidth="469.0">
+        <xAxis>
+          <CategoryAxis fx:id="testCategoryAxis" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="testNumberAxis" side="LEFT" tickLabelFill="#b50e0e" />
+        </yAxis>
+      </LineChart>
+   </children>
+</AnchorPane>

@@ -5,7 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
 
-
+/**
+ * View controller associated on view of the exchanges with the database
+ * @author Jean-Florian Tassart
+ */
 public class LoadingProductController {
 	
 	@FXML
@@ -14,6 +17,9 @@ public class LoadingProductController {
 	@FXML
 	public Text loadingProductText;
 
+	/**
+	 * Links the view components to the ProductService class
+	 */
 	@FXML
 	public void initialize() {
 		this.loadingProductProgressBar.progressProperty().bind(ProductService.getLoadingProductProgressBar());

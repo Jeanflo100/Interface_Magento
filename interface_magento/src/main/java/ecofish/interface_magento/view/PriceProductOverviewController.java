@@ -25,7 +25,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 
-public class PriceProductOverviewController{
+/**
+ * View controller asoociated to the change in product price
+ * @author Jean-Florian Tassart
+ */
+public class PriceProductOverviewController {
 	
 	@FXML
 	ComboBox<String> categoryComboBox;
@@ -85,6 +89,11 @@ public class PriceProductOverviewController{
     private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
     private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
 	
+    /**
+     * Returns the number of rows of the table visible on the screen
+     * @param table - table concerned
+     * @return The number of visible rows
+     */
 	private static Integer getNumberVisibleRow(TableView<?> table) {
 		Integer numberColumnRow = 0;
 		Integer newNumberColumnRow = numberColumnRow;
@@ -99,6 +108,12 @@ public class PriceProductOverviewController{
 		return numberVisibleRow;
 	}
 	
+	/**
+	 * Recursive function returning the number of column rows
+	 * @param column - column currently concerned
+	 * @param actualNumberColumnRow - current number of subcolumn rows
+	 * @return Total number of subcolumn rows
+	 */
 	private static Integer getNumberColumnRow(TableColumn<?, ?> column, Integer actualNumberColumnRow) {
 		Integer newNumberColumnRow = actualNumberColumnRow;
 		for (TableColumn<?, ?> subColumn : column.getColumns()) {
@@ -110,6 +125,9 @@ public class PriceProductOverviewController{
 		return newNumberColumnRow + 1;
 	}
     
+	/**
+	 * Checking conditions before updating the price
+	 */
 	@FXML
 	private void handleUpdatePriceButton() {
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
@@ -132,11 +150,17 @@ public class PriceProductOverviewController{
 		selectNextProduct();
 	}
 	
+	/**
+	 * Update products in the database
+	 */
 	@FXML
 	private void handleSaveChangesButton() {
 		ProductService.updateProduct();
 	}
 	
+	/**
+	 * Reset the filter by category
+	 */
 	@FXML
 	private void resetCategory() {
 		if (this.currentCategory != null) {
@@ -146,6 +170,9 @@ public class PriceProductOverviewController{
 		}
 	}
 	
+	/**
+	 * Reset the filter by family
+	 */
 	@FXML
 	private void resetFamily() {
 		if (this.currentFamily != null) {
@@ -154,6 +181,9 @@ public class PriceProductOverviewController{
 		}
 	}
 	
+	/**
+	 * Display the list of family
+	 */
 	@FXML
 	private void showFamily() {
 		if (this.currentCategory != null) {
@@ -167,6 +197,9 @@ public class PriceProductOverviewController{
 		}
 	}
 	
+	/**
+	 * Select the product table
+	 */
 	@FXML
 	private void showProductTable() {
 		if (!this.productTable.getItems().isEmpty()) this.productTable.requestFocus();
@@ -174,8 +207,21 @@ public class PriceProductOverviewController{
 		this.productTable.scrollTo(this.currentProduct);
 	}
 	
+	/**
+	 * Initialization of the view
+	 */
 	@FXML
 	private void initialize() {
+		initTable();
+		initItemSelection();
+		initKeyPresses();
+		setComponents();
+	}
+	
+	/**
+	 * Set up table features
+	 */
+	private void initTable() {
 		this.productTable.setPlaceholder(new Label("No active products"));
 		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
@@ -184,20 +230,6 @@ public class PriceProductOverviewController{
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("newPrice"));
 		this.productTable.setFixedCellSize(25);
 		this.numberVisibleRow = getNumberVisibleRow(this.productTable);
-		this.productTable.setItems(ProductService.getActiveProductsFiltered(null, null));
-		this.productTable.refresh();
-		this.productTable.getSortOrder().add(this.nameColumn);
-		this.productTable.getSortOrder().add(this.sizeColumn);
-		this.productTable.getSortOrder().add(this.qualityColumn);
-		sortProductTable();
-		
-		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
-			@Override
-			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
-				showProduct(newValue);
-			}
-		});
-		
 		this.productTable.setRowFactory(productTable -> new TableRow<Product>() {
 			
 		    @Override
@@ -216,13 +248,18 @@ public class PriceProductOverviewController{
 		    }
 	    
 		});
-		
-		this.productTable.getSelectionModel().selectFirst();
-				
-		this.filterService = new FilterService();
-		this.categoryComboBox.setItems(this.filterService.getCategories());
-		this.familyComboBox.setDisable(true);
-		this.newCategorySelected = false;
+	}
+	
+	/**
+	 * Adding action on the item element
+	 */
+	private void initItemSelection() {
+		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
+			@Override
+			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
+				showProduct(newValue);
+			}
+		});
 		
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
@@ -244,10 +281,12 @@ public class PriceProductOverviewController{
 				updateProductTable(currentCategory, newValue);
 			}
 		});
-
-		TextFormatterDouble textFormatter = new TextFormatterDouble();
-		this.newPriceTextField.setTextFormatter(textFormatter.getTextFormatterDouble());
-
+	}
+	
+	/**
+	 * Added faster navigation using the keys
+	 */
+	private void initKeyPresses() {
 		this.productTable.setOnKeyTyped(keyEvent -> {
 			if(keyEvent.getCharacter().matches("[.0-9]")) {
 				this.newPriceTextField.requestFocus();
@@ -271,9 +310,35 @@ public class PriceProductOverviewController{
 			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleUpdatePriceButton();
 			if(keyEvent.getCode() == KeyCode.ESCAPE) this.productTable.requestFocus();
 		});
-		
 	}
 	
+
+	
+	/**
+	 * Adding data to the view components
+	 */
+	private void setComponents() {
+		this.productTable.setItems(ProductService.getActiveProductsFiltered(null, null));
+		this.productTable.refresh();
+		this.productTable.getSortOrder().add(this.nameColumn);
+		this.productTable.getSortOrder().add(this.sizeColumn);
+		this.productTable.getSortOrder().add(this.qualityColumn);
+		sortProductTable();
+		this.productTable.getSelectionModel().selectFirst();
+		
+		this.filterService = new FilterService();
+		this.categoryComboBox.setItems(this.filterService.getCategories());
+		this.familyComboBox.setDisable(true);
+		this.newCategorySelected = false;
+		
+		TextFormatterDouble textFormatter = new TextFormatterDouble();
+		this.newPriceTextField.setTextFormatter(textFormatter.getTextFormatterDouble());
+	}
+	
+	/**
+	 * Show informations of product selected
+	 * @param product - product currently selected
+	 */
 	private void showProduct(Product product) {
 		this.currentProduct = product;
 		if (this.currentProduct == null) {
@@ -294,6 +359,11 @@ public class PriceProductOverviewController{
 		
 	}
 	
+	/**
+	 * Update product table with filtering by category and family
+	 * @param category - the category to be used for filtering
+	 * @param family - the family to be used for filtering
+	 */
 	private void updateProductTable(String category, String family) {
 		this.currentCategory = category;
 		this.currentFamily = family;
@@ -302,6 +372,9 @@ public class PriceProductOverviewController{
 		this.productTable.refresh();
 	}
 	
+	/**
+	 * Sort products in the table
+	 */
 	private void sortProductTable() {
 		this.nameColumn.setSortable(true);
 		this.sizeColumn.setSortable(true);
@@ -311,6 +384,9 @@ public class PriceProductOverviewController{
 		this.nameColumn.setSortable(false);
 	}
 	
+	/**
+	 * Customize the display of the selection in the table to have the currently selected product around the center of the table
+	 */
 	private void selectNextProduct() {
 		this.productTable.getSelectionModel().selectNext();
 		if(this.numberVisibleRow/2 - this.productTable.getSelectionModel().getSelectedIndex() <= 0) {
@@ -321,6 +397,10 @@ public class PriceProductOverviewController{
 		}
 	}
 	
+	/**
+	 * Update the price of the current product
+	 * @param newPrice - price to be updated on the current product 
+	 */
 	private void updateNewPrice(Double newPrice) {
 		if (this.currentProduct != null) {
 			if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
