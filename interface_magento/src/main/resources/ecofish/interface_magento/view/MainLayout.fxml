@@ -1,35 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="660.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.MainLayoutController">
-	<top>
-		<MenuBar BorderPane.alignment="CENTER">
-			<menus>
-				<Menu mnemonicParsing="false" text="File">
-					<items>
-                  <Menu mnemonicParsing="false" text="View products">
+   <top>
+      <SplitPane fx:id="testText" dividerPositions="0.6184895833333334" prefHeight="0.0" prefWidth="770.0" BorderPane.alignment="CENTER">
+         <items>
+      		<MenuBar prefHeight="0.0" prefWidth="512.0">
+      			<menus>
+      				<Menu mnemonicParsing="false" text="File">
+      					<items>
+                        <Menu mnemonicParsing="false" text="View products">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#showStatusProductView" text="Status" />
+                              <MenuItem mnemonicParsing="false" onAction="#showPriceProductView" text="Price" />
+                          </items>
+                        </Menu>
+      					<SeparatorMenuItem mnemonicParsing="false" />
+      						<MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Close" />
+                        		
+      						
+      					</items>
+      				</Menu>
+                  <Menu mnemonicParsing="false" text="Help">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#showStatusProductView" text="Status" />
-                        <MenuItem mnemonicParsing="false" onAction="#showPriceProductView" text="Price" />
+                      <MenuItem mnemonicParsing="false" onAction="#openLogsFile" text="Open logs" />
                     </items>
                   </Menu>
-					<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Close" />
-                  		
-						
-					</items>
-				</Menu>
-            <Menu mnemonicParsing="false" text="Help">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#openLogsFile" text="Open logs" />
-              </items>
-            </Menu>
-			</menus>
-		</MenuBar>
-	</top>
+      			</menus>
+      		</MenuBar>
+            <Label alignment="CENTER" contentDisplay="TEXT_ONLY" maxWidth="250.0" minWidth="250.0" prefHeight="25.0" prefWidth="250.0" text="Connected as: Jean-Florian Tassart" textAlignment="JUSTIFY" textFill="#2b6590">
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+               <font>
+                  <Font size="13.0" />
+               </font></Label>
+         </items>
+      </SplitPane>
+   </top>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
 </BorderPane>

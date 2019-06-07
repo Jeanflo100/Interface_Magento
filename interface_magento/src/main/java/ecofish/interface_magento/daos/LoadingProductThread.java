@@ -61,6 +61,8 @@ public class LoadingProductThread implements Runnable {
     		Connection connection = DataSourceFactory.getDataSource().getConnection();
 			Statement statement = connection.createStatement();
 			
+			//ResultSet test = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM testTable");
+			
 			ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM product");
 			retour.next();
 			Integer nb_products = retour.getInt("nb_products");
@@ -103,6 +105,7 @@ public class LoadingProductThread implements Runnable {
 
 		}
 		catch (SQLException e){
+			//System.out.println(e.getErrorCode());
 			Logging.LOGGER.log(Level.WARNING, "Error when getting products list:\n" + e.getMessage());
 			error = true;
 		}
