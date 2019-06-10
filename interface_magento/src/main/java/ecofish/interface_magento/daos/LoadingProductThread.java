@@ -31,7 +31,7 @@ public class LoadingProductThread implements Runnable {
 	private TreeMap<String, TreeSet<String>> groups;
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;   
-    private Boolean error;
+    private SQLException error;
  
     /**
      * Initialization of parameters
@@ -46,7 +46,7 @@ public class LoadingProductThread implements Runnable {
     	this.loadingProductProgressBar.set(0.0);
     	this.loadingProductText.set("Loading Products...");
 
-    	this.error = false;
+    	this.error = null;
     	
     	StageService.showOnSecondaryStage(Views.LoadingProduct, false);
     }
@@ -105,17 +105,17 @@ public class LoadingProductThread implements Runnable {
 
 		}
 		catch (SQLException e){
-			//System.out.println(e.getErrorCode());
-			Logging.LOGGER.log(Level.WARNING, "Error when getting products list:\n" + e.getMessage());
-			error = true;
+			Logging.LOGGER.log(Level.WARNING, "Error when getting products list: " + DataSourceFactory.getCustomMessageSQLException(e));
+			error = e;
 		}
 
 		Platform.runLater(() -> {
-			if (error == true) {
+			if (error != null) {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.initOwner(StageService.getSecondaryStage());
 				alert.setTitle("FAILURE");
 				alert.setHeaderText("Loading failure during product recovery");
+				alert.setContentText(DataSourceFactory.getCustomMessageSQLException(error));
 				alert.showAndWait();
 			}
 			StageService.showOnPrimaryStage(Views.StatusProductOverview);

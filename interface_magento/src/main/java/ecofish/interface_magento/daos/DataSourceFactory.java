@@ -64,6 +64,7 @@ public class DataSourceFactory {
 		}
 		dataSource.setUser(username);
 		dataSource.setPassword(password);
+		Logging.LOGGER.log(Level.INFO, "Connection of " + getUser());
 		return true;
 	}	
 	
@@ -76,6 +77,7 @@ public class DataSourceFactory {
 		if (error.getErrorCode() == 0) return "Connection to the database is not possible";
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
 		if (error.getErrorCode() == 1045) return "Incorrect login information";
+		if (error.getErrorCode() == 1142) return "You are not authorized to perform this action";
 		return error.getMessage();
 	}
 	

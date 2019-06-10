@@ -30,7 +30,7 @@ public class UpdatingProductThread implements Runnable {
     private Integer nb_update_products;
     private String updatedProductsLog;
 	private String separatorLog;
-    private Boolean error;
+    private SQLException error;
     
     /**
      * Initialization of parameters
@@ -48,7 +48,7 @@ public class UpdatingProductThread implements Runnable {
     	this.nb_update_products = 0;
     	this.updatedProductsLog = "";
     	this.separatorLog = " | ";
-    	this.error = false;
+    	this.error = null;
     	
     	StageService.showOnSecondaryStage(Views.LoadingProduct, false);	
     }
@@ -99,8 +99,8 @@ public class UpdatingProductThread implements Runnable {
 			connection.close();
 		}
 		catch (SQLException e) {
-			Logging.LOGGER.log(Level.WARNING, "Error when updating products list:\n" + e.getMessage());
-			error = true;
+			Logging.LOGGER.log(Level.WARNING, "Error when updating products list: " + DataSourceFactory.getCustomMessageSQLException(e));
+			error = e;
 		}
 		
 		if (!this.updatedProducts.isEmpty()) {
@@ -112,12 +112,12 @@ public class UpdatingProductThread implements Runnable {
 			
 		Platform.runLater(() -> {
 			StageService.clearViewPrimaryStage();
-			if (error == true) {
+			if (error != null) {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.initOwner(StageService.getSecondaryStage());
 				alert.setTitle("FAILURE");
 				alert.setHeaderText("Error when updating products");
-				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
+				alert.setContentText(DataSourceFactory.getCustomMessageSQLException(error) + "\n" + this.nb_update_products + "/" + this.nb_products + " products have been updated");
 				alert.showAndWait();
 				StageService.showOnPrimaryStage(Views.PriceProductOverview);
 			}
