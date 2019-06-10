@@ -14,7 +14,7 @@ import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
+import ecofish.interface_magento.service.Views;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
@@ -48,7 +48,7 @@ public class LoadingProductThread implements Runnable {
 
     	this.error = false;
     	
-		StageService.showSecondaryStage(true);
+    	StageService.showOnSecondaryStage(Views.LoadingProduct);
     }
  
     /**
@@ -118,8 +118,8 @@ public class LoadingProductThread implements Runnable {
 				alert.setHeaderText("Loading failure during product recovery");
 				alert.showAndWait();
 			}
-			StageService.showView(ViewService.getView("StatusProductOverview"));
-			StageService.showSecondaryStage(false);
+			StageService.showOnPrimaryStage(Views.StatusProductOverview);
+			StageService.closeSecondaryStage();
         });
 		
     }

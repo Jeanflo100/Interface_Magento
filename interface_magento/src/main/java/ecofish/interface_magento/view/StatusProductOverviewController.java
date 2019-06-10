@@ -5,7 +5,7 @@ import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
+import ecofish.interface_magento.service.Views;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.css.PseudoClass;
@@ -84,7 +84,7 @@ public class StatusProductOverviewController {
      */
 	@FXML
 	private void handleUpdatePriceButton() {
-		StageService.showView(ViewService.getView("PriceProductOverview"));
+		StageService.showOnPrimaryStage(Views.PriceProductOverview);
 	}
 	
 	/**

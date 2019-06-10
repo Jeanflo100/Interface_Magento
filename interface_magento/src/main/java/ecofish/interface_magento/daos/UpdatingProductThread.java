@@ -10,7 +10,7 @@ import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
+import ecofish.interface_magento.service.Views;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
@@ -50,7 +50,7 @@ public class UpdatingProductThread implements Runnable {
     	this.separatorLog = " | ";
     	this.error = false;
     	
-		StageService.showSecondaryStage(true);		
+    	StageService.showOnSecondaryStage(Views.LoadingProduct);	
     }
  
     /**
@@ -111,7 +111,7 @@ public class UpdatingProductThread implements Runnable {
 		}
 			
 		Platform.runLater(() -> {
-			ViewService.clearViews();
+			StageService.clearViewPrimaryStage();
 			if (error == true) {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.initOwner(StageService.getSecondaryStage());
@@ -119,7 +119,7 @@ public class UpdatingProductThread implements Runnable {
 				alert.setHeaderText("Error when updating products");
 				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
 				alert.showAndWait();
-				StageService.showView(ViewService.getView("PriceProductOverview"));
+				StageService.showOnPrimaryStage(Views.PriceProductOverview);
 			}
 			else {
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -128,9 +128,9 @@ public class UpdatingProductThread implements Runnable {
 				alert.setHeaderText("Success in updating products");
 				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
 				alert.showAndWait();
-				StageService.showView(ViewService.getView("StatusProductOverview"));
+				StageService.showOnPrimaryStage(Views.StatusProductOverview);
 			}
-			StageService.showSecondaryStage(false);
+			StageService.closeSecondaryStage();
         });
 		
     }

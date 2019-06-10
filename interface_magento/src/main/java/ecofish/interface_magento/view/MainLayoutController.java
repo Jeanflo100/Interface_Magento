@@ -2,7 +2,7 @@ package ecofish.interface_magento.view;
 
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
+import ecofish.interface_magento.service.Views;
 
 /**
  * View controller associated with the menu bar
@@ -14,21 +14,21 @@ public class MainLayoutController {
 	 * Shows the view with products status
 	 */
 	public void showStatusProductView(){
-		StageService.showView(ViewService.getView("StatusProductOverview"));
+		StageService.showOnPrimaryStage(Views.StatusProductOverview);
 	}
 	
 	/**
 	 * Shows the view with products price 
 	 */
 	public void showPriceProductView(){
-		StageService.showView(ViewService.getView("PriceProductOverview"));
+		StageService.showOnPrimaryStage(Views.PriceProductOverview);
 	}
 
 	/**
 	 * Closes the application
 	 */
 	public void closeApplication() {
-		StageService.closeStage();
+		StageService.closePrimaryStage();
 	}
 
 	/**

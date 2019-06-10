@@ -10,7 +10,6 @@ import ecofish.interface_magento.daos.DataSourceFactory;
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

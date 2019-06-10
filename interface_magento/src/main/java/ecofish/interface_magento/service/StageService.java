@@ -1,11 +1,11 @@
 package ecofish.interface_magento.service;
 
+import java.util.Hashtable;
 import java.util.Optional;
 import java.util.logging.Level;
 
 import ecofish.interface_magento.InterfaceMagento;
 import ecofish.interface_magento.log.Logging;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -27,7 +27,7 @@ public class StageService {
 	 * Initializes the main layout
 	 */
 	private StageService() {
-		mainLayout = ViewService.getView("MainLayout");
+		mainLayout = Views.getView(Views.MainLayout);
 	}
 
 	/**
@@ -40,7 +40,11 @@ public class StageService {
 	
 	private Stage primaryStage;
 	private Stage secondaryStage;
-	public BorderPane mainLayout;
+	
+	private BorderPane mainLayout;
+	
+	private Hashtable<Views, Pane> viewPrimaryStage = new Hashtable<>();
+	private Hashtable<Views, Scene> viewSecondaryStage = new Hashtable<>();
 
 	/**
 	 * Provides the instance of main layout
@@ -101,7 +105,6 @@ public class StageService {
 		secondaryStage.initOwner(StageService.getPrimaryStage());
 		secondaryStage.initModality(Modality.WINDOW_MODAL);
 		secondaryStage.initStyle(StageStyle.UNDECORATED);
-		secondaryStage.setScene(new Scene(ViewService.getView("LoadingProduct")));
 		StageServiceHolder.INSTANCE.secondaryStage = secondaryStage;
 	}
 
@@ -109,31 +112,54 @@ public class StageService {
 	 * Change view of primary window
 	 * @param rootElementPane - new view to show in window
 	 */
-	public static void showView(Pane rootElementPane) {
-		Node rootElementNode = rootElementPane;
-		if (ViewService.isNewView()) StageServiceHolder.INSTANCE.primaryStage.hide();
-		StageServiceHolder.INSTANCE.mainLayout.setPrefSize(rootElementPane.getPrefWidth(), StageServiceHolder.INSTANCE.mainLayout.getTop().getBoundsInParent().getHeight() + rootElementPane.getPrefHeight());
-		StageServiceHolder.INSTANCE.mainLayout.setCenter(rootElementNode);
+	public static void showOnPrimaryStage(Views view) {
+		Pane loadedView;
+		if (StageServiceHolder.INSTANCE.viewPrimaryStage.containsKey(view)) {
+			loadedView = StageServiceHolder.INSTANCE.viewPrimaryStage.get(view);
+		}
+		else {
+			loadedView = Views.getView(view);
+			StageServiceHolder.INSTANCE.viewPrimaryStage.put(view, loadedView);
+			StageServiceHolder.INSTANCE.primaryStage.hide();
+		}
+		StageServiceHolder.INSTANCE.mainLayout.setPrefSize(loadedView.getPrefWidth(), StageServiceHolder.INSTANCE.mainLayout.getTop().getBoundsInParent().getHeight() + loadedView.getPrefHeight());
+		StageServiceHolder.INSTANCE.mainLayout.setCenter(loadedView);
 		StageServiceHolder.INSTANCE.primaryStage.sizeToScene();
 		StageServiceHolder.INSTANCE.primaryStage.centerOnScreen();
 		StageServiceHolder.INSTANCE.primaryStage.show();
 	}
 	
 	/**
-	 * Display or not the secondary stage
-	 * @param show - show if true, close if false
+	 * Change view of secondary window
+	 * @param rootElementPane - new view to show in window
 	 */
-	public static void showSecondaryStage(Boolean show) {
-		if (show) {
-			StageServiceHolder.INSTANCE.secondaryStage.show();
+	public static void showOnSecondaryStage(Views view) {
+		Scene loadedView;
+		if (StageServiceHolder.INSTANCE.viewSecondaryStage.containsKey(view)) {
+			loadedView = StageServiceHolder.INSTANCE.viewSecondaryStage.get(view);
 		}
-		else StageServiceHolder.INSTANCE.secondaryStage.close();
+		else {
+			loadedView = new Scene(Views.getView(view));
+			StageServiceHolder.INSTANCE.viewSecondaryStage.put(view, loadedView);
+		}
+		StageServiceHolder.INSTANCE.secondaryStage.setScene(loadedView);
+		StageServiceHolder.INSTANCE.secondaryStage.sizeToScene();
+		StageServiceHolder.INSTANCE.secondaryStage.centerOnScreen();
+		StageServiceHolder.INSTANCE.secondaryStage.show();
+	}
+	
+	public static void clearViewPrimaryStage() {
+		StageServiceHolder.INSTANCE.viewPrimaryStage.clear();
+	}
+	
+	public static void closeSecondaryStage() {
+		StageServiceHolder.INSTANCE.secondaryStage.close();
 	}
 	
 	/**
 	 * Triggers the closing of the application
 	 */
-	public static void closeStage() {
+	public static void closePrimaryStage() {
 		StageServiceHolder.INSTANCE.primaryStage.fireEvent(new WindowEvent(StageServiceHolder.INSTANCE.primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
 	}
 
