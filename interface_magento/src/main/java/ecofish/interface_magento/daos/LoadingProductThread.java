@@ -48,7 +48,7 @@ public class LoadingProductThread implements Runnable {
 
     	this.error = false;
     	
-    	StageService.showOnSecondaryStage(Views.LoadingProduct);
+    	StageService.showOnSecondaryStage(Views.LoadingProduct, false);
     }
  
     /**

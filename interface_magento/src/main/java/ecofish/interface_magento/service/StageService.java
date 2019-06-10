@@ -133,7 +133,7 @@ public class StageService {
 	 * Change view of secondary window
 	 * @param rootElementPane - new view to show in window
 	 */
-	public static void showOnSecondaryStage(Views view) {
+	public static void showOnSecondaryStage(Views view, Boolean waitAfterShow) {
 		Scene loadedView;
 		if (StageServiceHolder.INSTANCE.viewSecondaryStage.containsKey(view)) {
 			loadedView = StageServiceHolder.INSTANCE.viewSecondaryStage.get(view);
@@ -145,7 +145,8 @@ public class StageService {
 		StageServiceHolder.INSTANCE.secondaryStage.setScene(loadedView);
 		StageServiceHolder.INSTANCE.secondaryStage.sizeToScene();
 		StageServiceHolder.INSTANCE.secondaryStage.centerOnScreen();
-		StageServiceHolder.INSTANCE.secondaryStage.show();
+		if (waitAfterShow) StageServiceHolder.INSTANCE.secondaryStage.showAndWait();
+		else StageServiceHolder.INSTANCE.secondaryStage.show();
 	}
 	
 	public static void clearViewPrimaryStage() {

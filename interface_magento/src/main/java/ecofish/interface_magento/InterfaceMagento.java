@@ -31,7 +31,8 @@ public class InterfaceMagento extends Application {
 		Logging.LOGGER.log(Level.INFO, "Launching application");
 		StageService.initPrimaryStage(primaryStage);
 		StageService.createSecondaryStage();
-		ProductService.loadProduct();
+		DataSourceFactory.initDatabase();
+		if (DataSourceFactory.getUser() != null) ProductService.loadProduct();
 	}
 
 	/**

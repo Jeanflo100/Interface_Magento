@@ -50,7 +50,7 @@ public class UpdatingProductThread implements Runnable {
     	this.separatorLog = " | ";
     	this.error = false;
     	
-    	StageService.showOnSecondaryStage(Views.LoadingProduct);	
+    	StageService.showOnSecondaryStage(Views.LoadingProduct, false);	
     }
  
     /**
