@@ -2,10 +2,8 @@ package ecofish.interface_magento.service;
 
 import java.util.Hashtable;
 import java.util.Optional;
-import java.util.logging.Level;
 
 import ecofish.interface_magento.InterfaceMagento;
-import ecofish.interface_magento.log.Logging;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -91,7 +89,6 @@ public class StageService {
 					return;
 		    	}
 			}
-			Logging.LOGGER.log(Level.INFO, "Closing application" + "\n");
 		});
 		StageServiceHolder.INSTANCE.primaryStage = primaryStage;
 	}

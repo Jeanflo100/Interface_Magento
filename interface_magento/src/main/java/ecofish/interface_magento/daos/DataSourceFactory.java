@@ -8,13 +8,12 @@ import java.util.logging.Level;
 
 import org.ini4j.Wini;
 
-import javax.sql.DataSource;
-
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
 
 /**
@@ -23,25 +22,39 @@ import javafx.scene.control.Alert;
  */
 public class DataSourceFactory {
 
-	private static MysqlDataSource dataSource;
+	private MysqlDataSource dataSource;
+	private SimpleStringProperty currentUser;
 	
-	public static DataSource getDataSource() {
-		return dataSource;
+	private Boolean isNewUser;
+	
+	private DataSourceFactory() {
+		dataSource = new MysqlDataSource();
+		currentUser = new SimpleStringProperty();
 	}
 	
-	public static String getUser() {
-		return dataSource.getUser();
+	public static MysqlDataSource getDataSource() {
+		return DataSourceFactoryHolder.INSTANCE.dataSource;
+	}
+	
+	public static SimpleStringProperty getCurrentUser() {
+		return DataSourceFactoryHolder.INSTANCE.currentUser;
+	}
+	
+	private static Boolean getIsNewUser() {
+		return DataSourceFactoryHolder.INSTANCE.isNewUser;
+	}
+	
+	private static void setIsNewUser(Boolean isNewUser) {
+		DataSourceFactoryHolder.INSTANCE.isNewUser = isNewUser;
 	}
 	
 	public static void initDatabase() {
-		dataSource = new MysqlDataSource();
 		try {
 			Wini ini = new Wini(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "config.ini"));
 			String server = ini.get("database_test", "server");
 			String port = ini.get("database_test", "port");
 			String name = ini.get("database_test", "name");
-			dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
-			goAuthentification();
+			DataSourceFactoryHolder.INSTANCE.dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
 		}
 		catch (IOException e){
 			Logging.LOGGER.log(Level.WARNING, "Error when recovering database connection data:\n" + e.getMessage());
@@ -62,23 +75,36 @@ public class DataSourceFactory {
 			alert.showAndWait();
 			return false;
 		}
-		dataSource.setUser(username);
-		dataSource.setPassword(password);
-		Logging.LOGGER.log(Level.INFO, "Connection of " + getUser());
+		getDataSource().setUser(username);
+		getDataSource().setPassword(password);
+		getCurrentUser().set(username);
+		setIsNewUser(true);
+		Logging.LOGGER.log(Level.INFO, "Connection of " + getCurrentUser().getValue());
 		return true;
 	}	
 	
-	public static void goAuthentification() {
+	public static Boolean goAuthentification() {
+		setIsNewUser(false);
 		StageService.showOnSecondaryStage(Views.LoginScreen, true);
+		return getIsNewUser();
 	}
 	
 	public static String getCustomMessageSQLException(SQLException error) {
 		//System.out.println(error.getErrorCode());
-		if (error.getErrorCode() == 0) return "Connection to the database is not possible";
-		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
-		if (error.getErrorCode() == 1045) return "Incorrect login information";
-		if (error.getErrorCode() == 1142) return "You are not authorized to perform this action";
+		if (error.getErrorCode() == 0) return "Connection to the database is not possible.";
+		if (error.getErrorCode() == 1044) return "You are not authorized to access this database.";
+		if (error.getErrorCode() == 1045) return "Incorrect login information.";
+		if (error.getErrorCode() == 1142) return "You are not authorized to perform this action.";
 		return error.getMessage();
+	}
+	
+	
+	/**
+	 * Make the class static
+	 * @author Jean-Florian Tassart
+	 */
+	private static class DataSourceFactoryHolder {
+		private static DataSourceFactory INSTANCE = new DataSourceFactory();
 	}
 	
 }

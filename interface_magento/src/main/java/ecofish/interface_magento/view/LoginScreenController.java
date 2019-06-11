@@ -38,15 +38,20 @@ public class LoginScreenController {
 		if (!this.usernameTextField.getText().isEmpty()) {
 			Boolean result = DataSourceFactory.setUser(this.usernameTextField.getText(), this.passwordPasswordField.getText());
 			if (result) {
-				this.usernameTextField.clear();
-				this.passwordPasswordField.clear();
 				closeWindow();				
+			}
+			else {
+				this.passwordPasswordField.selectAll();
+				this.passwordPasswordField.requestFocus();
 			}
 		}
 	}
 	
 	@FXML
 	private void closeWindow() {
+		this.passwordPasswordField.clear();
+		this.usernameTextField.clear();
+		this.usernameTextField.requestFocus();
 		StageService.closeSecondaryStage();
 	}
 	

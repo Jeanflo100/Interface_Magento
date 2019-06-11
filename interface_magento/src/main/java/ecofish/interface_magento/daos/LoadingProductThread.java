@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -19,6 +20,7 @@ import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  * Thread retrieving products from the database
@@ -111,15 +113,20 @@ public class LoadingProductThread implements Runnable {
 
 		Platform.runLater(() -> {
 			if (error != null) {
-				Alert alert = new Alert(Alert.AlertType.WARNING);
+				Alert alert = new Alert(Alert.AlertType.WARNING, DataSourceFactory.getCustomMessageSQLException(error) + "\nWould you like to change the user?", ButtonType.YES, ButtonType.NO);
 				alert.initOwner(StageService.getSecondaryStage());
 				alert.setTitle("FAILURE");
 				alert.setHeaderText("Loading failure during product recovery");
-				alert.setContentText(DataSourceFactory.getCustomMessageSQLException(error));
-				alert.showAndWait();
+				Optional<ButtonType> option = alert.showAndWait();
+				StageService.closeSecondaryStage();
+				if (option.get() == ButtonType.YES) {
+					if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
+				}
 			}
-			StageService.showOnPrimaryStage(Views.StatusProductOverview);
-			StageService.closeSecondaryStage();
+			else {
+				StageService.showOnPrimaryStage(Views.StatusProductOverview);
+				StageService.closeSecondaryStage();				
+			}
         });
 		
     }
