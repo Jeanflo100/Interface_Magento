@@ -22,7 +22,7 @@ public class MainLayoutController {
 	}
 	
 	public void changeUser(){
-		
+		DataSourceFactory.goAuthentification();
 	}
 	
 	/**

@@ -30,6 +30,7 @@
                           </items>
                         </Menu>
       					<SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#changeUser" text="Change User" />
       						<MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Close" />
                         		
       						
@@ -52,7 +53,7 @@
                         <Insets left="5.0" />
                      </FlowPane.margin>
                   </Text>
-                  <Label fx:id="currentUserLabel" alignment="CENTER" contentDisplay="TEXT_ONLY" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="19.0" prefWidth="121.0" text="Jeanflo" textAlignment="JUSTIFY" textFill="#2b6590">
+                  <Label fx:id="currentUserLabel" alignment="CENTER" contentDisplay="TEXT_ONLY" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="19.0" prefWidth="121.0" text="current user" textAlignment="JUSTIFY" textFill="#2b6590">
                      <padding>
                         <Insets left="5.0" right="5.0" />
                      </padding>

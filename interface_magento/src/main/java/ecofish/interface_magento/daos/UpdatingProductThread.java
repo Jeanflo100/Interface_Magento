@@ -111,15 +111,16 @@ public class UpdatingProductThread implements Runnable {
 		}
 			
 		Platform.runLater(() -> {
-			StageService.clearViewPrimaryStage();
 			if (error != null) {
-				Alert alert = new Alert(Alert.AlertType.WARNING);
-				alert.initOwner(StageService.getSecondaryStage());
-				alert.setTitle("FAILURE");
-				alert.setHeaderText("Error when updating products");
-				alert.setContentText(DataSourceFactory.getCustomMessageSQLException(error) + "\n" + this.nb_update_products + "/" + this.nb_products + " products have been updated");
-				alert.showAndWait();
-				StageService.showOnPrimaryStage(Views.PriceProductOverview);
+				if (DataSourceFactory.showAlertSQLException(error, "Error when updating products:\n" + this.nb_update_products + "/" + this.nb_products + " products have been updated")) {
+					if (DataSourceFactory.goAuthentification()) {
+						ProductService.updateProduct();
+					}
+				}
+				if (this.nb_update_products != 0) {
+					StageService.clearViewPrimaryStage();
+					StageService.showOnPrimaryStage(Views.PriceProductOverview);
+				}
 			}
 			else {
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -128,9 +129,10 @@ public class UpdatingProductThread implements Runnable {
 				alert.setHeaderText("Success in updating products");
 				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
 				alert.showAndWait();
+				StageService.clearViewPrimaryStage();
 				StageService.showOnPrimaryStage(Views.StatusProductOverview);
+				StageService.closeSecondaryStage();
 			}
-			StageService.closeSecondaryStage();
         });
 		
     }

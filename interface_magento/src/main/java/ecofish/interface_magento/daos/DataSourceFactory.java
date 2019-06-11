@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import org.ini4j.Wini;
@@ -15,6 +16,7 @@ import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  * Setting up the connection to the database
@@ -89,15 +91,28 @@ public class DataSourceFactory {
 		return getIsNewUser();
 	}
 	
-	public static String getCustomMessageSQLException(SQLException error) {
-		//System.out.println(error.getErrorCode());
-		if (error.getErrorCode() == 0) return "Connection to the database is not possible.";
-		if (error.getErrorCode() == 1044) return "You are not authorized to access this database.";
-		if (error.getErrorCode() == 1045) return "Incorrect login information.";
-		if (error.getErrorCode() == 1142) return "You are not authorized to perform this action.";
-		return error.getMessage();
+	public static Boolean showAlertSQLException(SQLException error, String message) {
+		Alert alert;
+		if (error.getErrorCode() == 0) alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error));
+		else alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error) + "\nWould you like to change the user?", ButtonType.YES, ButtonType.NO);
+		alert.initOwner(StageService.getSecondaryStage());
+		alert.setTitle("FAILURE");
+		alert.setHeaderText(message);
+		Optional<ButtonType> option = alert.showAndWait();
+		StageService.closeSecondaryStage();
+		if (option.get() == ButtonType.YES) return true;
+		else return false;
 	}
 	
+	public static String getCustomMessageSQLException(SQLException error) {
+		//System.out.println(error.getErrorCode());
+		Logging.LOGGER.log(Level.CONFIG, error.getMessage());
+		if (error.getErrorCode() == 0) return "Connection to the database is not possible";
+		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
+		if (error.getErrorCode() == 1045) return "Incorrect login information";
+		if (error.getErrorCode() == 1142 || error.getErrorCode() == 1143) return "You are not authorized to perform this action";
+		return error.getMessage();
+	}
 	
 	/**
 	 * Make the class static
