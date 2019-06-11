@@ -59,8 +59,7 @@ public class DataSourceFactory {
 			DataSourceFactoryHolder.INSTANCE.dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
 		}
 		catch (IOException e){
-			Logging.LOGGER.log(Level.WARNING, "Error when recovering database connection data:\n" + e.getMessage());
-			// Afficher un message d'erreur indiquant le non-accès aux informations de connexion (et donc ne peut pas aller plus loin)
+			Logging.LOGGER.log(Level.WARNING, "Error when recovering database connection data: " + "Impossible to open the configuration file");
 		}
 	}
 	
