@@ -20,7 +20,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <ImageView fitHeight="17.0" fitWidth="17.0" layoutX="271.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="17.0" fitWidth="17.0" layoutX="271.0" layoutY="24.0" onMouseClicked="#openConfigurationFile" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/sheet-of-papper.png" />
          </image>

@@ -1,13 +1,9 @@
 package ecofish.interface_magento.daos;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.logging.Level;
-
-import org.ini4j.Wini;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -51,16 +47,7 @@ public class DataSourceFactory {
 	}
 	
 	public static void initDatabase() {
-		try {
-			Wini ini = new Wini(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "config.ini"));
-			String server = ini.get("database_test", "server");
-			String port = ini.get("database_test", "port");
-			String name = ini.get("database_test", "name");
-			DataSourceFactoryHolder.INSTANCE.dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
-		}
-		catch (IOException e){
-			Logging.LOGGER.log(Level.WARNING, "Error when recovering database connection data: " + "Impossible to open the configuration file");
-		}
+		DatabaseAccess.getInformationConnection(getDataSource());	
 	}
 	
 	public static Boolean setUser(String username, String password) {
