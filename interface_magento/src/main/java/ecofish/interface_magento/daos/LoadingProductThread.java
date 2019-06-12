@@ -47,7 +47,7 @@ public class LoadingProductThread implements Runnable {
 
     	this.error = null;
     	
-    	StageService.showOnSecondaryStage(Views.LoadingProduct, false);
+    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     }
  
     /**
@@ -117,7 +117,7 @@ public class LoadingProductThread implements Runnable {
 				}
 			}
 			else {
-				StageService.showOnPrimaryStage(Views.StatusProductOverview);
+				StageService.showView(Views.viewsPrimaryStage.StatusProductOverview);
 				StageService.closeSecondaryStage();				
 			}
         });

@@ -29,14 +29,14 @@ public class MainLayoutController {
 	 * Shows the view with products status
 	 */
 	public void showStatusProductView(){
-		StageService.showOnPrimaryStage(Views.StatusProductOverview);
+		StageService.showView(Views.viewsPrimaryStage.StatusProductOverview);
 	}
 	
 	/**
 	 * Shows the view with products price 
 	 */
 	public void showPriceProductView(){
-		StageService.showOnPrimaryStage(Views.PriceProductOverview);
+		StageService.showView(Views.viewsPrimaryStage.PriceProductOverview);
 	}
 
 	/**

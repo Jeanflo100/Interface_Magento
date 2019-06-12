@@ -50,7 +50,7 @@ public class UpdatingProductThread implements Runnable {
     	this.separatorLog = " | ";
     	this.error = null;
     	
-    	StageService.showOnSecondaryStage(Views.LoadingProduct, false);	
+    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);	
     }
  
     /**
@@ -119,7 +119,7 @@ public class UpdatingProductThread implements Runnable {
 				}
 				if (this.nb_update_products != 0) {
 					StageService.clearViewPrimaryStage();
-					StageService.showOnPrimaryStage(Views.PriceProductOverview);
+					StageService.showView(Views.viewsPrimaryStage.PriceProductOverview);
 				}
 			}
 			else {
@@ -130,7 +130,7 @@ public class UpdatingProductThread implements Runnable {
 				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
 				alert.showAndWait();
 				StageService.clearViewPrimaryStage();
-				StageService.showOnPrimaryStage(Views.StatusProductOverview);
+				StageService.showView(Views.viewsPrimaryStage.StatusProductOverview);
 				StageService.closeSecondaryStage();
 			}
         });

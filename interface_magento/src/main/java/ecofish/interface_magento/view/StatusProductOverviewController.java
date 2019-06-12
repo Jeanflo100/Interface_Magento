@@ -84,7 +84,7 @@ public class StatusProductOverviewController {
      */
 	@FXML
 	private void handleUpdatePriceButton() {
-		StageService.showOnPrimaryStage(Views.PriceProductOverview);
+		StageService.showView(Views.viewsPrimaryStage.PriceProductOverview);
 	}
 	
 	/**

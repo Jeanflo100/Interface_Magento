@@ -46,7 +46,7 @@ public class DataSourceFactory {
 	 */
 	public static Boolean goAuthentification() {
 		setIsNewUser(false);
-		StageService.showOnSecondaryStage(Views.LoginScreen, true);
+		StageService.showView(Views.viewsSecondaryStage.LoginScreen, true);
 		return getIsNewUser();
 	}
 	

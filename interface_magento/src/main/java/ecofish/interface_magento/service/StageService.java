@@ -4,6 +4,8 @@ import java.util.Hashtable;
 import java.util.Optional;
 
 import ecofish.interface_magento.InterfaceMagento;
+import ecofish.interface_magento.service.Views.viewsPrimaryStage;
+import ecofish.interface_magento.service.Views.viewsSecondaryStage;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -25,7 +27,7 @@ public class StageService {
 	 * Initializes the main layout
 	 */
 	private StageService() {
-		mainLayout = Views.getView(Views.MainLayout);
+		mainLayout = Views.getView(Views.viewsPrimaryStage.MainLayout);
 	}
 
 	/**
@@ -41,8 +43,8 @@ public class StageService {
 	
 	private BorderPane mainLayout;
 	
-	private Hashtable<Views, Pane> viewPrimaryStage = new Hashtable<>();
-	private Hashtable<Views, Scene> viewSecondaryStage = new Hashtable<>();
+	private Hashtable<viewsPrimaryStage, Pane> viewPrimaryStage = new Hashtable<>();
+	private Hashtable<viewsSecondaryStage, Scene> viewSecondaryStage = new Hashtable<>();
 
 	/**
 	 * Provides the instance of main layout
@@ -104,12 +106,12 @@ public class StageService {
 		secondaryStage.initStyle(StageStyle.UNDECORATED);
 		StageServiceHolder.INSTANCE.secondaryStage = secondaryStage;
 	}
-
+	
 	/**
 	 * Change view of primary window
-	 * @param rootElementPane - view to show in window
+	 * @param view - view to show in primary stage
 	 */
-	public static void showOnPrimaryStage(Views view) {
+	public static void showView(viewsPrimaryStage view) {
 		Pane loadedView;
 		if (StageServiceHolder.INSTANCE.viewPrimaryStage.containsKey(view)) {
 			loadedView = StageServiceHolder.INSTANCE.viewPrimaryStage.get(view);
@@ -128,9 +130,10 @@ public class StageService {
 	
 	/**
 	 * Change view of secondary window
-	 * @param rootElementPane - view to show in window
+	 * @param view - view to show in secondary stage
+	 * @param waitAfterShow - True if the program must wait for an action from the window user, false else
 	 */
-	public static void showOnSecondaryStage(Views view, Boolean waitAfterShow) {
+	public static void showView(viewsSecondaryStage view, Boolean waitAfterShow) {
 		Scene loadedView;
 		if (StageServiceHolder.INSTANCE.viewSecondaryStage.containsKey(view)) {
 			loadedView = StageServiceHolder.INSTANCE.viewSecondaryStage.get(view);
