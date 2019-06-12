@@ -6,7 +6,7 @@ import ecofish.interface_magento.InterfaceMagento;
 import javafx.fxml.FXMLLoader;
 
 /**
- * Load FXML files to get application views
+ * List of FXML files to get application views
  * @author Jean-Florian Tassart
  */
 public enum Views {
@@ -17,11 +17,11 @@ public enum Views {
 	PriceProductOverview;
 
 	/**
-	 * Load an instance of the view or provide the stored one if there is
+	 * Load an instance of the view
 	 * @param id - name of view to show
 	 * @return Instance of the view
 	 */
-	public static <T> T getView(Views view) {
+	protected static <T> T getView(Views view) {
 		FXMLLoader loader;
 		loader = getLoader(view);
 		return loader.getRoot();

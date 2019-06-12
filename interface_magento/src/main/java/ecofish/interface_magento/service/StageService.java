@@ -107,7 +107,7 @@ public class StageService {
 
 	/**
 	 * Change view of primary window
-	 * @param rootElementPane - new view to show in window
+	 * @param rootElementPane - view to show in window
 	 */
 	public static void showOnPrimaryStage(Views view) {
 		Pane loadedView;
@@ -128,7 +128,7 @@ public class StageService {
 	
 	/**
 	 * Change view of secondary window
-	 * @param rootElementPane - new view to show in window
+	 * @param rootElementPane - view to show in window
 	 */
 	public static void showOnSecondaryStage(Views view, Boolean waitAfterShow) {
 		Scene loadedView;
@@ -146,10 +146,16 @@ public class StageService {
 		else StageServiceHolder.INSTANCE.secondaryStage.show();
 	}
 	
+	/**
+	 * Clear views of primary stage
+	 */
 	public static void clearViewPrimaryStage() {
 		StageServiceHolder.INSTANCE.viewPrimaryStage.clear();
 	}
 	
+	/**
+	 * Clear views of secondary stage
+	 */
 	public static void closeSecondaryStage() {
 		StageServiceHolder.INSTANCE.secondaryStage.close();
 	}

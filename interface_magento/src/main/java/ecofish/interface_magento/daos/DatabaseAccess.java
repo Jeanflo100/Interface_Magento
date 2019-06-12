@@ -12,10 +12,19 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import ecofish.interface_magento.log.Logging;
 import javafx.scene.control.Alert;
 
+/**
+ * Exchanging with the configuration file
+ * @author Jean-Florian Tassart
+ */
 public class DatabaseAccess	{
 	
 	private String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "config.ini";
 	
+	/**
+	 * Retrieve database connection information
+	 * @param dataSource - variable to be initialized with the information, allowing to establish the connections
+	 * @return Variable allowing the connections initialized
+	 */
 	protected static MysqlDataSource getInformationConnection(MysqlDataSource dataSource) {
 		try {
 			Wini ini = new Wini(new File(DatabaseAccessHolder.INSTANCE.pathFile));
@@ -46,6 +55,10 @@ public class DatabaseAccess	{
 		return dataSource;
 	}
 	
+	/**
+	 * Create a default configuration file if none exists
+	 * @return True is the file has been created, false else
+	 */
 	private static Boolean createDefaultConfigurationFile() {
 		File file = new File(DatabaseAccessHolder.INSTANCE.pathFile);
 		if (file.exists()) return false;
@@ -68,6 +81,9 @@ public class DatabaseAccess	{
 		return false;
 	}
 	
+	/**
+	 * Opens the configuration file
+	 */
 	public static void openConfigurationFile() {
 		try {
 			Desktop.getDesktop().open(new File(DatabaseAccessHolder.INSTANCE.pathFile));
@@ -81,6 +97,10 @@ public class DatabaseAccess	{
 		}
 	}
 	
+	/**
+	 * Make the class static
+	 * @author Jean-Florian Tassart
+	 */
 	private static class DatabaseAccessHolder {
 		private static DatabaseAccess INSTANCE = new DatabaseAccess();
 	}

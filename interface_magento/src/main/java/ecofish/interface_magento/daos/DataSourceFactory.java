@@ -25,31 +25,37 @@ public class DataSourceFactory {
 	
 	private Boolean isNewUser;
 	
+	/**
+	 * Initialization of variables
+	 */
 	private DataSourceFactory() {
 		dataSource = new MysqlDataSource();
 		currentUser = new SimpleStringProperty();
 	}
 	
-	public static MysqlDataSource getDataSource() {
-		return DataSourceFactoryHolder.INSTANCE.dataSource;
-	}
-	
-	public static SimpleStringProperty getCurrentUser() {
-		return DataSourceFactoryHolder.INSTANCE.currentUser;
-	}
-	
-	private static Boolean getIsNewUser() {
-		return DataSourceFactoryHolder.INSTANCE.isNewUser;
-	}
-	
-	private static void setIsNewUser(Boolean isNewUser) {
-		DataSourceFactoryHolder.INSTANCE.isNewUser = isNewUser;
-	}
-	
+	/**
+	 * Initialization of connection data to the database
+	 */
 	public static void initDatabase() {
 		DatabaseAccess.getInformationConnection(getDataSource());	
 	}
 	
+	/**
+	 * Opens the window allowing a new user to authenticate himself
+	 * @return True if a new user has been authenticated, false else
+	 */
+	public static Boolean goAuthentification() {
+		setIsNewUser(false);
+		StageService.showOnSecondaryStage(Views.LoginScreen, true);
+		return getIsNewUser();
+	}
+	
+	/**
+	 * Updates the connection data to the database concerning the user after authentication of this one
+	 * @param username - username of the user
+	 * @param password - password of the user
+	 * @return True if he has access to the database, false else
+	 */
 	public static Boolean setUser(String username, String password) {
 		try {
 			Connection connection = DataSourceFactory.getDataSource().getConnection(username, password);
@@ -69,15 +75,47 @@ public class DataSourceFactory {
 		setIsNewUser(true);
 		Logging.LOGGER.log(Level.INFO, "Connection of " + getCurrentUser().getValue());
 		return true;
-	}	
-	
-	public static Boolean goAuthentification() {
-		setIsNewUser(false);
-		StageService.showOnSecondaryStage(Views.LoginScreen, true);
-		return getIsNewUser();
 	}
 	
-	public static Boolean showAlertSQLException(SQLException error, String message) {
+	/**
+	 * Returns the currently authenticated user
+	 * @return the currently authenticated user
+	 */
+	public static SimpleStringProperty getCurrentUser() {
+		return DataSourceFactoryHolder.INSTANCE.currentUser;
+	}
+	
+	/**
+	 * Returns the variable used to establish connections to the database
+	 * @return the variable used to establish connections to the database
+	 */
+	protected static MysqlDataSource getDataSource() {
+		return DataSourceFactoryHolder.INSTANCE.dataSource;
+	}
+	
+	/**
+	 * Returns whether after the authentication window a new user has been authenticated
+	 * @return True if it's a new user, false else
+	 */
+	private static Boolean getIsNewUser() {
+		return DataSourceFactoryHolder.INSTANCE.isNewUser;
+	}
+	
+	/**
+	 * Updates the authentication of a new user or not
+	 * @param isNewUser - true if it's a new user authenticated, false else
+	 */
+	private static void setIsNewUser(Boolean isNewUser) {
+		DataSourceFactoryHolder.INSTANCE.isNewUser = isNewUser;
+	}
+	
+	/**
+	 * Shows a custom alert for SQL errors and requests the user change if the error is due to an access problem
+	 * @param error - error concerned
+	 * @param message - custom header text to display in the alert
+	 * @return True if a new user must be authenticated, false else
+	 */
+	protected static Boolean showAlertSQLException(SQLException error, String message) {
 		Alert alert;
 		if (error.getErrorCode() == 0) alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error));
 		else alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error) + "\nWould you like to change the user?", ButtonType.YES, ButtonType.NO);
@@ -90,7 +128,12 @@ public class DataSourceFactory {
 		else return false;
 	}
 	
-	public static String getCustomMessageSQLException(SQLException error) {
+	/**
+	 * Returns a custom message according to the SQL error code
+	 * @param error - error concerned
+	 * @return Custom message
+	 */
+	protected static String getCustomMessageSQLException(SQLException error) {
 		//System.out.println(error.getErrorCode());
 		Logging.LOGGER.log(Level.CONFIG, error.getMessage());
 		if (error.getErrorCode() == 0) return "Connection to the database is not possible";
