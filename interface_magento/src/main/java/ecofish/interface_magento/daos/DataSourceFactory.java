@@ -137,8 +137,8 @@ public class DataSourceFactory {
 		System.out.println(error.getErrorCode());
 		System.out.println(error.getSQLState());
 		Logging.LOGGER.log(Level.CONFIG, error.getMessage());
+		if (error.getErrorCode() == 0) return "Unable to connect to the database";
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
-		if (error.getSQLState().equals("08S01")) return "Unable to connect to the database";
 		if (error.getSQLState().equals("28000")) return "Incorrect login information";
 		if (error.getSQLState().equals("42000")) return "You are not authorized to perform this action";
 		return error.getMessage();

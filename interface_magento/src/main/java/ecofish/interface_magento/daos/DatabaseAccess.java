@@ -67,9 +67,9 @@ public class DatabaseAccess	{
 			try {
 				Wini ini = new Wini(file);
 				ini.setComment("If modifications are made, the application will have to be restarted to retrieve them");
-				ini.put("database_test", "server", null);
-				ini.put("database_test", "port", null);
-				ini.put("database_test", "name", null);
+				ini.put("database", "server", null);
+				ini.put("database", "port", null);
+				ini.put("database", "name", null);
 				ini.store();
 				return true;
 			} catch (IOException e) {
