@@ -1,3 +1,5 @@
 /target/
 /config.ini
 /Interface_Magento.log
+/config_test.ini
+/Interface_Magento_test.log

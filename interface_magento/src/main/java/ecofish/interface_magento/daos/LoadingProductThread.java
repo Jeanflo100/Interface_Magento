@@ -14,11 +14,10 @@ import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
+import ecofish.interface_magento.service.Views;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.control.Alert;
 
 /**
  * Thread retrieving products from the database
@@ -31,7 +30,7 @@ public class LoadingProductThread implements Runnable {
 	private TreeMap<String, TreeSet<String>> groups;
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;   
-    private Boolean error;
+    private SQLException error;
  
     /**
      * Initialization of parameters
@@ -46,9 +45,9 @@ public class LoadingProductThread implements Runnable {
     	this.loadingProductProgressBar.set(0.0);
     	this.loadingProductText.set("Loading Products...");
 
-    	this.error = false;
+    	this.error = null;
     	
-		StageService.showSecondaryStage(true);
+    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     }
  
     /**
@@ -141,20 +140,22 @@ public class LoadingProductThread implements Runnable {
 
 		}
 		catch (SQLException e){
-			Logging.LOGGER.log(Level.WARNING, "Error when getting products list:\n" + e.getMessage());
-			error = true;
+			Logging.LOGGER.log(Level.WARNING, "Error when getting products list: " + DataSourceFactory.getCustomMessageSQLException(e));
+			error = e;
 		}
 
 		Platform.runLater(() -> {
-			if (error == true) {
-				Alert alert = new Alert(Alert.AlertType.WARNING);
-				alert.initOwner(StageService.getSecondaryStage());
-				alert.setTitle("FAILURE");
-				alert.setHeaderText("Loading failure during product recovery");
-				alert.showAndWait();
+			if (error != null) {
+				if (DataSourceFactory.showAlertSQLException(error, "Error when getting products list")) {
+					if (DataSourceFactory.goAuthentification()) {
+						ProductService.loadProduct();
+					}
+				}
 			}
-			StageService.showView(ViewService.getView("StatusProductOverview"));
-			StageService.showSecondaryStage(false);
+			else {
+				StageService.showView(Views.viewsPrimaryStage.StatusProductOverview);
+				StageService.closeSecondaryStage();				
+			}
         });
 		
     }

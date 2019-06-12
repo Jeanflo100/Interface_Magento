@@ -10,7 +10,7 @@ import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
-import ecofish.interface_magento.service.ViewService;
+import ecofish.interface_magento.service.Views;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
@@ -30,7 +30,7 @@ public class UpdatingProductThread implements Runnable {
     private Integer nb_update_products;
     private String updatedProductsLog;
 	private String separatorLog;
-    private Boolean error;
+    private SQLException error;
     
     /**
      * Initialization of parameters
@@ -48,9 +48,9 @@ public class UpdatingProductThread implements Runnable {
     	this.nb_update_products = 0;
     	this.updatedProductsLog = "";
     	this.separatorLog = " | ";
-    	this.error = false;
+    	this.error = null;
     	
-		StageService.showSecondaryStage(true);		
+    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);	
     }
  
     /**
@@ -110,8 +110,8 @@ public class UpdatingProductThread implements Runnable {
 			connection.close();
 		}
 		catch (SQLException e) {
-			Logging.LOGGER.log(Level.WARNING, "Error when updating products list:\n" + e.getMessage());
-			error = true;
+			Logging.LOGGER.log(Level.WARNING, "Error when updating products list: " + DataSourceFactory.getCustomMessageSQLException(e));
+			error = e;
 		}
 		
 		if (!this.updatedProducts.isEmpty()) {
@@ -122,15 +122,16 @@ public class UpdatingProductThread implements Runnable {
 		}
 			
 		Platform.runLater(() -> {
-			ViewService.clearViews();
-			if (error == true) {
-				Alert alert = new Alert(Alert.AlertType.WARNING);
-				alert.initOwner(StageService.getSecondaryStage());
-				alert.setTitle("FAILURE");
-				alert.setHeaderText("Error when updating products");
-				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
-				alert.showAndWait();
-				StageService.showView(ViewService.getView("PriceProductOverview"));
+			if (error != null) {
+				if (DataSourceFactory.showAlertSQLException(error, "Error when updating products:\n" + this.nb_update_products + "/" + this.nb_products + " products have been updated")) {
+					if (DataSourceFactory.goAuthentification()) {
+						ProductService.updateProduct();
+					}
+				}
+				if (this.nb_update_products != 0) {
+					StageService.clearViewPrimaryStage();
+					StageService.showView(Views.viewsPrimaryStage.PriceProductOverview);
+				}
 			}
 			else {
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -139,9 +140,10 @@ public class UpdatingProductThread implements Runnable {
 				alert.setHeaderText("Success in updating products");
 				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
 				alert.showAndWait();
-				StageService.showView(ViewService.getView("StatusProductOverview"));
+				StageService.clearViewPrimaryStage();
+				StageService.showView(Views.viewsPrimaryStage.StatusProductOverview);
+				StageService.closeSecondaryStage();
 			}
-			StageService.showSecondaryStage(false);
         });
 		
     }

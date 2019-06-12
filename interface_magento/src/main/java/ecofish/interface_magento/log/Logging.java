@@ -12,11 +12,15 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javafx.scene.control.Alert;
+
 /**
  * Setting up logs writting
  * @author Jean-Florian Tassart
  */
 public class Logging{
+	
+	private static String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "Interface_Magento.log";
 	
 	public static final Logger LOGGER = Logger.getLogger(Logging.class.getName());
 	
@@ -57,7 +61,7 @@ public class Logging{
 		};
 		
 		try {
-			logFileHandler = new FileHandler("./Interface_Magento.log", 0, 1, true);
+			logFileHandler = new FileHandler(pathFile, 0, 1, true);
 		} catch (IOException e) {
 			LOGGER.log(Level.WARNING, "Writing to file isn't set");
 		}
@@ -75,9 +79,14 @@ public class Logging{
 	 */
 	public static void openLoggingFile() {
 		try {
-			Desktop.getDesktop().open(new File("./Interface_Magento.log"));
+			Desktop.getDesktop().open(new File(pathFile));
 		} catch (IOException e) {
-			Logging.LOGGER.log(Level.WARNING, "Error when opening logs file:\n" + e.getMessage());
+			Logging.LOGGER.log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			alert.setTitle("WARNING");
+			alert.setHeaderText("Error when opening logs file");
+			alert.setContentText("Retry the action or restart the application if the problem persists");
+			alert.showAndWait();
 		}
 	}
 	

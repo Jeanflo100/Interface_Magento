@@ -1,8 +1,8 @@
 package ecofish.interface_magento;
 
 import java.io.IOException;
-import java.util.logging.Level;
 
+import ecofish.interface_magento.daos.DataSourceFactory;
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
@@ -21,10 +21,10 @@ public class InterfaceMagento extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		Logging.setLogging();
-		Logging.LOGGER.log(Level.INFO, "Launching application");
 		StageService.initPrimaryStage(primaryStage);
 		StageService.createSecondaryStage();
-		ProductService.loadProduct();
+		DataSourceFactory.initDatabase();
+		if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
 	}
 
 	/**
