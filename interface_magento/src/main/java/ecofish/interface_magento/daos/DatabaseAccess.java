@@ -28,9 +28,9 @@ public class DatabaseAccess	{
 	protected static MysqlDataSource getInformationConnection(MysqlDataSource dataSource) {
 		try {
 			Wini ini = new Wini(new File(DatabaseAccessHolder.INSTANCE.pathFile));
-			String server = ini.get("database_test", "server");
-			String port = ini.get("database_test", "port");
-			String name = ini.get("database_test", "name");
+			String server = ini.get("database", "server");
+			String port = ini.get("database", "port");
+			String name = ini.get("database", "name");
 			dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
 		}
 		catch (IOException e){
