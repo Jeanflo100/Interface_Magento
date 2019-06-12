@@ -20,7 +20,7 @@ import javafx.scene.control.Alert;
  */
 public class Logging{
 	
-	private static String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "Interface_Magento.log";
+	private static String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "Interface_Magento_test.log";
 	
 	public static final Logger LOGGER = Logger.getLogger(Logging.class.getName());
 	
