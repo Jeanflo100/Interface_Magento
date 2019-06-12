@@ -1,6 +1,9 @@
 package ecofish.interface_magento.model;
 
-
+/**
+ * Product model
+ * @author Jean-Florian Tassart
+ */
 public class Product implements Comparable<Product>{
 	
 	private Integer idProduct;
@@ -14,26 +17,17 @@ public class Product implements Comparable<Product>{
 	private Boolean active;
 	private Boolean changeActive;
 	
-	/*public Product() {
-		this.name = "";
-		this.quality = "";
-		this.size = "";
-		this.actualPrice = null;
-		this.newPrice = null;
-		this.active = true;
-	}*/
-	
-	public Product(Integer idProduct, String name, String quality, String size, Double actualPrice, Boolean active) {
-		this.idProduct = idProduct;
-		this.name = name;
-		this.quality = quality;
-		this.size = size;
-		this.actualPrice = actualPrice;
-		this.newPrice = null;
-		this.active = active;
-		this.changeActive = false;
-	}
-	
+	/**
+	 * Constructor of product
+	 * @param idProduct - unique product ID
+	 * @param name - product name
+	 * @param category - product category
+	 * @param family - product family
+	 * @param quality - product quality
+	 * @param size - product size
+	 * @param actualPrice - actual product price
+	 * @param active - active or inactive status product
+	 */
 	public Product(Integer idProduct, String name, String category, String family, String quality, String size, Double actualPrice, Boolean active) {
 		this.idProduct = idProduct;
 		this.name = name;
@@ -117,12 +111,21 @@ public class Product implements Comparable<Product>{
 	
 	@Override
 	public String toString() {
-		return name + "\nSize : " + size + "\nQuality : " + quality;
+		return "Name : " + name + "\n" + "Size : " + size + "\n" + "Quality : " + quality + "\n";
 	}
 
+	/**
+	 * Comparison order : category, family, name, size, quality, idProduct
+	 */
 	@Override
 	public int compareTo(Product product) {
-		if (this.getName().compareTo(product.getName()) != 0) {
+		if (this.getCategory().compareTo(product.getCategory()) != 0) {
+			return this.getCategory().compareTo(product.getCategory());
+		}
+		else if (this.getFamily().compareTo(product.getFamily()) != 0) {
+			return this.getFamily().compareTo(product.getFamily());
+		}
+		else if (this.getName().compareTo(product.getName()) != 0) {
 			return this.getName().compareTo(product.getName());
 		}
 		else if (this.getSize().compareTo(product.getSize()) != 0) {

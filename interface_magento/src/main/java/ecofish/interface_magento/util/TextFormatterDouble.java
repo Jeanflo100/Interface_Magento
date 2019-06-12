@@ -9,11 +9,18 @@ import java.util.Locale;
 import javafx.scene.control.TextFormatter;
 import javafx.util.StringConverter;
 
+/**
+ * Provides the writing format to be used for double variable
+ * @author Jean-Florian Tassart
+ */
 public class TextFormatterDouble {
 
     private DecimalFormat df ;
     private TextFormatter<Double> textFormatter ;
     
+    /**
+     * Initialization of the format
+     */
     public TextFormatterDouble() {
         Locale locale  = new Locale("en", "EN");
         String pattern = "###,###.##";
@@ -57,6 +64,10 @@ public class TextFormatterDouble {
         });
     }
     
+    /**
+     * Provides the instance of the format
+     * @return Instance of the format
+     */
     public TextFormatter<Double> getTextFormatterDouble(){
     	return textFormatter;
     }
