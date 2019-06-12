@@ -112,16 +112,16 @@ public class DataSourceFactory {
 	/**
 	 * Shows a custom alert for SQL errors and requests the user change if the error is due to an access problem
 	 * @param error - error concerned
-	 * @param message - custom header text to display in the alert
+	 * @param headerText - custom header text to display in the alert
 	 * @return True if a new user must be authenticated, false else
 	 */
-	protected static Boolean showAlertSQLException(SQLException error, String message) {
+	protected static Boolean showAlertSQLException(SQLException error, String headerText) {
 		Alert alert;
-		if (error.getErrorCode() == 0) alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error));
-		else alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error) + "\nWould you like to change the user?", ButtonType.YES, ButtonType.NO);
+		if (error.getSQLState().equals("42000")) alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error) + ".\nWould you like to change the user?", ButtonType.YES, ButtonType.NO);
+		else alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error));
 		alert.initOwner(StageService.getSecondaryStage());
 		alert.setTitle("FAILURE");
-		alert.setHeaderText(message);
+		alert.setHeaderText(headerText);
 		Optional<ButtonType> option = alert.showAndWait();
 		StageService.closeSecondaryStage();
 		if (option.get() == ButtonType.YES) return true;
@@ -129,17 +129,18 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Returns a custom message according to the SQL error code
+	 * Returns a custom message according to the SQL error code in first, then to the SQL state else
 	 * @param error - error concerned
 	 * @return Custom message
 	 */
 	protected static String getCustomMessageSQLException(SQLException error) {
-		//System.out.println(error.getErrorCode());
+		System.out.println(error.getErrorCode());
+		System.out.println(error.getSQLState());
 		Logging.LOGGER.log(Level.CONFIG, error.getMessage());
-		if (error.getErrorCode() == 0) return "Connection to the database is not possible";
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
-		if (error.getErrorCode() == 1045) return "Incorrect login information";
-		if (error.getErrorCode() == 1142 || error.getErrorCode() == 1143) return "You are not authorized to perform this action";
+		if (error.getSQLState().equals("08S01")) return "Unable to connect to the database";
+		if (error.getSQLState().equals("28000")) return "Incorrect login information";
+		if (error.getSQLState().equals("42000")) return "You are not authorized to perform this action";
 		return error.getMessage();
 	}
 	

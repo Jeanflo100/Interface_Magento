@@ -7,12 +7,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * 
  * @author Jean-Florian Tassart
  */
 public class LoginScreenController {
+	
+	@FXML
+	AnchorPane loginScreenAnchorPane;
 	
 	@FXML
 	TextField usernameTextField;
@@ -22,6 +26,11 @@ public class LoginScreenController {
 	
 	@FXML
 	private void initialize() {
+		this.loginScreenAnchorPane.setOnKeyPressed(keyEvent -> {
+			if (keyEvent.getCode() == KeyCode.ESCAPE) {
+				closeWindow();
+			}
+		});
 		this.usernameTextField.setOnKeyPressed(keyEvent -> {
 			if (keyEvent.getCode() == KeyCode.ENTER) {
 				getInformationConnection();
