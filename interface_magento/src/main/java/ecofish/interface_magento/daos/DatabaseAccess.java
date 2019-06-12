@@ -28,9 +28,9 @@ public class DatabaseAccess	{
 	protected static MysqlDataSource getInformationConnection(MysqlDataSource dataSource) {
 		try {
 			Wini ini = new Wini(new File(DatabaseAccessHolder.INSTANCE.pathFile));
-			String server = ini.get("database_test", "server");
-			String port = ini.get("database_test", "port");
-			String name = ini.get("database_test", "name");
+			String server = ini.get("database", "server");
+			String port = ini.get("database", "port");
+			String name = ini.get("database", "name");
 			dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
 		}
 		catch (IOException e){
@@ -67,9 +67,9 @@ public class DatabaseAccess	{
 			try {
 				Wini ini = new Wini(file);
 				ini.setComment("If modifications are made, the application will have to be restarted to retrieve them");
-				ini.put("database_test", "server", null);
-				ini.put("database_test", "port", null);
-				ini.put("database_test", "name", null);
+				ini.put("database", "server", null);
+				ini.put("database", "port", null);
+				ini.put("database", "name", null);
 				ini.store();
 				return true;
 			} catch (IOException e) {
