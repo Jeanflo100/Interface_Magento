@@ -55,7 +55,6 @@ public class PriceProductOverviewController {
 	@FXML
 	TableColumn<Product, Double> newPriceColumn;
 
-	
 	@FXML
 	Text descriptionText;
 	

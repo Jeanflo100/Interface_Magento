@@ -129,7 +129,7 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Returns a custom message according to the SQL error code in first, then to the SQL state else
+	 * Returns a custom message according to the SQL error code in first, then to the SQL state else. If none custom message exists, the default one is returned.
 	 * @param error - error concerned
 	 * @return Custom message
 	 */
