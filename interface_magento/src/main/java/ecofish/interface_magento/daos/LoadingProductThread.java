@@ -51,7 +51,7 @@ public class LoadingProductThread implements Runnable {
     }
  
     /**
-     * Loads products then display a window of success or failure
+     * Checks if the user has the necessary privileges and then get the products if he has them, suggests changing users otherwise
      */
     public void run() {
 		if (privilegeChecking()) {
@@ -63,6 +63,10 @@ public class LoadingProductThread implements Runnable {
 		}
     }
     
+    /**
+     * Check each necessary privilege
+     * @return True if the user has all necessary privileges, false else
+     */
     private Boolean privilegeChecking() {
     	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "idproduct")) return false;
     	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "name")) return false;
@@ -75,6 +79,9 @@ public class LoadingProductThread implements Runnable {
     	return true;
     }
     
+    /**
+     * Getting produts
+     */
     private void loadingProducts() {
     	try {
     		Connection connection = DataSourceFactory.getDataSource().getConnection();
@@ -116,6 +123,9 @@ public class LoadingProductThread implements Runnable {
 		}
     }
     
+    /**
+     * Update of the interface according to the result of the product getting
+     */
     private void updateInterface() {
     	Platform.runLater(() -> {
 			if (error) {
@@ -128,6 +138,9 @@ public class LoadingProductThread implements Runnable {
         });
     }
     
+    /**
+     * Shows the custom alert associated with a privilege problem and relaunch the getting of products if the user has been successfully changed
+     */
     private void problemPrivileges() {
     	Platform.runLater(() -> {
     		if (DataSourceFactory.showAlertProblemPrivileges()) ProductService.loadProduct();

@@ -57,7 +57,7 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Updates the connection data to the database concerning the user after authentication of this one
+	 * Updates the connection data to the database concerning the user after authentication of this one and recovery of its privileges
 	 * @param username - username of the user
 	 * @param password - password of the user
 	 * @return True if he has access to the database, false else
@@ -103,9 +103,30 @@ public class DataSourceFactory {
 		return true;
 	}
 	
-	protected static Boolean checkPrivilege(String privilege_searched, String database, String table, String column) {
+	/**
+	 * Returns a custom message according to the connection errors.
+	 * @param error - error concerned
+	 * @return Custom message
+	 */
+	private static String getCustomMessageFailureConnection(SQLException error) {
+		Logging.LOGGER.log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
+		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
+		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
+		else if (error.getSQLState().equals("08S01")) return "Unable to connect to the database. Please try again";
+		else return "Unexpected error. Please try again";
+	}
+	
+	/**
+	 * Checks if the user has the desired privilege
+	 * @param action - desired action
+	 * @param database - database in which the action is to be performed
+	 * @param table - table in which the action is to be performed
+	 * @param column - column in which the action is to be performed
+	 * @return True if the user has the desired privilege, false else
+	 */
+	protected static Boolean checkPrivilege(String action, String database, String table, String column) {
 		for (HashMap<String, String> privilege : getPrivileges()) {
-			if (privilege.get("privilege").equals(privilege_searched)) {
+			if (privilege.get("privilege").equals(action)) {
 				if (privilege.get("database") == null) {
 					return true;				}
 				else if (privilege.get("database").equals(database)) {
@@ -132,6 +153,10 @@ public class DataSourceFactory {
 		return DataSourceFactoryHolder.INSTANCE.currentUser;
 	}
 	
+	/**
+	 * Returns the user's privileges
+	 * @return the user's privileges
+	 */
 	private static ArrayList<HashMap<String, String>> getPrivileges(){
 		return DataSourceFactoryHolder.INSTANCE.privileges;
 	}
@@ -161,7 +186,7 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Shows a custom alert if the current user has privilege problems in order to be able to change it
+	 * Shows a custom alert if the current user has privilege problems and proposes to change it
 	 * @return True if a new user have been authenticated, false else
 	 */
 	protected static Boolean showAlertProblemPrivileges() {
@@ -176,6 +201,11 @@ public class DataSourceFactory {
 		return false;
 	}
 	
+	/**
+	 * Shows a custom alert if an SQLException is returned by the database
+	 * @param headerText - custom message to display in the alert
+	 * @return True if the user want to retry the request to the database, false else
+	 */
 	protected static Boolean showAlertErrorSQL(String headerText) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.initOwner(StageService.getSecondaryStage());
@@ -191,19 +221,6 @@ public class DataSourceFactory {
 		StageService.closeSecondaryStage();
 		if (option.get() == ButtonType.YES) return true;
 		return false;
-	}
-	
-	/**
-	 * Returns a custom message according to the SQL error code in first, then to the SQL state else. If none custom message exists, the default one is returned.
-	 * @param error - error concerned
-	 * @return Custom message
-	 */
-	private static String getCustomMessageFailureConnection(SQLException error) {
-		Logging.LOGGER.log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
-		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
-		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
-		else if (error.getSQLState().equals("08S01")) return "Unable to connect to the database. Please try again";
-		else return "Unexpected error. Please try again";
 	}
 	
 	/**

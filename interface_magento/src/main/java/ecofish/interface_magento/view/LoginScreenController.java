@@ -11,7 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
 /**
- * 
+ * View controller associated to user authentication
  * @author Jean-Florian Tassart
  */
 public class LoginScreenController {
@@ -25,6 +25,9 @@ public class LoginScreenController {
 	@FXML
 	PasswordField passwordPasswordField;
 	
+	/**
+	 * Added faster navigation using the keys
+	 */
 	@FXML
 	private void initialize() {
 		this.loginScreenAnchorPane.setOnKeyPressed(keyEvent -> {
@@ -44,6 +47,9 @@ public class LoginScreenController {
 		});
 	}
 	
+	/**
+	 * Retrieve the information entered by the user to authenticate himself
+	 */
 	@FXML
 	private void getInformationConnection() {
 		if (!this.usernameTextField.getText().isEmpty()) {
@@ -58,16 +64,25 @@ public class LoginScreenController {
 		}
 	}
 	
+	/**
+	 * Open the log file
+	 */
 	@FXML
 	private void openLogFile() {
 		Logging.openLoggingFile();
 	}
 	
+	/**
+	 * Open the configuration file
+	 */
 	@FXML
 	private void openConfigurationFile() {
 		DatabaseAccess.openConfigurationFile();
 	}
 	
+	/**
+	 * Clear the view before to close it for the next authentications
+	 */
 	@FXML
 	private void closeWindow() {
 		this.passwordPasswordField.clear();

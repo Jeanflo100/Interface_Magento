@@ -21,7 +21,7 @@ import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 
 /**
- * View controller asoociated to the change in product status
+ * View controller associated to the change in product status
  * @author Jean-Florian Tassart
  */
 public class StatusProductOverviewController {
