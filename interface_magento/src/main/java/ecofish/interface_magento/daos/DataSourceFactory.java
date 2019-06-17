@@ -90,8 +90,8 @@ public class DataSourceFactory {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.initOwner(StageService.getSecondaryStage());
 			alert.setTitle("WARNING");
-			alert.setHeaderText("Error when connection to database");
-			alert.setContentText(getCustomMessageSQLException(e));
+			alert.setHeaderText("Error when connecting to database");
+			alert.setContentText(getCustomMessageFailureConnection(e));
 			alert.showAndWait();
 			return false;
 		}
@@ -161,22 +161,36 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Shows a custom alert for SQL errors and requests the user change if the error is due to an access problem
-	 * @param error - error concerned
-	 * @param headerText - custom header text to display in the alert
-	 * @return True if a new user must be authenticated, false else
+	 * Shows a custom alert if the current user has privilege problems in order to be able to change it
+	 * @return True if a new user have been authenticated, false else
 	 */
-	protected static Boolean showAlertSQLException(SQLException error, String headerText) {
-		Alert alert;
-		if (error.getSQLState().equals("42000")) alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error) + ".\nWould you like to change the user?", ButtonType.YES, ButtonType.NO);
-		else alert = new Alert(Alert.AlertType.WARNING, getCustomMessageSQLException(error));
+	protected static Boolean showAlertProblemPrivileges() {
+		Alert alert = new Alert(Alert.AlertType.WARNING);
 		alert.initOwner(StageService.getSecondaryStage());
-		alert.setTitle("FAILURE");
-		alert.setHeaderText(headerText);
+		alert.setHeaderText("You don't have the required privileges to perform this action");
+		alert.setContentText("Do you want to change the user?");
+		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 		Optional<ButtonType> option = alert.showAndWait();
 		StageService.closeSecondaryStage();
+		if (option.get() == ButtonType.YES) return DataSourceFactory.goAuthentification();
+		return false;
+	}
+	
+	protected static Boolean showAlertErrorSQL(String headerText) {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.initOwner(StageService.getSecondaryStage());
+		alert.setHeaderText(headerText);
+		alert.setContentText("An unexpected error occurred in the database.\n" + "Do you want to try again?\n" + "(You can also open the logs to get more details on the cause of the error)");
+		ButtonType openLogs = new ButtonType("Open logs");
+		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, openLogs);
+		Optional<ButtonType> option = alert.showAndWait();
+		while (option.get() == openLogs) {
+			Logging.openLoggingFile();
+			option = alert.showAndWait();
+		}
+		StageService.closeSecondaryStage();
 		if (option.get() == ButtonType.YES) return true;
-		else return false;
+		return false;
 	}
 	
 	/**
@@ -184,16 +198,12 @@ public class DataSourceFactory {
 	 * @param error - error concerned
 	 * @return Custom message
 	 */
-	protected static String getCustomMessageSQLException(SQLException error) {
-		System.out.println(error.getErrorCode());
-		System.out.println(error.getSQLState());
-		System.out.println(error.getMessage());
-		Logging.LOGGER.log(Level.CONFIG, error.getMessage());
-		if (error.getErrorCode() == 0) return "Unable to connect to the database";
+	private static String getCustomMessageFailureConnection(SQLException error) {
+		Logging.LOGGER.log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
-		if (error.getSQLState().equals("28000")) return "Incorrect login information";
-		if (error.getSQLState().equals("42000")) return "You are not authorized to perform this action";
-		return error.getMessage();
+		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
+		else if (error.getSQLState().equals("08S01")) return "Unable to connect to the database. Please try again";
+		else return "Unexpected error. Please try again";
 	}
 	
 	/**

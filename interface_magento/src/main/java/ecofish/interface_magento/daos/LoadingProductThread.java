@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -19,8 +18,6 @@ import ecofish.interface_magento.service.Views;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 /**
  * Thread retrieving products from the database
@@ -33,7 +30,7 @@ public class LoadingProductThread implements Runnable {
 	private TreeMap<String, TreeSet<String>> groups;
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;   
-    private SQLException error;
+    private Boolean error;
  
     /**
      * Initialization of parameters
@@ -48,7 +45,7 @@ public class LoadingProductThread implements Runnable {
     	this.loadingProductProgressBar.set(0.0);
     	this.loadingProductText.set("Loading Products...");
 
-    	this.error = null;
+    	this.error = false;
     	
     	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     }
@@ -62,7 +59,7 @@ public class LoadingProductThread implements Runnable {
 			updateInterface();
 		}
 		else {
-			changeUser();
+			problemPrivileges();
 		}
     }
     
@@ -114,27 +111,15 @@ public class LoadingProductThread implements Runnable {
 			}
 		}
 		catch (SQLException e){
-			Logging.LOGGER.log(Level.WARNING, "Error when getting products list:\n" + e.getMessage());
-			error = e;
+			Logging.LOGGER.log(Level.SEVERE, "Error when getting products list:\n" + e.getMessage());
+			error = true;
 		}
     }
     
     private void updateInterface() {
     	Platform.runLater(() -> {
-			if (error != null) {
-				Alert alert = new Alert(Alert.AlertType.ERROR);
-				alert.initOwner(StageService.getSecondaryStage());
-				alert.setHeaderText("Error when getting products list");
-				alert.setContentText("An unexpected error occurred in the database.\n" + "Do you want to try again?\n" + "(You can also open the logs to get more details on the cause of the error)");
-				ButtonType openLogs = new ButtonType("Open logs");
-				alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO, openLogs);
-				Optional<ButtonType> option = alert.showAndWait();
-				while (option.get() == openLogs) {
-					Logging.openLoggingFile();
-					option = alert.showAndWait();
-				}
-				StageService.closeSecondaryStage();
-				if (option.get() == ButtonType.YES) ProductService.loadProduct();
+			if (error) {
+				if (DataSourceFactory.showAlertErrorSQL("Error when getting products list")) ProductService.loadProduct();
 			}
 			else {
 				StageService.showView(Views.viewsPrimaryStage.StatusProductOverview);
@@ -143,20 +128,9 @@ public class LoadingProductThread implements Runnable {
         });
     }
     
-    private void changeUser() {
+    private void problemPrivileges() {
     	Platform.runLater(() -> {
-	    	Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.initOwner(StageService.getSecondaryStage());
-			alert.setHeaderText("You don't have the required privileges to perform this action");
-			alert.setContentText("Do you want to change the user?");
-			alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-			Optional<ButtonType> option = alert.showAndWait();
-			StageService.closeSecondaryStage();
-			if (option.get() == ButtonType.YES) {
-				if (DataSourceFactory.goAuthentification()) {
-					ProductService.loadProduct();
-				}
-			}
+    		if (DataSourceFactory.showAlertProblemPrivileges()) ProductService.loadProduct();
     	});
     }
     
