@@ -10,8 +10,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="650.0" prefWidth="770.0" stylesheets="@StatusProductOverview.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
+<AnchorPane prefHeight="660.0" prefWidth="770.0" stylesheets="@StatusProductOverview.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
    <children>
       <TableView fx:id="inactiveProductTable" editable="true" layoutX="36.0" layoutY="34.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
          <columns>
@@ -43,13 +44,13 @@
       </TableView>
       <Button fx:id="leftToRightButton" layoutX="352.0" layoutY="242.0" mnemonicParsing="false" onAction="#handleLeftToRightButton" prefHeight="25.0" prefWidth="69.0" text="&gt;&gt;&gt;&gt;&gt;&gt;" />
       <Button fx:id="rightToLeftButton" layoutX="352.0" layoutY="288.0" mnemonicParsing="false" onAction="#handleRightToLeftButton" prefHeight="25.0" prefWidth="69.0" text="&lt;&lt;&lt;&lt;&lt;&lt;" />
-      <Label layoutX="346.0" layoutY="508.0" text="CATEGORY :">
+      <Label layoutX="346.0" layoutY="520.0" text="CATEGORY :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="529.0" onHidden="#showFamily" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="528.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
+      <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="541.0" onHidden="#showFamily" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="540.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>
@@ -57,13 +58,13 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Label layoutX="358.0" layoutY="563.0" text="FAMILY :">
+      <Label layoutX="358.0" layoutY="575.0" text="FAMILY :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="585.0" onHidden="#showProductTables" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="584.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
+      <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="597.0" onHidden="#showProductTables" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="596.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>
@@ -71,6 +72,12 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Button fx:id="updatePriceButton" layoutX="532.0" layoutY="508.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" prefHeight="43.0" prefWidth="94.0" text="Update prices" />
+      <Button fx:id="updatePriceButton" layoutX="577.0" layoutY="551.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" prefHeight="45.0" prefWidth="96.0" text="Update prices" />
+      <Text fx:id="descriptionText" layoutX="17.0" layoutY="531.0" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="278.0000029206276">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Button fx:id="productDetailsButton" layoutX="108.0" layoutY="619.0" mnemonicParsing="false" onAction="#handleProductDetailsButton" prefHeight="27.0" prefWidth="96.0" text="Product details" />
    </children>
 </AnchorPane>

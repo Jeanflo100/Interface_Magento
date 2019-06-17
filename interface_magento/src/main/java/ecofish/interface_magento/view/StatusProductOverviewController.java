@@ -17,10 +17,11 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 import javafx.scene.control.Label;
 
 /**
- * View controller asoociated to the change in product status
+ * View controller associated to the change in product status
  * @author Jean-Florian Tassart
  */
 public class StatusProductOverviewController {
@@ -56,7 +57,13 @@ public class StatusProductOverviewController {
 	Button rightToLeftButton;
 	
 	@FXML
+	Button productDetailsButton;
+	
+	@FXML
 	Button updatePriceButton;
+	
+	@FXML
+	Text descriptionText;
 	
 	@FXML
 	ComboBox<String> categoryComboBox;
@@ -88,12 +95,21 @@ public class StatusProductOverviewController {
 	}
 	
 	/**
+	 * Go to show product details view
+	 */
+	@FXML
+	private void handleProductDetailsButton() {
+		
+	}
+	
+	/**
 	 * Pass the product from the inactive table to the active table
 	 */
 	@FXML
 	private void handleLeftToRightButton() {
 		if (currentInactiveProduct != null) ProductService.changeStatusProduct(currentInactiveProduct);
 		sortActiveProductTable();
+		this.inactiveProductTable.requestFocus();
 	}
 	
 	/**
@@ -103,6 +119,7 @@ public class StatusProductOverviewController {
 	private void handleRightToLeftButton() {
 		if (currentActiveProduct != null) ProductService.changeStatusProduct(currentActiveProduct);
 		sortInactiveProductTable();
+		this.activeProductTable.requestFocus();
 	}
 	
 	/**
@@ -221,6 +238,7 @@ public class StatusProductOverviewController {
 			@Override
 			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
 				currentInactiveProduct = newValue;
+				showProduct(newValue);
 			}
 		});
 		
@@ -228,6 +246,7 @@ public class StatusProductOverviewController {
 			@Override
 			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
 				currentActiveProduct = newValue;
+				showProduct(newValue);
 			}
 		});
 		
@@ -332,6 +351,21 @@ public class StatusProductOverviewController {
 		this.qualityActiveProductColumn.setSortable(false);
 		this.sizeActiveProductColumn.setSortable(false);
 		this.nameActiveProductColumn.setSortable(false);
+	}
+	
+	/**
+	 * 
+	 * @param product - 
+	 */
+	private void showProduct(Product product) {
+		if (product != null) {
+			this.descriptionText.setText(product.toString());
+			this.productDetailsButton.setDisable(false);
+		}
+		else {
+			this.descriptionText.setText(null);
+			this.productDetailsButton.setDisable(true);
+		}
 	}
 	
 }

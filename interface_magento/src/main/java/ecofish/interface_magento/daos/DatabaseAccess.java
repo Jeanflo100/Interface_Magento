@@ -44,7 +44,7 @@ public class DatabaseAccess	{
 			}
 			else {
 				message = "Unable to open the configuration file and/or create a new one.\n"
-						+ "Please restart the application";
+						+ "Retry the action or restart the application if the problem persists";
 			}
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.setTitle("WARNING");
