@@ -1,7 +1,11 @@
 package ecofish.interface_magento.daos;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -22,6 +26,7 @@ public class DataSourceFactory {
 
 	private MysqlDataSource dataSource;
 	private SimpleStringProperty currentUser;
+	private ArrayList<HashMap<String, String>> privileges;
 	
 	private Boolean isNewUser;
 	
@@ -31,6 +36,7 @@ public class DataSourceFactory {
 	private DataSourceFactory() {
 		dataSource = new MysqlDataSource();
 		currentUser = new SimpleStringProperty();
+		privileges = new ArrayList<HashMap<String, String>>();
 	}
 	
 	/**
@@ -59,6 +65,26 @@ public class DataSourceFactory {
 	public static Boolean setUser(String username, String password) {
 		try {
 			Connection connection = DataSourceFactory.getDataSource().getConnection(username, password);
+			getPrivileges().clear();
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(
+					"SELECT null AS 'database', null AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.USER_PRIVILEGES\n" +
+					"UNION\n" +
+					"SELECT table_schema AS 'database', null AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.SCHEMA_PRIVILEGES\n" +
+					"UNION\n" +
+					"SELECT table_schema AS 'database', table_name AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.TABLE_PRIVILEGES\n" +
+					"UNION\n" +
+					"SELECT table_schema AS 'database', table_name AS 'table', column_name AS 'column', privilege_type AS 'privilege' FROM information_schema.COLUMN_PRIVILEGES\n"
+					);
+			while (resultSet.next()) {
+				HashMap<String, String> privilege = new HashMap<String, String>();
+				privilege.put("database", resultSet.getString("database"));
+				privilege.put("table", resultSet.getString("table"));
+				privilege.put("column", resultSet.getString("column"));
+				privilege.put("privilege", resultSet.getString("privilege"));
+				getPrivileges().add(privilege);
+			}
+			statement.close();
 			connection.close();
 		} catch (SQLException e) {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -77,12 +103,37 @@ public class DataSourceFactory {
 		return true;
 	}
 	
+	protected static Boolean checkPrivilege(String privilege_searched, String database, String table, String column) {
+		for (HashMap<String, String> privilege : getPrivileges()) {
+			if (privilege.get("privilege").equals(privilege_searched)) {
+				if (privilege.get("database") == null) {
+					return true;				}
+				else if (privilege.get("database").equals(database)) {
+					if (privilege.get("table") == null) {
+						return true;					}
+					else if (privilege.get("table").equals(table)) {
+						if (privilege.get("column") == null) {
+							return true;						}
+						else if (privilege.get("column").equals(column)) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Returns the currently authenticated user
 	 * @return the currently authenticated user
 	 */
 	public static SimpleStringProperty getCurrentUser() {
 		return DataSourceFactoryHolder.INSTANCE.currentUser;
+	}
+	
+	private static ArrayList<HashMap<String, String>> getPrivileges(){
+		return DataSourceFactoryHolder.INSTANCE.privileges;
 	}
 	
 	/**
@@ -136,6 +187,7 @@ public class DataSourceFactory {
 	protected static String getCustomMessageSQLException(SQLException error) {
 		System.out.println(error.getErrorCode());
 		System.out.println(error.getSQLState());
+		System.out.println(error.getMessage());
 		Logging.LOGGER.log(Level.CONFIG, error.getMessage());
 		if (error.getErrorCode() == 0) return "Unable to connect to the database";
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";

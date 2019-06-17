@@ -2,6 +2,7 @@ package ecofish.interface_magento.view;
 
 import ecofish.interface_magento.daos.DataSourceFactory;
 import ecofish.interface_magento.daos.DatabaseAccess;
+import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.StageService;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -55,6 +56,11 @@ public class LoginScreenController {
 				this.passwordPasswordField.requestFocus();
 			}
 		}
+	}
+	
+	@FXML
+	private void openLogFile() {
+		Logging.openLoggingFile();
 	}
 	
 	@FXML
