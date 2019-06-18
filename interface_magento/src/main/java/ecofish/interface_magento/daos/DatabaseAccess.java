@@ -35,6 +35,18 @@ public class DatabaseAccess	{
 			dataSource.setPort(Integer.parseInt(port));
 			dataSource.setDatabaseName(name);
 			dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
+			dataSource.setServerName(server);
+			try {
+				dataSource.setPort(Integer.parseInt(port));
+			} catch (NumberFormatException e) {
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setHeaderText("Error when recovering database connection data");
+				alert.setContentText("The port specified in the configuration file is invalid.\n"
+										+ "Please correct this and restart the application.\n"
+										+ "(Access to the configuration file by clicking on the database file icon on the authentication screen that follows)");
+				alert.showAndWait();
+			}
+			dataSource.setDatabaseName(name);
 		}
 		catch (IOException e){
 			Logging.LOGGER.log(Level.WARNING, "Error when recovering database connection data: " + "Impossible to open the configuration file");
@@ -43,14 +55,13 @@ public class DatabaseAccess	{
 				message = "Configuration file not founded.\n"
 						+ "A new one has been created at the expected location.\n"
 						+ "It must now be initialized and the application will have to restart to recover the changes.\n"
-						+ "(Access to the file by clicking on the file icon above the following authentication)";
+						+ "(Access to the configuration file by clicking on the database file icon on the authentication screen that follows)";
 			}
 			else {
 				message = "Unable to open/read the configuration file and/or create a new one.\n"
 						+ "Retry the action or restart the application if the problem persists";
 			}
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle("WARNING");
 			alert.setHeaderText("Error when recovering database connection data");
 			alert.setContentText(message);
 			alert.showAndWait();	
