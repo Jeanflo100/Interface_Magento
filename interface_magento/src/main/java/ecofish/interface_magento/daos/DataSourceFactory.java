@@ -112,6 +112,7 @@ public class DataSourceFactory {
 	private static String getCustomMessageFailureConnection(SQLException error) {
 		Logging.LOGGER.log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
+		else if (error.getErrorCode() == 1049) return "Database not founded.\nPlease check the name of the database registered in the configuration file";
 		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
 		else if (error.getSQLState().equals("08S01")) return "Unable to connect to the database. Please try again";
 		else return "Unexpected error. Please try again";
