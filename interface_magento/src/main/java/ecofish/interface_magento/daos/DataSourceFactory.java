@@ -79,7 +79,6 @@ public class DataSourceFactory {
 					+ "AS privilegeTable WHERE (privilegeTable.database IS NULL OR privilegeTable.database = '" + getDataSource().getDatabaseName() + "')"
 					);
 			while (resultSet.next()) {
-				System.out.println(resultSet.getString(1) + " | " + resultSet.getString(2) + " | " + resultSet.getString(3) + " | " + resultSet.getString(4));
 				HashMap<String, String> privilege = new HashMap<String, String>();
 				privilege.put("database", resultSet.getString("database"));
 				privilege.put("table", resultSet.getString("table"));
@@ -219,6 +218,7 @@ public class DataSourceFactory {
 		Optional<ButtonType> option = alert.showAndWait();
 		while (option.get() == openLogs) {
 			Logging.openLoggingFile();
+			alert.setResult(ButtonType.NO);
 			option = alert.showAndWait();
 		}
 		StageService.closeSecondaryStage();
