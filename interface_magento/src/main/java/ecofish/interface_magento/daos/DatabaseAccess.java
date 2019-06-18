@@ -31,9 +31,6 @@ public class DatabaseAccess	{
 			String server = ini.get("database", "server");
 			String port = ini.get("database", "port");
 			String name = ini.get("database", "name");
-			dataSource.setServerName(server);
-			dataSource.setPort(Integer.parseInt(port));
-			dataSource.setDatabaseName(name);
 			dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
 			dataSource.setServerName(server);
 			try {
