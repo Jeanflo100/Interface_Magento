@@ -87,10 +87,10 @@ public class LoadingProductThread implements Runnable {
     		Connection connection = DataSourceFactory.getDataSource().getConnection();
 			Statement statement = connection.createStatement();
 			
-			/*ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS retour FROM mg_admin_user");
+			ResultSet retour = statement.executeQuery("SELECT attribute_id, attribute_code FROM mg_eav_attribute");
 			while(retour.next()) {
-				System.out.println(retour.getString("retour"));
-			}*/
+				System.out.println(retour.getString(1) + "\t" + retour.getString(2));
+			}
 			
 			ResultSet nb_elements = statement.executeQuery("SELECT COUNT(productTable.sku) AS nb_products FROM mg_catalog_product_entity AS productTable");
 			nb_elements.next();

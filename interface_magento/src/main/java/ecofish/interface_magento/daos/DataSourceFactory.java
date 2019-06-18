@@ -111,6 +111,7 @@ public class DataSourceFactory {
 	 * @return Custom message
 	 */
 	private static String getCustomMessageFailureConnection(SQLException error) {
+		System.out.println(error.getMessage());
 		Logging.LOGGER.log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
 		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
