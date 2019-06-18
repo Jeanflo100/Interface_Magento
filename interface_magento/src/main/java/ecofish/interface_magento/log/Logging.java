@@ -83,7 +83,6 @@ public class Logging{
 		} catch (IOException e) {
 			Logging.LOGGER.log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle("WARNING");
 			alert.setHeaderText("Error when opening logs file");
 			alert.setContentText("Retry the action or restart the application if the problem persists");
 			alert.showAndWait();

@@ -91,7 +91,6 @@ public class DataSourceFactory {
 		} catch (SQLException e) {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.initOwner(StageService.getSecondaryStage());
-			alert.setTitle("WARNING");
 			alert.setHeaderText("Error when connecting to database");
 			alert.setContentText(getCustomMessageFailureConnection(e));
 			alert.showAndWait();
