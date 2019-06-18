@@ -70,13 +70,14 @@ public class DataSourceFactory {
 			ResultSet resultSet = statement.executeQuery(
 					"SELECT null AS 'database', null AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.USER_PRIVILEGES\n" +
 					"UNION\n" +
-					"SELECT table_schema AS 'database', null AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.SCHEMA_PRIVILEGES\n" +
+					"SELECT REPLACE(table_schema,'\\_','_') AS 'database', null AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.SCHEMA_PRIVILEGES\n" +
 					"UNION\n" +
 					"SELECT table_schema AS 'database', table_name AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.TABLE_PRIVILEGES\n" +
 					"UNION\n" +
 					"SELECT table_schema AS 'database', table_name AS 'table', column_name AS 'column', privilege_type AS 'privilege' FROM information_schema.COLUMN_PRIVILEGES\n"
 					);
 			while (resultSet.next()) {
+				System.out.println(resultSet.getString("database") + " | " + resultSet.getString("table") + " | " + resultSet.getString("column") + " | " + resultSet.getString("privilege"));
 				HashMap<String, String> privilege = new HashMap<String, String>();
 				privilege.put("database", resultSet.getString("database"));
 				privilege.put("table", resultSet.getString("table"));
