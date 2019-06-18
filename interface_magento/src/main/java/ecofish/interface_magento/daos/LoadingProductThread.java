@@ -30,7 +30,7 @@ public class LoadingProductThread implements Runnable {
 	private TreeMap<String, TreeSet<String>> groups;
     private DoubleProperty loadingProductProgressBar;
     private StringProperty loadingProductText;   
-    private SQLException error;
+    private Boolean error;
  
     /**
      * Initialization of parameters
@@ -45,22 +45,47 @@ public class LoadingProductThread implements Runnable {
     	this.loadingProductProgressBar.set(0.0);
     	this.loadingProductText.set("Loading Products...");
 
-    	this.error = null;
+    	this.error = false;
     	
     	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     }
  
     /**
-     * Loads products then display a window of success or failure
+     * Checks if the user has the necessary privileges and then get the products if he has them, suggests changing users otherwise
      */
     public void run() {
-
+		if (privilegeChecking()) {
+	    	loadingProducts();
+			updateInterface();
+		}
+		else {
+			problemPrivileges();
+		}
+    }
+    
+    /**
+     * Check each necessary privilege
+     * @return True if the user has all necessary privileges, false else
+     */
+    private Boolean privilegeChecking() {
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "idproduct")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "name")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "category")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "family")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "quality")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "size")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "actual_price")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "active")) return false;
+    	return true;
+    }
+    
+    /**
+     * Getting produts
+     */
+    private void loadingProducts() {
     	try {
-    		
     		Connection connection = DataSourceFactory.getDataSource().getConnection();
 			Statement statement = connection.createStatement();
-			
-			//ResultSet test = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM testTable");
 			
 			ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM product");
 			retour.next();
@@ -79,12 +104,8 @@ public class LoadingProductThread implements Runnable {
 						resultSet.getString("size"),
 						resultSet.getDouble("actual_price"),
 						resultSet.getBoolean("active"));
-				if (product.getActive()) {
-					this.activeProducts.add(product);
-				}
-				else {
-					this.inactiveProducts.add(product);
-				}
+				if (product.getActive()) this.activeProducts.add(product);
+				else this.inactiveProducts.add(product);
 
 				String category = resultSet.getString("category");
 				String family = resultSet.getString("family");
@@ -94,34 +115,36 @@ public class LoadingProductThread implements Runnable {
 				
 				nb_loading_products += 1;
 				loadingProductProgressBar.set((double)nb_loading_products/nb_products);
-				/*try {
-					Thread.sleep(30);
-					System.out.println(loadingProductProgressBar);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}*/
 			}
-
 		}
 		catch (SQLException e){
-			Logging.LOGGER.log(Level.WARNING, "Error when getting products list: " + DataSourceFactory.getCustomMessageSQLException(e));
-			error = e;
+			Logging.LOGGER.log(Level.SEVERE, "Error when getting products list:\n" + e.getMessage());
+			error = true;
 		}
-
-		Platform.runLater(() -> {
-			if (error != null) {
-				if (DataSourceFactory.showAlertSQLException(error, "Error when getting products list")) {
-					if (DataSourceFactory.goAuthentification()) {
-						ProductService.loadProduct();
-					}
-				}
+    }
+    
+    /**
+     * Update of the interface according to the result of the product getting
+     */
+    private void updateInterface() {
+    	Platform.runLater(() -> {
+			if (error) {
+				if (DataSourceFactory.showAlertErrorSQL("Error when getting products list")) ProductService.loadProduct();
 			}
 			else {
 				StageService.showView(Views.viewsPrimaryStage.StatusProductOverview);
 				StageService.closeSecondaryStage();				
 			}
         });
-		
     }
- 
+    
+    /**
+     * Shows the custom alert associated with a privilege problem and relaunch the getting of products if the user has been successfully changed
+     */
+    private void problemPrivileges() {
+    	Platform.runLater(() -> {
+    		if (DataSourceFactory.showAlertProblemPrivileges()) ProductService.loadProduct();
+    	});
+    }
+    
 }

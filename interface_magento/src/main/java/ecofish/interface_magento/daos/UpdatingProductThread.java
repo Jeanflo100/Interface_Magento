@@ -30,7 +30,7 @@ public class UpdatingProductThread implements Runnable {
     private Integer nb_update_products;
     private String updatedProductsLog;
 	private String separatorLog;
-    private SQLException error;
+    private Boolean error;
     
     /**
      * Initialization of parameters
@@ -48,17 +48,39 @@ public class UpdatingProductThread implements Runnable {
     	this.nb_update_products = 0;
     	this.updatedProductsLog = "";
     	this.separatorLog = " | ";
-    	this.error = null;
+    	this.error = false;
     	
     	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);	
     }
  
     /**
-     * Updates products then display a window of success or failure
+     * Checks if the user has the necessary privileges and then updates the products if he has them, suggests changing users otherwise
      */
     public void run() {
-
-		try {
+    	if (privilegeChecking()) {
+    		updatingProducts();
+    		updateInterface();
+    	}
+    	else {
+    		problemPrivileges();
+    	}
+    }
+    
+    /**
+     * Check each necessary privilege
+     * @return True if the user has all necessary privileges, false else
+     */
+    private Boolean privilegeChecking() {
+    	if (!DataSourceFactory.checkPrivilege("UPDATE", "products", "actual_price")) return false;
+    	if (!DataSourceFactory.checkPrivilege("UPDATE", "products", "active")) return false;
+    	return true;
+    }
+    
+    /**
+     * Updating products
+     */
+    private void updatingProducts() {
+    	try {
 			Connection connection = DataSourceFactory.getDataSource().getConnection();
 			Statement stmt = connection.createStatement();
 			for (Product product : updatingProducts) {
@@ -88,36 +110,32 @@ public class UpdatingProductThread implements Runnable {
 				}
 				this.nb_update_products += 1;
 				this.loadingProductProgressBar.set((double)this.nb_update_products/this.nb_products);
-				/*try {
-					Thread.sleep(30);
-					System.out.println(loadingProductProgressBar);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}*/
 			}
 			stmt.close();
 			connection.close();
 		}
 		catch (SQLException e) {
-			Logging.LOGGER.log(Level.WARNING, "Error when updating products list: " + DataSourceFactory.getCustomMessageSQLException(e));
-			error = e;
+			Logging.LOGGER.log(Level.SEVERE, "Error when updating products list:\n" + e.getMessage());
+			error = true;
 		}
-		
-		if (!this.updatedProducts.isEmpty()) {
-			for (Product product : this.updatedProducts) {
-				this.updatingProducts.remove(product);
-			}
-			Logging.LOGGER.log(Level.INFO, this.nb_update_products + "/" + this.nb_products + " products have been updated: " + updatedProductsLog);
-		}
-			
-		Platform.runLater(() -> {
-			if (error != null) {
-				if (DataSourceFactory.showAlertSQLException(error, "Error when updating products:\n" + this.nb_update_products + "/" + this.nb_products + " products have been updated")) {
-					if (DataSourceFactory.goAuthentification()) {
-						ProductService.updateProduct();
-					}
-				}
-				if (this.nb_update_products != 0) {
+    	finally {
+    		if (!this.updatedProducts.isEmpty()) {
+    			for (Product product : this.updatedProducts) {
+    				this.updatingProducts.remove(product);
+    			}
+    			Logging.LOGGER.log(Level.INFO, this.nb_update_products + "/" + this.nb_products + " products have been updated: " + updatedProductsLog);
+    		}
+    	}
+    }
+ 
+    /**
+     * Update of the interface according to the result of the product updating
+     */
+    private void updateInterface() {
+    	Platform.runLater(() -> {
+			if (error) {
+				if (DataSourceFactory.showAlertErrorSQL("Error when updating products list.\n" + this.nb_update_products + "/" + this.nb_products + " products have been updated")) ProductService.updateProduct();
+				else {
 					StageService.clearViewPrimaryStage();
 					StageService.showView(Views.viewsPrimaryStage.PriceProductOverview);
 				}
@@ -125,16 +143,23 @@ public class UpdatingProductThread implements Runnable {
 			else {
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
 				alert.initOwner(StageService.getSecondaryStage());
-				alert.setTitle("SUCCESS");
 				alert.setHeaderText("Success in updating products");
 				alert.setContentText(this.nb_update_products + "/" + this.nb_products + " products have been updated");
 				alert.showAndWait();
+				StageService.closeSecondaryStage();
 				StageService.clearViewPrimaryStage();
 				StageService.showView(Views.viewsPrimaryStage.StatusProductOverview);
-				StageService.closeSecondaryStage();
 			}
         });
-		
     }
- 
+    
+    /**
+     * Shows the custom alert associated with a privilege problem and relaunch the updating of products if the user has been successfully changed
+     */
+    private void problemPrivileges() {
+    	Platform.runLater(() -> {
+	    	if (DataSourceFactory.showAlertProblemPrivileges()) ProductService.updateProduct();
+    	});
+    }
+    
 }

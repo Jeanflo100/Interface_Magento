@@ -31,6 +31,9 @@ public class DatabaseAccess	{
 			String server = ini.get("database", "server");
 			String port = ini.get("database", "port");
 			String name = ini.get("database", "name");
+			dataSource.setServerName(server);
+			dataSource.setPort(Integer.parseInt(port));
+			dataSource.setDatabaseName(name);
 			dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
 		}
 		catch (IOException e){
@@ -44,7 +47,7 @@ public class DatabaseAccess	{
 			}
 			else {
 				message = "Unable to open the configuration file and/or create a new one.\n"
-						+ "Please restart the application";
+						+ "Retry the action or restart the application if the problem persists";
 			}
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.setTitle("WARNING");

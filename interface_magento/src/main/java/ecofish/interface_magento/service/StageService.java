@@ -28,6 +28,7 @@ public class StageService {
 	 */
 	private StageService() {
 		mainLayout = Views.getView(Views.viewsPrimaryStage.MainLayout);
+		baseHeightMainLayout = mainLayout.getPrefHeight();
 	}
 
 	/**
@@ -42,6 +43,7 @@ public class StageService {
 	private Stage secondaryStage;
 	
 	private BorderPane mainLayout;
+	private Double baseHeightMainLayout;
 	
 	private Hashtable<viewsPrimaryStage, Pane> viewPrimaryStage = new Hashtable<>();
 	private Hashtable<viewsSecondaryStage, Scene> viewSecondaryStage = new Hashtable<>();
@@ -121,7 +123,7 @@ public class StageService {
 			StageServiceHolder.INSTANCE.viewPrimaryStage.put(view, loadedView);
 			StageServiceHolder.INSTANCE.primaryStage.hide();
 		}
-		StageServiceHolder.INSTANCE.mainLayout.setPrefSize(loadedView.getPrefWidth(), StageServiceHolder.INSTANCE.mainLayout.getTop().getBoundsInParent().getHeight() + loadedView.getPrefHeight());
+		StageServiceHolder.INSTANCE.mainLayout.setPrefSize(loadedView.getPrefWidth(), StageServiceHolder.INSTANCE.baseHeightMainLayout + loadedView.getPrefHeight());
 		StageServiceHolder.INSTANCE.mainLayout.setCenter(loadedView);
 		StageServiceHolder.INSTANCE.primaryStage.sizeToScene();
 		StageServiceHolder.INSTANCE.primaryStage.centerOnScreen();
