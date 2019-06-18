@@ -68,14 +68,14 @@ public class LoadingProductThread implements Runnable {
      * @return True if the user has all necessary privileges, false else
      */
     private Boolean privilegeChecking() {
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "a941109_Ecofish_dump", "mg_catalog_product_entity", "sku")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "a941109_Ecofish_dump", "mg_catalog_product_entity_varchar", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "a941109_Ecofish_dump", "mg_catalog_product_entity_decimal", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "a941109_Ecofish_dump", "mg_catalog_product_entity_int", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "a941109_Ecofish_dump", "mg_catalog_category_entity_varchar", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "a941109_Ecofish_dump", "mg_eav_attribute_option_value", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "a941109_Ecofish_dump", "mg_eav_attribute", "attribute_id")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "a941109_Ecofish_dump", "mg_catalog_product_entity_int", "attribute_id")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity", "sku")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity_varchar", "value")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity_decimal", "value")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity_int", "value")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_category_entity_varchar", "value")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_eav_attribute_option_value", "value")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_eav_attribute", "attribute_id")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity_int", "attribute_id")) return false;
     	return true;
     }
     

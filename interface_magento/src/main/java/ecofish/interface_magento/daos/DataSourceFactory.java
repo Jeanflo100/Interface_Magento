@@ -57,7 +57,7 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Updates the connection data to the database concerning the user after authentication of this one and recovery of its privileges
+	 * Updates the connection data to the database concerning the user after authentication of this one and recovery of its global privileges and those for this database
 	 * @param username - username of the user
 	 * @param password - password of the user
 	 * @return True if he has access to the database, false else
@@ -68,16 +68,18 @@ public class DataSourceFactory {
 			getPrivileges().clear();
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(
-					"SELECT null AS 'database', null AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.USER_PRIVILEGES\n" +
-					"UNION\n" +
-					"SELECT REPLACE(table_schema,'\\_','_') AS 'database', null AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.SCHEMA_PRIVILEGES\n" +
-					"UNION\n" +
-					"SELECT table_schema AS 'database', table_name AS 'table', null AS 'column', privilege_type AS 'privilege' FROM information_schema.TABLE_PRIVILEGES\n" +
-					"UNION\n" +
-					"SELECT table_schema AS 'database', table_name AS 'table', column_name AS 'column', privilege_type AS 'privilege' FROM information_schema.COLUMN_PRIVILEGES\n"
+					"SELECT * FROM\n"
+					+ "(SELECT NULL AS 'database', NULL AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.USER_PRIVILEGES\n"
+					+ "UNION\n"
+					+ "SELECT REPLACE(table_schema,'\\_','_') AS 'database', NULL AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.SCHEMA_PRIVILEGES\n"
+					+ "UNION\n"
+					+ "SELECT table_schema AS 'database', table_name AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.TABLE_PRIVILEGES\n"
+					+ "UNION\n"
+					+ "SELECT table_schema AS 'database', table_name AS 'table', column_name AS 'column', privilege_type AS 'privilege' FROM information_schema.COLUMN_PRIVILEGES)\n"
+					+ "AS privilegeTable WHERE (privilegeTable.database IS NULL OR privilegeTable.database = '" + getDataSource().getDatabaseName() + "')"
 					);
 			while (resultSet.next()) {
-				System.out.println(resultSet.getString("database") + " | " + resultSet.getString("table") + " | " + resultSet.getString("column") + " | " + resultSet.getString("privilege"));
+				System.out.println(resultSet.getString(1) + " | " + resultSet.getString(2) + " | " + resultSet.getString(3) + " | " + resultSet.getString(4));
 				HashMap<String, String> privilege = new HashMap<String, String>();
 				privilege.put("database", resultSet.getString("database"));
 				privilege.put("table", resultSet.getString("table"));
@@ -125,12 +127,12 @@ public class DataSourceFactory {
 	 * @param column - column in which the action is to be performed
 	 * @return True if the user has the desired privilege, false else
 	 */
-	protected static Boolean checkPrivilege(String action, String database, String table, String column) {
+	protected static Boolean checkPrivilege(String action, String table, String column) {
 		for (HashMap<String, String> privilege : getPrivileges()) {
 			if (privilege.get("privilege").equals(action)) {
 				if (privilege.get("database") == null) {
 					return true;				}
-				else if (privilege.get("database").equals(database)) {
+				else {
 					if (privilege.get("table") == null) {
 						return true;					}
 					else if (privilege.get("table").equals(table)) {
