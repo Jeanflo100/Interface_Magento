@@ -71,8 +71,8 @@ public class UpdatingProductThread implements Runnable {
      * @return True if the user has all necessary privileges, false else
      */
     private Boolean privilegeChecking() {
-    	if (!DataSourceFactory.checkPrivilege("UPDATE", "ecofish products", "products", "actual_price")) return false;
-    	if (!DataSourceFactory.checkPrivilege("UPDATE", "ecofish products", "products", "active")) return false;
+    	if (!DataSourceFactory.checkPrivilege("UPDATE", "products", "actual_price")) return false;
+    	if (!DataSourceFactory.checkPrivilege("UPDATE", "products", "active")) return false;
     	return true;
     }
     

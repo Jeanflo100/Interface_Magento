@@ -68,14 +68,14 @@ public class LoadingProductThread implements Runnable {
      * @return True if the user has all necessary privileges, false else
      */
     private Boolean privilegeChecking() {
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "idproduct")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "name")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "category")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "family")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "quality")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "size")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "actual_price")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "ecofish products", "products", "active")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "idproduct")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "name")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "category")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "family")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "quality")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "size")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "actual_price")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "active")) return false;
     	return true;
     }
     
