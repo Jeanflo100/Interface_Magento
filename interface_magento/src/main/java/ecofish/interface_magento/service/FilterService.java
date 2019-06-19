@@ -16,12 +16,21 @@ public class FilterService {
 	private ObservableList<String> categories;
 	private ObservableList<String> families;
 	
+	private static String DefaultFamily = "[No family]";
+	
 	/**
 	 * Initialization of parameters
 	 */
 	public FilterService() {
 		this.categories = FXCollections.observableArrayList();
 		this.families = FXCollections.observableArrayList();
+	}
+	
+	/**
+	 * Returns the default family to give to a product if it hasn't family
+	 */
+	public static String getDefaultFamily() {
+		return DefaultFamily;
 	}
 	
 	/**

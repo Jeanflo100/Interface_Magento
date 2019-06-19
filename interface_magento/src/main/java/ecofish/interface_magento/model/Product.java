@@ -112,7 +112,10 @@ public class Product implements Comparable<Product>{
 	
 	@Override
 	public String toString() {
-		return "Name : " + name + "\n" + "Size : " + size + "\n" + "Quality : " + quality + "\n";
+		String description = "Name : " + name + "\n";
+		if (size != null) description += "Size : " + size + "\n";
+		if (quality != null) description += "Quality : " + quality + "\n";
+		return description;
 	}
 
 	/**

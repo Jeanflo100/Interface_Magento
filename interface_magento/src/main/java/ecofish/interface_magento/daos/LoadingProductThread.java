@@ -87,11 +87,6 @@ public class LoadingProductThread implements Runnable {
     		Connection connection = DataSourceFactory.getDataSource().getConnection();
 			Statement statement = connection.createStatement();
 			
-			ResultSet retour = statement.executeQuery("SELECT attribute_id, attribute_code FROM mg_eav_attribute");
-			while(retour.next()) {
-				System.out.println(retour.getString(1) + "\t" + retour.getString(2));
-			}
-			
 			ResultSet nb_elements = statement.executeQuery("SELECT COUNT(productTable.sku) AS nb_products FROM mg_catalog_product_entity AS productTable");
 			nb_elements.next();
 			Integer nb_products = nb_elements.getInt("nb_products");
@@ -100,9 +95,11 @@ public class LoadingProductThread implements Runnable {
 			TreeSet<String> familySet;
 
 			ResultSet resultSet = statement.executeQuery(
-					"SELECT DISTINCT productTable.sku AS sku, nameTable.value AS name, priceTable.value AS price, statusTable.value AS status, categoryTable.value AS category, familyTable.value AS family\n"	
+					"SELECT DISTINCT productTable.sku AS sku, nameTable.value AS name, sizeTable.value AS size, qualityTable.value AS quality, priceTable.value AS price, statusTable.value AS status, categoryTable.value AS category, familyTable.value AS family\n"	
 					+ "FROM mg_catalog_product_entity AS productTable\n"
 					+ "LEFT JOIN mg_catalog_product_entity_varchar AS nameTable USING (entity_id)\n"
+					+ "LEFT JOIN mg_catalog_product_entity_varchar AS sizeTable using (entity_id)\n"
+					+ "LEFT JOIN mg_catalog_product_entity_varchar AS qualityTable using (entity_id)\n"
 					+ "LEFT JOIN mg_catalog_product_entity_decimal AS priceTable USING (entity_id)\n"
 					+ "LEFT JOIN mg_catalog_product_entity_int AS statusTable USING (entity_id)\n"
 					+ "LEFT JOIN mg_catalog_category_product AS matchProductCategoryTable ON productTable.entity_id = matchProductCategoryTable.product_id\n"
@@ -116,6 +113,12 @@ public class LoadingProductThread implements Runnable {
 					+ "										FROM mg_eav_attribute AS attributeTable\n"
 					+ "										LEFT JOIN mg_eav_entity_type AS attributeTypeTable USING (entity_type_id)\n"
 					+ "										WHERE (attributeTable.attribute_code = 'name' AND attributeTypeTable.entity_type_code = 'catalog_product'))\n"
+					+ "	AND sizeTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "										FROM mg_eav_attribute AS attributeTable\n"
+					+ "										WHERE attributeTable.attribute_code = 'product_size')\n"
+					+ "	AND qualityTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "										FROM mg_eav_attribute AS attributeTable\n"
+					+ "										WHERE attributeTable.attribute_code = 'product_quality')\n"
 					+ "	AND priceTable.attribute_id = (SELECT attributeTable.attribute_id\n"
 					+ "										FROM mg_eav_attribute AS attributeTable\n"
 					+ "										WHERE attributeTable.attribute_code = 'price')\n"
@@ -140,14 +143,14 @@ public class LoadingProductThread implements Runnable {
 			
 			while(resultSet.next()) {
 				String category = resultSet.getString("category");
-				String family = resultSet.getString("family") == null ? "[No family]" : resultSet.getString("family");
+				String family = resultSet.getString("family") == null ? FilterService.getDefaultFamily() : resultSet.getString("family");
 				Product product = new Product(
 						resultSet.getString("sku"),
 						category,
 						family,
 						resultSet.getString("name"),
-						"",	/*resultSet.getString("size"),*/
-						"",	/*resultSet.getString("quality"),*/
+						resultSet.getString("size"),
+						resultSet.getString("quality"),
 						resultSet.getDouble("price"),
 						resultSet.getBoolean("status"));
 				if (product.getActive()) this.activeProducts.add(product);
