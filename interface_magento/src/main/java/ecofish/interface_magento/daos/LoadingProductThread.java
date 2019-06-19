@@ -15,9 +15,8 @@ import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
+import ecofish.interface_magento.view.LoadingProductController;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.StringProperty;
 
 /**
  * Thread retrieving products from the database
@@ -28,8 +27,6 @@ public class LoadingProductThread implements Runnable {
 	private ArrayList<Product> activeProducts;
 	private ArrayList<Product> inactiveProducts;
 	private TreeMap<String, TreeSet<String>> groups;
-    private DoubleProperty loadingProductProgressBar;
-    private StringProperty loadingProductText;   
     private Boolean error;
  
     /**
@@ -39,15 +36,12 @@ public class LoadingProductThread implements Runnable {
     	this.activeProducts = ProductService.getActiveProducts();
     	this.inactiveProducts = ProductService.getInactiveProducts();
     	this.groups = FilterService.getGroups();
-    	this.loadingProductProgressBar = ProductService.getLoadingProductProgressBar();
-    	this.loadingProductText = ProductService.getLoadingProductText();
-    	
-    	this.loadingProductProgressBar.set(0.0);
-    	this.loadingProductText.set("Loading Products...");
+
+    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
+    	LoadingProductController.updateLoadingProductProgressBar(0.0);
+    	LoadingProductController.updateLoadingProductText("Loading Products...");
 
     	this.error = false;
-    	
-    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     }
  
     /**
@@ -114,7 +108,13 @@ public class LoadingProductThread implements Runnable {
 				groups.put(category, familySet);
 				
 				nb_loading_products += 1;
-				loadingProductProgressBar.set((double)nb_loading_products/nb_products);
+				LoadingProductController.updateLoadingProductProgressBar((double)nb_loading_products/nb_products);
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		catch (SQLException e){

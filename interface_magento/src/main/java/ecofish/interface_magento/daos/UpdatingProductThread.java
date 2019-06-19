@@ -11,9 +11,8 @@ import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
+import ecofish.interface_magento.view.LoadingProductController;
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.Alert;
 
 /**
@@ -24,8 +23,6 @@ public class UpdatingProductThread implements Runnable {
 
 	private TreeSet<Product> updatingProducts;
 	private TreeSet<Product> updatedProducts;
-    private DoubleProperty loadingProductProgressBar;
-    private StringProperty loadingProductText;
     private Integer nb_products;
     private Integer nb_update_products;
     private String updatedProductsLog;
@@ -38,11 +35,9 @@ public class UpdatingProductThread implements Runnable {
     public UpdatingProductThread() {
     	this.updatingProducts = ProductService.getUpdatingProducts();
     	this.updatedProducts = new TreeSet<Product>();
-    	this.loadingProductProgressBar = ProductService.getLoadingProductProgressBar();
-    	this.loadingProductText = ProductService.getLoadingProductText();
     	
-    	this.loadingProductProgressBar.set(0.0);
-    	this.loadingProductText.set("Update Products...");
+    	LoadingProductController.updateLoadingProductProgressBar(0.0);
+    	LoadingProductController.updateLoadingProductText("Update Products...");
 
     	this.nb_products = this.updatingProducts.size();
     	this.nb_update_products = 0;
@@ -50,7 +45,7 @@ public class UpdatingProductThread implements Runnable {
     	this.separatorLog = " | ";
     	this.error = false;
     	
-    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);	
+    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     }
  
     /**
@@ -109,7 +104,13 @@ public class UpdatingProductThread implements Runnable {
 					this.updatedProducts.add(product);
 				}
 				this.nb_update_products += 1;
-				this.loadingProductProgressBar.set((double)this.nb_update_products/this.nb_products);
+				LoadingProductController.updateLoadingProductProgressBar((double)this.nb_update_products/this.nb_products);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			stmt.close();
 			connection.close();
