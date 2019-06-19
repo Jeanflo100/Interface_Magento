@@ -1,10 +1,11 @@
 package ecofish.interface_magento.view;
 
-import ecofish.interface_magento.daos.DataSourceFactory;
+import ecofish.interface_magento.daos.AuthentificationThread;
 import ecofish.interface_magento.daos.DatabaseAccess;
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.StageService;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -17,7 +18,10 @@ import javafx.scene.layout.AnchorPane;
 public class LoginScreenController {
 	
 	@FXML
-	AnchorPane loginScreenAnchorPane;
+	AnchorPane backgroundAnchorPane;
+	
+	@FXML
+	AnchorPane componentsAnchorPane;
 	
 	@FXML
 	TextField usernameTextField;
@@ -30,7 +34,7 @@ public class LoginScreenController {
 	 */
 	@FXML
 	private void initialize() {
-		this.loginScreenAnchorPane.setOnKeyPressed(keyEvent -> {
+		this.componentsAnchorPane.setOnKeyPressed(keyEvent -> {
 			if (keyEvent.getCode() == KeyCode.ESCAPE) {
 				closeWindow();
 			}
@@ -53,14 +57,22 @@ public class LoginScreenController {
 	@FXML
 	private void getInformationConnection() {
 		if (!this.usernameTextField.getText().isEmpty()) {
-			Boolean result = DataSourceFactory.setUser(this.usernameTextField.getText(), this.passwordPasswordField.getText());
-			if (result) {
-				closeWindow();				
-			}
-			else {
-				this.passwordPasswordField.selectAll();
-				this.passwordPasswordField.requestFocus();
-			}
+			this.backgroundAnchorPane.setCursor(Cursor.WAIT);
+			this.componentsAnchorPane.setDisable(true);
+			AuthentificationThread authentification = new AuthentificationThread(this, this.usernameTextField.getText(), this.passwordPasswordField.getText());
+			new Thread(authentification).start();
+		}
+	}
+	
+	public void resultAuthentification(Boolean success) {
+		this.componentsAnchorPane.setDisable(false);
+		this.backgroundAnchorPane.setCursor(Cursor.DEFAULT);
+		if (success) {
+			closeWindow();				
+		}
+		else {
+			this.passwordPasswordField.selectAll();
+			this.passwordPasswordField.requestFocus();
 		}
 	}
 	
