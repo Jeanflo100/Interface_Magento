@@ -8,7 +8,6 @@ import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.util.TextFormatterDouble;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -194,6 +193,9 @@ public class PriceProductOverviewController {
 			this.familyComboBox.requestFocus();
 			this.familyComboBox.show();
 		}
+		else {
+			showProductTable();
+		}
 	}
 	
 	/**
@@ -211,7 +213,7 @@ public class PriceProductOverviewController {
 	 */
 	@FXML
 	private void initialize() {
-		initTable();
+		initProductTable();
 		initItemSelection();
 		initKeyPresses();
 		setComponents();
@@ -220,7 +222,7 @@ public class PriceProductOverviewController {
 	/**
 	 * Set up table features
 	 */
-	private void initTable() {
+	private void initProductTable() {
 		this.productTable.setPlaceholder(new Label("No active products"));
 		this.nameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
@@ -230,22 +232,15 @@ public class PriceProductOverviewController {
 		this.productTable.setFixedCellSize(25);
 		this.numberVisibleRow = getNumberVisibleRow(this.productTable);
 		this.productTable.setRowFactory(productTable -> new TableRow<Product>() {
-			
 		    @Override
 		    protected void updateItem(Product product, boolean empty) {
 		        super.updateItem(product, empty);
-		        cancelHighlight();
 		        if (product != null && product.getNewPrice() != null) {
 		        	if (product.getNewPrice() > product.getActualPrice()) this.pseudoClassStateChanged(increasePrice, true);
 		        	else if (product.getNewPrice() < product.getActualPrice()) this.pseudoClassStateChanged(decreasePrice, true);
+		        	else {this.pseudoClassStateChanged(increasePrice, false); this.pseudoClassStateChanged(decreasePrice, false);}
 		        }
 		    }
-		    
-		    private void cancelHighlight() {
-		    	 this.pseudoClassStateChanged(increasePrice, false);
-			     this.pseudoClassStateChanged(decreasePrice, false);
-		    }
-	    
 		});
 	}
 	
@@ -253,32 +248,23 @@ public class PriceProductOverviewController {
 	 * Adding action on the item element
 	 */
 	private void initItemSelection() {
-		this.productTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
-			@Override
-			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
-				showProduct(newValue);
-			}
+		this.productTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
+			showProduct(newValue);
 		});
 		
-		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!categoryComboBox.isShowing() && categoryComboBox.getSelectionModel().getSelectedItem() != null) {
-					categoryComboBox.show();
-				}
-				newCategorySelected = true;
-				updateProductTable(newValue, null);
+		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+			if (!categoryComboBox.isShowing() && categoryComboBox.getSelectionModel().getSelectedItem() != null) {
+				categoryComboBox.show();
 			}
+			newCategorySelected = true;
+			updateProductTable(newValue, null);
 		});
 		
-		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!familyComboBox.isShowing() && familyComboBox.getSelectionModel().getSelectedItem() != null) {
-					familyComboBox.show();
-				}
-				updateProductTable(currentCategory, newValue);
+		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+			if (!familyComboBox.isShowing() && familyComboBox.getSelectionModel().getSelectedItem() != null) {
+				familyComboBox.show();
 			}
+			updateProductTable(currentCategory, newValue);
 		});
 	}
 	

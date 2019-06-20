@@ -6,7 +6,6 @@ import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
@@ -159,6 +158,9 @@ public class StatusProductOverviewController {
 			this.familyComboBox.requestFocus();
 			this.familyComboBox.show();
 		}
+		else {
+			showProductTables();
+		}
 	}
 	
 	/**
@@ -179,8 +181,8 @@ public class StatusProductOverviewController {
 	 */
 	@FXML
 	private void initialize() {
-		initInactiveTable();
-		initActiveTable();
+		initInactiveProductTable();
+		initActiveProductTable();
 		initItemSelection();
 		initKeyPresses();
 		setComponents();
@@ -189,7 +191,7 @@ public class StatusProductOverviewController {
 	/**
 	 * Set up inactive table features
 	 */
-	private void initInactiveTable() {
+	private void initInactiveProductTable() {
 		this.inactiveProductTable.setPlaceholder(new Label("No inactive products"));
 		this.nameInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
@@ -198,12 +200,8 @@ public class StatusProductOverviewController {
 		    @Override
 		    protected void updateItem(Product product, boolean empty) {
 		        super.updateItem(product, empty);
-		        if (product != null && product.getChangeActive() == true) {
-		        	this.pseudoClassStateChanged(activeToInactive, true);
-		        }
-		        else {
-		        	this.pseudoClassStateChanged(activeToInactive, false);
-		        }
+		        if (product != null && product.getChangeActive() == true) this.pseudoClassStateChanged(activeToInactive, true);
+		        else this.pseudoClassStateChanged(activeToInactive, false);
 		    }
 		});
 	}
@@ -211,7 +209,7 @@ public class StatusProductOverviewController {
 	/**
 	 * Set up active table features
 	 */
-	private void initActiveTable() {
+	private void initActiveProductTable() {
 		this.activeProductTable.setPlaceholder(new Label("No active products"));
 		this.nameActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
@@ -220,12 +218,8 @@ public class StatusProductOverviewController {
 		    @Override
 		    protected void updateItem(Product product, boolean empty) {
 		        super.updateItem(product, empty);
-		        if (product != null && product.getChangeActive() == true) {
-		        	this.pseudoClassStateChanged(inactiveToActive, true);
-		        }
-		        else {
-		        	this.pseudoClassStateChanged(inactiveToActive, false);
-		        }
+		        if (product != null && product.getChangeActive() == true) this.pseudoClassStateChanged(inactiveToActive, true);
+		        else this.pseudoClassStateChanged(inactiveToActive, false);
 		    }
 		});
 	}
@@ -234,41 +228,37 @@ public class StatusProductOverviewController {
 	 * Adding action on the item selected
 	 */
 	private void initItemSelection() {
-		this.inactiveProductTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
-			@Override
-			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
-				currentInactiveProduct = newValue;
-				showProduct(newValue);
-			}
+		this.inactiveProductTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
+			currentInactiveProduct = newValue;
+			showProduct(currentInactiveProduct);
 		});
 		
-		this.activeProductTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Product>() {
-			@Override
-			public void changed(ObservableValue<? extends Product> observable, Product oldValue, Product newValue) {
-				currentActiveProduct = newValue;
-				showProduct(newValue);
-			}
+		this.activeProductTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
+			currentActiveProduct = newValue;
+			showProduct(currentActiveProduct);
 		});
 		
-		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!categoryComboBox.isShowing() && categoryComboBox.getSelectionModel().getSelectedItem() != null) {
-					categoryComboBox.show();
-				}
-				newCategorySelected = true;
-				updateProductTable(newValue, null);
-			}
+		this.inactiveProductTable.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+			if (newValue) showProduct(currentInactiveProduct);
 		});
 		
-		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!familyComboBox.isShowing() && familyComboBox.getSelectionModel().getSelectedItem() != null) {
-					familyComboBox.show();
-				}
-				updateProductTable(currentCategory, newValue);
+		this.activeProductTable.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+			if (newValue) showProduct(currentActiveProduct);
+		});
+		
+		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+			if (!categoryComboBox.isShowing() && categoryComboBox.getSelectionModel().getSelectedItem() != null) {
+				categoryComboBox.show();
 			}
+			newCategorySelected = true;
+			updateProductTable(newValue, null);
+		});
+		
+		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+			if (!familyComboBox.isShowing() && familyComboBox.getSelectionModel().getSelectedItem() != null) {
+				familyComboBox.show();
+			}
+			updateProductTable(currentCategory, newValue);
 		});
 	}
 	
