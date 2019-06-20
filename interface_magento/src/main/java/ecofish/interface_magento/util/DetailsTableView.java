@@ -3,6 +3,10 @@ package ecofish.interface_magento.util;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+/**
+ * Class containing basic non-implemented methods for the TableView component
+ * @author Jean-Florian Tassart
+ */
 public class DetailsTableView {
 	
     /**
