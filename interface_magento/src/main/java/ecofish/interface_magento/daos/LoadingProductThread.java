@@ -11,7 +11,7 @@ import java.util.logging.Level;
 
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.model.Product;
-import ecofish.interface_magento.service.FilterService;
+import ecofish.interface_magento.service.Filters;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
@@ -35,7 +35,7 @@ public class LoadingProductThread implements Runnable {
     public LoadingProductThread() {
     	this.activeProducts = ProductService.getActiveProducts();
     	this.inactiveProducts = ProductService.getInactiveProducts();
-    	this.groups = FilterService.getGroups();
+    	this.groups = Filters.getGroups();
 
     	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     	LoadingProductController.updateLoadingProductProgressBar(0.0);

@@ -4,7 +4,7 @@ package ecofish.interface_magento.view;
 import java.util.Optional;
 
 import ecofish.interface_magento.model.Product;
-import ecofish.interface_magento.service.FilterService;
+import ecofish.interface_magento.service.Filters;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.util.TextFormatterDouble;
@@ -76,13 +76,7 @@ public class PriceProductOverviewController {
 	
 	private Product currentProduct;
 	
-	private FilterService filterService;
-	
-	private String currentCategory;
-	
-	private String currentFamily;
-	
-	private Boolean newCategorySelected;
+	private Filters filters;
 	
     private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
     private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
@@ -161,11 +155,7 @@ public class PriceProductOverviewController {
 	 */
 	@FXML
 	private void resetCategory() {
-		if (this.currentCategory != null) {
-			this.familyComboBox.setDisable(true);
-			this.categoryComboBox.getSelectionModel().clearSelection();
-			showProductTable();
-		}
+		this.filters.resetCategory();
 	}
 	
 	/**
@@ -173,10 +163,7 @@ public class PriceProductOverviewController {
 	 */
 	@FXML
 	private void resetFamily() {
-		if (this.currentFamily != null) {
-			this.familyComboBox.getSelectionModel().clearSelection();
-			showProductTable();
-		}
+		this.filters.resetFamily();
 	}
 	
 	/**
@@ -184,18 +171,7 @@ public class PriceProductOverviewController {
 	 */
 	@FXML
 	private void showFamily() {
-		if (this.currentCategory != null) {
-			if (this.newCategorySelected == true) {
-				this.newCategorySelected = false;
-				this.familyComboBox.setItems(this.filterService.getFamilies(this.currentCategory));
-				this.familyComboBox.setDisable(false);
-			}
-			this.familyComboBox.requestFocus();
-			this.familyComboBox.show();
-		}
-		else {
-			showProductTable();
-		}
+		this.filters.showFamily();
 	}
 	
 	/**
@@ -214,8 +190,9 @@ public class PriceProductOverviewController {
 	@FXML
 	private void initialize() {
 		initProductTable();
-		initItemSelection();
-		initKeyPresses();
+		initItemSelectionTable();
+		initKeyPressesTable();
+		initFilter();
 		setComponents();
 	}
 	
@@ -247,31 +224,16 @@ public class PriceProductOverviewController {
 	/**
 	 * Adding action on the item element
 	 */
-	private void initItemSelection() {
+	private void initItemSelectionTable() {
 		this.productTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
 			showProduct(newValue);
-		});
-		
-		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-			if (!categoryComboBox.isShowing() && categoryComboBox.getSelectionModel().getSelectedItem() != null) {
-				categoryComboBox.show();
-			}
-			newCategorySelected = true;
-			updateProductTable(newValue, null);
-		});
-		
-		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-			if (!familyComboBox.isShowing() && familyComboBox.getSelectionModel().getSelectedItem() != null) {
-				familyComboBox.show();
-			}
-			updateProductTable(currentCategory, newValue);
 		});
 	}
 	
 	/**
 	 * Added faster navigation using the keys
 	 */
-	private void initKeyPresses() {
+	private void initKeyPressesTable() {
 		this.productTable.setOnKeyTyped(keyEvent -> {
 			if(keyEvent.getCharacter().matches("[.0-9]")) {
 				this.newPriceTextField.requestFocus();
@@ -297,7 +259,20 @@ public class PriceProductOverviewController {
 		});
 	}
 	
-
+	private void initFilter() {
+		this.filters = new Filters(this.categoryComboBox, this.familyComboBox) {
+			@Override
+			protected void updateTable(String category, String family) {
+				productTable.setItems(ProductService.getActiveProductsFiltered(category, family));
+				sortProductTable();
+				productTable.refresh();
+			}
+			@Override
+			public void showTable() {
+				showProductTable();
+			}
+		};
+	}
 	
 	/**
 	 * Adding data to the view components
@@ -310,11 +285,6 @@ public class PriceProductOverviewController {
 		this.productTable.getSortOrder().add(this.qualityColumn);
 		sortProductTable();
 		this.productTable.getSelectionModel().selectFirst();
-		
-		this.filterService = new FilterService();
-		this.categoryComboBox.setItems(this.filterService.getCategories());
-		this.familyComboBox.setDisable(true);
-		this.newCategorySelected = false;
 		
 		TextFormatterDouble textFormatter = new TextFormatterDouble();
 		this.newPriceTextField.setTextFormatter(textFormatter.getTextFormatterDouble());
@@ -345,31 +315,6 @@ public class PriceProductOverviewController {
 	}
 	
 	/**
-	 * Update product table with filtering by category and family
-	 * @param category - the category to be used for filtering
-	 * @param family - the family to be used for filtering
-	 */
-	private void updateProductTable(String category, String family) {
-		this.currentCategory = category;
-		this.currentFamily = family;
-		this.productTable.setItems(ProductService.getActiveProductsFiltered(this.currentCategory, this.currentFamily));
-		sortProductTable();
-		this.productTable.refresh();
-	}
-	
-	/**
-	 * Sort products in the table
-	 */
-	private void sortProductTable() {
-		this.nameColumn.setSortable(true);
-		this.sizeColumn.setSortable(true);
-		this.qualityColumn.setSortable(true);
-		this.qualityColumn.setSortable(false);
-		this.sizeColumn.setSortable(false);
-		this.nameColumn.setSortable(false);
-	}
-	
-	/**
 	 * Customize the display of the selection in the table to have the currently selected product around the center of the table
 	 */
 	private void selectNextProduct() {
@@ -395,6 +340,18 @@ public class PriceProductOverviewController {
 			else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
 			this.productTable.refresh();
 		}
+	}
+	
+	/**
+	 * Sort products in the table
+	 */
+	private void sortProductTable() {
+		this.nameColumn.setSortable(true);
+		this.sizeColumn.setSortable(true);
+		this.qualityColumn.setSortable(true);
+		this.qualityColumn.setSortable(false);
+		this.sizeColumn.setSortable(false);
+		this.nameColumn.setSortable(false);
 	}
 	
 }

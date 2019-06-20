@@ -2,7 +2,7 @@ package ecofish.interface_magento.view;
 
 
 import ecofish.interface_magento.model.Product;
-import ecofish.interface_magento.service.FilterService;
+import ecofish.interface_magento.service.Filters;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
@@ -74,13 +74,7 @@ public class StatusProductOverviewController {
 	
 	private Product currentActiveProduct;
 	
-	private FilterService filterService;
-	
-	private String currentCategory;
-	
-	private String currentFamily;
-	
-	private Boolean newCategorySelected;
+	private Filters filters;
 	
     private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("inactive-to-active");
     private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
@@ -98,7 +92,7 @@ public class StatusProductOverviewController {
 	 */
 	@FXML
 	private void handleProductDetailsButton() {
-		
+		//TODO
 	}
 	
 	/**
@@ -126,11 +120,7 @@ public class StatusProductOverviewController {
 	 */
 	@FXML
 	private void resetCategory() {
-		if (this.currentCategory != null) {
-			this.familyComboBox.setDisable(true);
-			this.categoryComboBox.getSelectionModel().clearSelection();
-			showProductTables();
-		}
+		this.filters.resetCategory();
 	}
 	
 	/**
@@ -138,10 +128,7 @@ public class StatusProductOverviewController {
 	 */
 	@FXML
 	private void resetFamily() {
-		if (this.currentFamily != null) {
-			this.familyComboBox.getSelectionModel().clearSelection();
-			showProductTables();
-		}
+		this.filters.resetFamily();
 	}
 	
 	/**
@@ -149,18 +136,7 @@ public class StatusProductOverviewController {
 	 */
 	@FXML
 	private void showFamily() {
-		if (this.currentCategory != null) {
-			if (this.newCategorySelected == true) {
-				this.newCategorySelected = false;
-				this.familyComboBox.setItems(this.filterService.getFamilies(this.currentCategory));
-				this.familyComboBox.setDisable(false);
-			}
-			this.familyComboBox.requestFocus();
-			this.familyComboBox.show();
-		}
-		else {
-			showProductTables();
-		}
+		this.filters.showFamily();
 	}
 	
 	/**
@@ -183,8 +159,9 @@ public class StatusProductOverviewController {
 	private void initialize() {
 		initInactiveProductTable();
 		initActiveProductTable();
-		initItemSelection();
-		initKeyPresses();
+		initItemSelectionTables();
+		initKeyPressesTables();
+		initFilter();
 		setComponents();
 	}
 	
@@ -227,7 +204,7 @@ public class StatusProductOverviewController {
 	/**
 	 * Adding action on the item selected
 	 */
-	private void initItemSelection() {
+	private void initItemSelectionTables() {
 		this.inactiveProductTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
 			currentInactiveProduct = newValue;
 			showProduct(currentInactiveProduct);
@@ -245,27 +222,12 @@ public class StatusProductOverviewController {
 		this.activeProductTable.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
 			if (newValue) showProduct(currentActiveProduct);
 		});
-		
-		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-			if (!categoryComboBox.isShowing() && categoryComboBox.getSelectionModel().getSelectedItem() != null) {
-				categoryComboBox.show();
-			}
-			newCategorySelected = true;
-			updateProductTable(newValue, null);
-		});
-		
-		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-			if (!familyComboBox.isShowing() && familyComboBox.getSelectionModel().getSelectedItem() != null) {
-				familyComboBox.show();
-			}
-			updateProductTable(currentCategory, newValue);
-		});
 	}
 	
 	/**
 	 * Added faster navigation using the keys
 	 */
-	private void initKeyPresses() {
+	private void initKeyPressesTables() {
 		this.inactiveProductTable.setOnKeyPressed(keyEvent -> {
 			if(keyEvent.getCode() == KeyCode.RIGHT) this.activeProductTable.requestFocus();
 			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleLeftToRightButton();
@@ -275,6 +237,24 @@ public class StatusProductOverviewController {
 			if(keyEvent.getCode() == KeyCode.LEFT) this.inactiveProductTable.requestFocus();
 			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleRightToLeftButton();
 		});
+	}
+	
+	private void initFilter() {
+		this.filters = new Filters(this.categoryComboBox, this.familyComboBox) {
+			@Override
+			protected void updateTable(String category, String family) {
+				inactiveProductTable.setItems(ProductService.getInactiveProductsFiltered(category, family));
+				activeProductTable.setItems(ProductService.getActiveProductsFiltered(category, family));
+				sortInactiveProductTable();
+				sortActiveProductTable();
+				inactiveProductTable.refresh();
+				activeProductTable.refresh();
+			}
+			@Override
+			public void showTable() {
+				showProductTables();
+			}
+		};
 	}
 	
 	/**
@@ -296,29 +276,8 @@ public class StatusProductOverviewController {
 		this.activeProductTable.getSortOrder().add(this.qualityActiveProductColumn);
 		sortActiveProductTable();
 		this.activeProductTable.getSelectionModel().selectFirst();
-		
-		this.filterService = new FilterService();
-		this.categoryComboBox.setItems(this.filterService.getCategories());
-		this.familyComboBox.setDisable(true);
-		this.newCategorySelected = false;
 	}
-	
-	/**
-	 * Update product table with filtering by category and family
-	 * @param category - the category to be used for filtering
-	 * @param family - the family to be used for filtering
-	 */
-	private void updateProductTable(String category, String family) {
-		this.currentCategory = category;
-		this.currentFamily = family;
-		this.inactiveProductTable.setItems(ProductService.getInactiveProductsFiltered(this.currentCategory, this.currentFamily));
-		this.activeProductTable.setItems(ProductService.getActiveProductsFiltered(this.currentCategory, this.currentFamily));
-		sortInactiveProductTable();
-		sortActiveProductTable();
-		this.inactiveProductTable.refresh();
-		this.activeProductTable.refresh();
-	}
-	
+
 	/**
 	 * Sort products in the inactive table
 	 */
