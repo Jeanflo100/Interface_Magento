@@ -15,7 +15,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 /**
- * Thread retrieving products from the database
+ * Thread attempting a connection with the new user entered and retrieving his privileges if there is one
  * @author Jean-Florian Tassart
  */
 public class AuthentificationThread implements Runnable {
@@ -27,9 +27,9 @@ public class AuthentificationThread implements Runnable {
 	
     /**
      * Initialization of parameters
-     * @param loginScreen 
-     * @param username 
-     * @param password 
+     * @param loginScreen - view performing the connection attempt in order to perform the appropriate actions on it according to the authentication result
+     * @param username - username with which the connection is made
+     * @param password - password with which the connection is made
      */
     public AuthentificationThread(LoginScreenController loginScreen, String username, String password) {
     	this.loginScreen = loginScreen;
@@ -39,7 +39,7 @@ public class AuthentificationThread implements Runnable {
     }
  
     /**
-     * Checks if the user has the necessary privileges and then get the products if he has them, suggests changing users otherwise
+     * Action to be performed for authentication
      */
     public void run() {
     	authentification();
@@ -48,7 +48,7 @@ public class AuthentificationThread implements Runnable {
     }
     
     /**
-     * Getting produts
+     * Attempt to connect and recover privileges if successful
      */
     private void authentification() {
     	try {
@@ -82,6 +82,9 @@ public class AuthentificationThread implements Runnable {
 		}
     }
     
+    /**
+     * Update the current user if they are successful during authentification
+     */
     private void updateCurrentUser() {
     	DataSourceFactory.getDataSource().setUser(username);
     	DataSourceFactory.getDataSource().setPassword(password);

@@ -344,8 +344,8 @@ public class StatusProductOverviewController {
 	}
 	
 	/**
-	 * 
-	 * @param product - 
+	 * Show informations of product selected
+	 * @param product - product currently selected
 	 */
 	private void showProduct(Product product) {
 		if (product != null) {

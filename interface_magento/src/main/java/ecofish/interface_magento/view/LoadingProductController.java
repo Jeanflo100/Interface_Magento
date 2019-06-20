@@ -35,10 +35,18 @@ public class LoadingProductController {
 		this.loadingProductText.textProperty().bind(valueLoadingProductText);
 	}
 	
+	/**
+	 * Update the advance of progress bar
+	 * @param value - current advancement
+	 */
 	public static void updateLoadingProductProgressBar(Double value) {
 		valueLoadingProductProgressBar.set(value);
 	}
 	
+	/**
+	 * Update the action in progress
+	 * @param value - action in progress
+	 */
 	public static void updateLoadingProductText(String value) {
 		valueLoadingProductText.set(value);
 	}

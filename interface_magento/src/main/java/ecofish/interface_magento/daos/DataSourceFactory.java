@@ -113,6 +113,10 @@ public class DataSourceFactory {
 		return DataSourceFactoryHolder.INSTANCE.currentUserPrivileges;
 	}
 	
+	/**
+	 * Privileges owned by the user
+	 * @param privileges
+	 */
 	protected static void changeCurrentUserPrivileges(Collection<HashMap<String, String>> privileges) {
 		getCurrentUserPrivileges().clear();
 		getCurrentUserPrivileges().addAll(privileges);
