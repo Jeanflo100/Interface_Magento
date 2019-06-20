@@ -9,7 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 
 /**
- * Provides methods for category and family ComboBox
+ * Provides processing for category and family ComboBox
  * @author Jean-Florian Tassart
  */
 public abstract class Filters {
