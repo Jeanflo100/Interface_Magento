@@ -7,6 +7,7 @@ import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.Filters;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
+import ecofish.interface_magento.util.DetailsTableView;
 import ecofish.interface_magento.util.TextFormatterDouble;
 import javafx.beans.value.ObservableValue;
 import javafx.css.PseudoClass;
@@ -80,42 +81,6 @@ public class PriceProductOverviewController {
 	
     private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
     private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
-	
-    /**
-     * Returns the number of rows of the table visible on the screen
-     * @param table - table concerned
-     * @return The number of visible rows
-     */
-	private static Integer getNumberVisibleRow(TableView<?> table) {
-		Integer numberColumnRow = 0;
-		Integer newNumberColumnRow = numberColumnRow;
-		for (TableColumn<?, ?> column : table.getColumns()) {
-			Integer temp_newNumberColumnRow = getNumberColumnRow(column, numberColumnRow);
-			if (temp_newNumberColumnRow > newNumberColumnRow) {
-				newNumberColumnRow = temp_newNumberColumnRow;
-			}
-		}
-		numberColumnRow = newNumberColumnRow;
-		Integer numberVisibleRow = (int) ((table.getPrefHeight() - numberColumnRow * 20) / table.getFixedCellSize());
-		return numberVisibleRow;
-	}
-	
-	/**
-	 * Recursive function returning the number of column rows
-	 * @param column - column currently concerned
-	 * @param actualNumberColumnRow - current number of subcolumn rows
-	 * @return Total number of subcolumn rows
-	 */
-	private static Integer getNumberColumnRow(TableColumn<?, ?> column, Integer actualNumberColumnRow) {
-		Integer newNumberColumnRow = actualNumberColumnRow;
-		for (TableColumn<?, ?> subColumn : column.getColumns()) {
-			Integer temp_newNumberColumnRow = getNumberColumnRow(subColumn, actualNumberColumnRow);
-			if (temp_newNumberColumnRow > newNumberColumnRow) {
-				newNumberColumnRow = temp_newNumberColumnRow;
-			}
-		}
-		return newNumberColumnRow + 1;
-	}
     
 	/**
 	 * Checking conditions before updating the price
@@ -207,7 +172,7 @@ public class PriceProductOverviewController {
 		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("actualPrice"));
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("newPrice"));
 		this.productTable.setFixedCellSize(25);
-		this.numberVisibleRow = getNumberVisibleRow(this.productTable);
+		this.numberVisibleRow = DetailsTableView.getNumberVisibleRow(this.productTable);
 		this.productTable.setRowFactory(productTable -> new TableRow<Product>() {
 		    @Override
 		    protected void updateItem(Product product, boolean empty) {
