@@ -36,6 +36,7 @@ public class UpdatingProductThread implements Runnable {
     	this.updatingProducts = ProductService.getUpdatingProducts();
     	this.updatedProducts = new TreeSet<Product>();
     	
+    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     	LoadingProductController.updateLoadingProductProgressBar(0.0);
     	LoadingProductController.updateLoadingProductText("Update Products...");
 
@@ -44,8 +45,6 @@ public class UpdatingProductThread implements Runnable {
     	this.updatedProductsLog = "";
     	this.separatorLog = " | ";
     	this.error = false;
-    	
-    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     }
  
     /**
@@ -105,12 +104,6 @@ public class UpdatingProductThread implements Runnable {
 				}
 				this.nb_update_products += 1;
 				LoadingProductController.updateLoadingProductProgressBar((double)this.nb_update_products/this.nb_products);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 			stmt.close();
 			connection.close();

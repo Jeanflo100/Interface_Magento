@@ -85,9 +85,11 @@ public class AuthentificationThread implements Runnable {
     private void updateCurrentUser() {
     	DataSourceFactory.getDataSource().setUser(username);
     	DataSourceFactory.getDataSource().setPassword(password);
-    	DataSourceFactory.getCurrentUser().set(username);
     	DataSourceFactory.setIsNewUser(true);
-		Logging.LOGGER.log(Level.INFO, "Connection of " + DataSourceFactory.getCurrentUser().getValue());
+    	Platform.runLater(() -> {
+        	DataSourceFactory.getCurrentUser().set(username);
+    		Logging.LOGGER.log(Level.INFO, "Connection of " + DataSourceFactory.getCurrentUser().getValue());
+    	});
     }
     
     /**

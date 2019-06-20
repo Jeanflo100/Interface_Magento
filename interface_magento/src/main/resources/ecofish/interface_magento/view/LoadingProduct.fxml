@@ -19,7 +19,7 @@
          </effect>
       </ImageView>
       <ProgressBar fx:id="loadingProductProgressBar" layoutX="134.0" layoutY="138.0" prefWidth="200.0" progress="0.0" />
-      <Text fx:id="loadingProductText" layoutX="184.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Loading Products..." />
+      <Text fx:id="loadingProductText" layoutX="134.0" layoutY="177.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="199.99999409914017" />
    </children>
    <cursor>
       <Cursor fx:constant="WAIT" />

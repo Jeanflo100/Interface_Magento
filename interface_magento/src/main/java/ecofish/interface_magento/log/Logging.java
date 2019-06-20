@@ -63,7 +63,7 @@ public class Logging{
 		try {
 			logFileHandler = new FileHandler(pathFile, 0, 1, true);
 		} catch (IOException e) {
-			LOGGER.log(Level.WARNING, "Writing to file isn't set");
+			LOGGER.log(Level.WARNING, "Writing logs to file isn't set");
 		}
 		
 		if (logFileHandler != null) {

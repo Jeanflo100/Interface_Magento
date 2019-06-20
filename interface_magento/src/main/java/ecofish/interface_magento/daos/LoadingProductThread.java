@@ -109,12 +109,6 @@ public class LoadingProductThread implements Runnable {
 				
 				nb_loading_products += 1;
 				LoadingProductController.updateLoadingProductProgressBar((double)nb_loading_products/nb_products);
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		}
 		catch (SQLException e){
