@@ -128,9 +128,9 @@ public class UpdatingProductThread implements Runnable {
     private void updateInterface() {
     	Platform.runLater(() -> {
 			if (error) {
-				if (DataSourceFactory.showAlertErrorSQL("Error when updating products list.\n" + this.nb_update_products + "/" + this.nb_products + " products have been updated")) ProductService.updateProduct();
+				if (DataSourceFactory.showAlertErrorSQL("Error when updating products list:\n" + this.nb_update_products + "/" + this.nb_products + " products have been updated")) ProductService.updateProduct();
 				else {
-					StageService.clearViewPrimaryStage();
+					if (this.nb_update_products != 0) StageService.clearViewPrimaryStage();
 					StageService.showView(Views.viewsPrimaryStage.PriceProductOverview);
 				}
 			}
