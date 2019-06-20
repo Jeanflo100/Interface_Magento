@@ -32,14 +32,14 @@ public class UpdatingProductThread implements Runnable {
     /**
      * Initialization of parameters
      */
-    public UpdatingProductThread() {
+    public UpdatingProductThread() {    	
+    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
+    	LoadingProductController.updateLoadingProductProgressBar(0.0);
+    	LoadingProductController.updateLoadingProductText("Updating Products...");
+
     	this.updatingProducts = ProductService.getUpdatingProducts();
     	this.updatedProducts = new TreeSet<Product>();
     	
-    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
-    	LoadingProductController.updateLoadingProductProgressBar(0.0);
-    	LoadingProductController.updateLoadingProductText("Update Products...");
-
     	this.nb_products = this.updatingProducts.size();
     	this.nb_update_products = 0;
     	this.updatedProductsLog = "";

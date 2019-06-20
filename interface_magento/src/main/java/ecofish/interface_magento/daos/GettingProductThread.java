@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -22,24 +21,17 @@ import javafx.application.Platform;
  * Thread retrieving products from the database
  * @author Jean-Florian Tassart
  */
-public class LoadingProductThread implements Runnable {
+public class GettingProductThread implements Runnable {
 
-	private ArrayList<Product> activeProducts;
-	private ArrayList<Product> inactiveProducts;
-	private TreeMap<String, TreeSet<String>> groups;
     private Boolean error;
  
     /**
      * Initialization of parameters
      */
-    public LoadingProductThread() {
-    	this.activeProducts = ProductService.getActiveProducts();
-    	this.inactiveProducts = ProductService.getInactiveProducts();
-    	this.groups = Filters.getGroups();
-
+    public GettingProductThread() {
     	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     	LoadingProductController.updateLoadingProductProgressBar(0.0);
-    	LoadingProductController.updateLoadingProductText("Loading Products...");
+    	LoadingProductController.updateLoadingProductText("Getting Products...");
 
     	this.error = false;
     }
@@ -85,6 +77,8 @@ public class LoadingProductThread implements Runnable {
 			retour.next();
 			Integer nb_products = retour.getInt("nb_products");
 			Integer nb_loading_products = 0;
+			
+			TreeMap<String, TreeSet<String>> groups = new TreeMap<String, TreeSet<String>>();
 			TreeSet<String> familySet;
 
 			ResultSet resultSet = statement.executeQuery("SELECT * FROM product");
@@ -98,8 +92,8 @@ public class LoadingProductThread implements Runnable {
 						resultSet.getString("size"),
 						resultSet.getDouble("actual_price"),
 						resultSet.getBoolean("active"));
-				if (product.getActive()) this.activeProducts.add(product);
-				else this.inactiveProducts.add(product);
+				if (product.getActive()) ProductService.addActiveProduct(product);
+				else ProductService.addInactiveProduct(product);
 
 				String category = resultSet.getString("category");
 				String family = resultSet.getString("family");
@@ -110,6 +104,7 @@ public class LoadingProductThread implements Runnable {
 				nb_loading_products += 1;
 				LoadingProductController.updateLoadingProductProgressBar((double)nb_loading_products/nb_products);
 			}
+			Filters.updateGroups(groups);
 		}
 		catch (SQLException e){
 			Logging.LOGGER.log(Level.SEVERE, "Error when getting products list:\n" + e.getMessage());

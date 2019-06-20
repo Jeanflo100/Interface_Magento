@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.TreeSet;
 
-import ecofish.interface_magento.daos.LoadingProductThread;
+import ecofish.interface_magento.daos.GettingProductThread;
 import ecofish.interface_magento.daos.UpdatingProductThread;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,7 +40,7 @@ public class ProductService {
 	 * Launching the product loading thread
 	 */
 	public static void loadProduct() {
-		LoadingProductThread loadingProduct = new LoadingProductThread();
+		GettingProductThread loadingProduct = new GettingProductThread();
 		new Thread(loadingProduct).start();
 	}
 	
@@ -84,19 +84,19 @@ public class ProductService {
 	}
 	
 	/**
-	 * Returns the list of products with active status
-	 * @return List of products with active status
+	 * Add a product to the list of active products
+	 * @param product - product to be added to the list of active products
 	 */
-	public static ArrayList<Product> getActiveProducts(){
-		return ProductServiceHolder.INSTANCE.activeProducts;
+	public static void addActiveProduct(Product product){
+		ProductServiceHolder.INSTANCE.activeProducts.add(product);
 	}
 	
 	/**
-	 * Returns the list of products with inactive status
-	 * @return List of products with inactive status
+	 * Add a product to the list of inactive products
+	 * @param - product to be added to the list of inactive products
 	 */
-	public static ArrayList<Product> getInactiveProducts(){
-		return ProductServiceHolder.INSTANCE.inactiveProducts;
+	public static void addInactiveProduct(Product product){
+		ProductServiceHolder.INSTANCE.inactiveProducts.add(product);
 	}
 	
 	/**

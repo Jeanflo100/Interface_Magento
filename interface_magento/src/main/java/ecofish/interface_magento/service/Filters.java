@@ -27,12 +27,11 @@ public abstract class Filters {
 	private Boolean newCategorySelected;
 	
 	/**
-	 * Returns a dictionary with as key each category and as value the list of families associated
-	 * @return Dictionnary category/families
+	 * Updates existing product groups
+	 * @param productGroups - existing product groups
 	 */
-	public static TreeMap<String, TreeSet<String>> getGroups(){
-		if (groups == null) groups = new TreeMap<String, TreeSet<String>>();
-		return groups;
+	public static void updateGroups(TreeMap<String, TreeSet<String>> productGroups){
+		groups = productGroups;
 	}
 	
 	/**
