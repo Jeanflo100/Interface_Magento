@@ -1,6 +1,9 @@
 package ecofish.interface_magento.view;
 
-import ecofish.interface_magento.service.ProductService;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.text.Text;
@@ -12,18 +15,32 @@ import javafx.scene.text.Text;
 public class LoadingProductController {
 	
 	@FXML
-	public ProgressBar loadingProductProgressBar;
+	ProgressBar loadingProductProgressBar;
 	
 	@FXML
-	public Text loadingProductText;
+	Text loadingProductText;
+	
+	private static DoubleProperty valueLoadingProductProgressBar;
+	
+	private static StringProperty valueLoadingProductText;
 
 	/**
 	 * Links the view components to the ProductService class
 	 */
 	@FXML
 	public void initialize() {
-		this.loadingProductProgressBar.progressProperty().bind(ProductService.getLoadingProductProgressBar());
-		this.loadingProductText.textProperty().bind(ProductService.getLoadingProductText());
+		valueLoadingProductProgressBar = new SimpleDoubleProperty(0.0);
+		valueLoadingProductText = new SimpleStringProperty("");
+		this.loadingProductProgressBar.progressProperty().bind(valueLoadingProductProgressBar);
+		this.loadingProductText.textProperty().bind(valueLoadingProductText);
+	}
+	
+	public static void updateLoadingProductProgressBar(Double value) {
+		valueLoadingProductProgressBar.set(value);
+	}
+	
+	public static void updateLoadingProductText(String value) {
+		valueLoadingProductText.set(value);
 	}
 	
 }

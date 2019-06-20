@@ -142,7 +142,8 @@ public class StageService {
 		}
 		else {
 			loadedView = new Scene(Views.getView(view));
-			StageServiceHolder.INSTANCE.viewSecondaryStage.put(view, loadedView);
+			// The "LoadingProduct" view is not kept in memory otherwise, when reused, the cursor might be reset by default
+			if (view != Views.viewsSecondaryStage.LoadingProduct) StageServiceHolder.INSTANCE.viewSecondaryStage.put(view, loadedView);
 		}
 		StageServiceHolder.INSTANCE.secondaryStage.setScene(loadedView);
 		StageServiceHolder.INSTANCE.secondaryStage.sizeToScene();

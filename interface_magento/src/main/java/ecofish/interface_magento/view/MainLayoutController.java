@@ -18,7 +18,7 @@ public class MainLayoutController {
 	
 	@FXML
 	private void initialize() {
-		currentUserLabel.textProperty().bind(DataSourceFactory.getCurrentUser());
+		this.currentUserLabel.textProperty().bind(DataSourceFactory.getCurrentUser());
 	}
 	
 	public void changeUser(){

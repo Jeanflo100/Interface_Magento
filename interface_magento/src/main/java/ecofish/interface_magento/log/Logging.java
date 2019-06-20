@@ -63,7 +63,7 @@ public class Logging{
 		try {
 			logFileHandler = new FileHandler(pathFile, 0, 1, true);
 		} catch (IOException e) {
-			LOGGER.log(Level.WARNING, "Writing to file isn't set");
+			LOGGER.log(Level.WARNING, "Writing logs to file isn't set");
 		}
 		
 		if (logFileHandler != null) {
@@ -83,7 +83,6 @@ public class Logging{
 		} catch (IOException e) {
 			Logging.LOGGER.log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
 			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle("WARNING");
 			alert.setHeaderText("Error when opening logs file");
 			alert.setContentText("Retry the action or restart the application if the problem persists");
 			alert.showAndWait();
