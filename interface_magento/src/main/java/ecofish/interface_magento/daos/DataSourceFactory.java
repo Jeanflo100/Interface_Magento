@@ -1,10 +1,8 @@
 package ecofish.interface_magento.daos;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -26,7 +24,7 @@ public class DataSourceFactory {
 
 	private MysqlDataSource dataSource;
 	private SimpleStringProperty currentUser;
-	private ArrayList<HashMap<String, String>> privileges;
+	private ArrayList<HashMap<String, String>> currentUserPrivileges;
 	
 	private Boolean isNewUser;
 	
@@ -36,7 +34,7 @@ public class DataSourceFactory {
 	private DataSourceFactory() {
 		dataSource = new MysqlDataSource();
 		currentUser = new SimpleStringProperty();
-		privileges = new ArrayList<HashMap<String, String>>();
+		currentUserPrivileges = new ArrayList<HashMap<String, String>>();
 	}
 	
 	/**
@@ -57,62 +55,14 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Updates the connection data to the database concerning the user after authentication of this one and recovery of its global privileges and those for this database
-	 * @param username - username of the user
-	 * @param password - password of the user
-	 * @return True if he has access to the database, false else
-	 */
-	public static Boolean setUser(String username, String password) {
-		try {
-			Connection connection = DataSourceFactory.getDataSource().getConnection(username, password);
-			getPrivileges().clear();
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(
-					"SELECT * FROM\n"
-					+ "(SELECT NULL AS 'database', NULL AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.USER_PRIVILEGES\n"
-					+ "UNION\n"
-					+ "SELECT REPLACE(table_schema,'\\_','_') AS 'database', NULL AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.SCHEMA_PRIVILEGES\n"
-					+ "UNION\n"
-					+ "SELECT table_schema AS 'database', table_name AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.TABLE_PRIVILEGES\n"
-					+ "UNION\n"
-					+ "SELECT table_schema AS 'database', table_name AS 'table', column_name AS 'column', privilege_type AS 'privilege' FROM information_schema.COLUMN_PRIVILEGES)\n"
-					+ "AS privilegeTable WHERE (privilegeTable.database IS NULL OR privilegeTable.database = '" + getDataSource().getDatabaseName() + "')"
-					);
-			while (resultSet.next()) {
-				HashMap<String, String> privilege = new HashMap<String, String>();
-				privilege.put("database", resultSet.getString("database"));
-				privilege.put("table", resultSet.getString("table"));
-				privilege.put("column", resultSet.getString("column"));
-				privilege.put("privilege", resultSet.getString("privilege"));
-				getPrivileges().add(privilege);
-			}
-			statement.close();
-			connection.close();
-		} catch (SQLException e) {
-			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.initOwner(StageService.getSecondaryStage());
-			alert.setTitle("WARNING");
-			alert.setHeaderText("Error when connecting to database");
-			alert.setContentText(getCustomMessageFailureConnection(e));
-			alert.showAndWait();
-			return false;
-		}
-		getDataSource().setUser(username);
-		getDataSource().setPassword(password);
-		getCurrentUser().set(username);
-		setIsNewUser(true);
-		Logging.LOGGER.log(Level.INFO, "Connection of " + getCurrentUser().getValue());
-		return true;
-	}
-	
-	/**
 	 * Returns a custom message according to the connection errors.
 	 * @param error - error concerned
 	 * @return Custom message
 	 */
-	private static String getCustomMessageFailureConnection(SQLException error) {
+	protected static String getCustomMessageFailureConnection(SQLException error) {
 		Logging.LOGGER.log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
+		else if (error.getErrorCode() == 1049) return "Database not founded.\nPlease check the name of the database registered in the configuration file";
 		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
 		else if (error.getSQLState().equals("08S01")) return "Unable to connect to the database. Please try again";
 		else return "Unexpected error. Please try again";
@@ -127,7 +77,7 @@ public class DataSourceFactory {
 	 * @return True if the user has the desired privilege, false else
 	 */
 	protected static Boolean checkPrivilege(String action, String table, String column) {
-		for (HashMap<String, String> privilege : getPrivileges()) {
+		for (HashMap<String, String> privilege : getCurrentUserPrivileges()) {
 			if (privilege.get("privilege").equals(action)) {
 				if (privilege.get("database") == null) {
 					return true;				}
@@ -159,8 +109,13 @@ public class DataSourceFactory {
 	 * Returns the user's privileges
 	 * @return the user's privileges
 	 */
-	private static ArrayList<HashMap<String, String>> getPrivileges(){
-		return DataSourceFactoryHolder.INSTANCE.privileges;
+	private static ArrayList<HashMap<String, String>> getCurrentUserPrivileges(){
+		return DataSourceFactoryHolder.INSTANCE.currentUserPrivileges;
+	}
+	
+	protected static void changeCurrentUserPrivileges(Collection<HashMap<String, String>> privileges) {
+		getCurrentUserPrivileges().clear();
+		getCurrentUserPrivileges().addAll(privileges);
 	}
 	
 	/**
@@ -183,7 +138,7 @@ public class DataSourceFactory {
 	 * Updates the authentication of a new user or not
 	 * @param isNewUser - true if it's a new user authenticated, false else
 	 */
-	private static void setIsNewUser(Boolean isNewUser) {
+	protected static void setIsNewUser(Boolean isNewUser) {
 		DataSourceFactoryHolder.INSTANCE.isNewUser = isNewUser;
 	}
 	

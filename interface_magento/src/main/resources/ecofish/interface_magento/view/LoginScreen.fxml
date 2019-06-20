@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.InnerShadow?>
@@ -11,62 +10,66 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="loginScreenAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="234.0" prefWidth="467.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.LoginScreenController">
+<AnchorPane fx:id="backgroundAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="234.0" prefWidth="467.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.LoginScreenController">
    <children>
-      <ImageView fitHeight="17.0" fitWidth="17.0" layoutX="15.0" layoutY="15.0" onMouseClicked="#closeWindow" pickOnBounds="true" preserveRatio="true" rotate="180.0">
-         <image>
-            <Image url="@../image/black-arrow.png" />
-         </image>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ImageView>
-      <ImageView fitHeight="17.0" fitWidth="17.0" layoutX="271.0" layoutY="183.0" onMouseClicked="#openConfigurationFile" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../image/sheet-of-papper.png" />
-         </image>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ImageView>
-      <Label layoutX="127.0" layoutY="51.0" text="Username:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <TextField fx:id="usernameTextField" layoutX="205.0" layoutY="48.0" promptText="username" />
-      <Label layoutX="129.0" layoutY="85.0" text="Password:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <PasswordField fx:id="passwordPasswordField" layoutX="205.0" layoutY="82.0" promptText="password" />
-      <ImageView fitHeight="104.0" fitWidth="200.0" layoutX="134.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../image/ecofish-logo.png" />
-         </image>
-         <effect>
-            <InnerShadow />
-         </effect>
-      </ImageView>
-      <ImageView fitHeight="43.0" fitWidth="31.0" layoutX="364.0" layoutY="62.0" onMouseClicked="#getInformationConnection" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../image/black-arrow.png" />
-         </image>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ImageView>
-      <ImageView fitHeight="17.0" fitWidth="17.0" layoutX="173.0" layoutY="183.0" onMouseClicked="#openLogFile" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../image/sheet-of-papper.png" />
-         </image>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ImageView>
-      <Text layoutX="171.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log" />
-      <Text layoutX="255.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Database" />
+      <AnchorPane fx:id="componentsAnchorPane" layoutX="1.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="234.0" prefWidth="467.0">
+         <children>
+            <ImageView fitHeight="17.0" fitWidth="17.0" layoutX="15.0" layoutY="15.0" onMouseClicked="#closeWindow" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+               <image>
+                  <Image url="@../image/black-arrow.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Text layoutX="127.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" textAlignment="JUSTIFY" textOrigin="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="usernameTextField" layoutX="205.0" layoutY="48.0" promptText="username" />
+            <Text layoutX="129.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" textAlignment="JUSTIFY" textOrigin="CENTER">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <PasswordField fx:id="passwordPasswordField" layoutX="205.0" layoutY="82.0" promptText="password" />
+            <ImageView fitHeight="43.0" fitWidth="31.0" layoutX="364.0" layoutY="62.0" onMouseClicked="#getInformationConnection" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/black-arrow.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fitHeight="104.0" fitWidth="200.0" layoutX="134.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/ecofish-logo.png" />
+               </image>
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="17.0" fitWidth="17.0" layoutX="173.0" layoutY="183.0" onMouseClicked="#openLogFile" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/sheet-of-papper.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Text layoutX="171.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log" />
+            <ImageView fitHeight="17.0" fitWidth="17.0" layoutX="271.0" layoutY="183.0" onMouseClicked="#openConfigurationFile" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/sheet-of-papper.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <Text layoutX="255.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Database" />
+         </children>
+      </AnchorPane>
    </children>
    <effect>
       <InnerShadow color="#6b6a6ab2" height="30.0" radius="14.5" width="30.0" />

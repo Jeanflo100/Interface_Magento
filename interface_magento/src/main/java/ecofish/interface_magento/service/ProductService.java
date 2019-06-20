@@ -8,10 +8,6 @@ import java.util.TreeSet;
 
 import ecofish.interface_magento.daos.LoadingProductThread;
 import ecofish.interface_magento.daos.UpdatingProductThread;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -29,25 +25,6 @@ public class ProductService {
 	private ObservableList<Product> activeProductsFiltered;
 	private ObservableList<Product> inactiveProductsFiltered;
 	
-	private DoubleProperty loadingProductProgressBar;
-	private StringProperty loadingProductText;
-	
-	/**
-	 * Provides the instance of the loading bar of the loading window
-	 * @return Instance of the loading bar of the loading window
-	 */
-	public static DoubleProperty getLoadingProductProgressBar() {
-		return ProductServiceHolder.INSTANCE.loadingProductProgressBar;
-	}
-	
-	/**
-	 * Provide the instance of the text accompanying the loading bar of the loading window
-	 * @return Instance of the text accompanying the loading bar of the loading window
-	 */
-	public static StringProperty getLoadingProductText() {
-		return ProductServiceHolder.INSTANCE.loadingProductText;
-	}
-	
 	/**
 	 * Initialization of parameters
 	 */
@@ -57,8 +34,6 @@ public class ProductService {
 		inactiveProducts = new ArrayList<Product>();
 		activeProductsFiltered = FXCollections.observableArrayList();
 		inactiveProductsFiltered = FXCollections.observableArrayList();
-		loadingProductProgressBar = new SimpleDoubleProperty(0.0);
-		loadingProductText = new SimpleStringProperty("");
 	}
 	
 	/**

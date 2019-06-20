@@ -26,10 +26,7 @@ public class InterfaceMagento extends Application {
 		StageService.initPrimaryStage(primaryStage);
 		StageService.createSecondaryStage();
 		DataSourceFactory.initDatabase();
-		
-		//if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
-		DataSourceFactory.setUser("a941109_ecofishg", "@;B!U0{YOpPK");
-		ProductService.loadProduct();
+		if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
 	}
 
 	/**
