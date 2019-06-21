@@ -6,9 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
-import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.view.LoginScreenController;
 import javafx.application.Platform;
@@ -43,7 +41,7 @@ public class AuthentificationThread implements Runnable {
      */
     public void run() {
     	authentification();
-    	if (error == null) updateCurrentUser();
+    	if (error == null) Platform.runLater(() -> DataSourceFactory.setNewUser(this.username, this.password));
     	updateInterface();
     }
     
@@ -52,8 +50,8 @@ public class AuthentificationThread implements Runnable {
      */
     private void authentification() {
     	try {
-			Connection connection = DataSourceFactory.getDataSource().getConnection(this.username, this.password);
-			Statement statement = connection.createStatement();
+			Connection connection = DataSourceFactory.getConnection(this.username, this.password);
+    		Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(
 					"SELECT * FROM\n"
 					+ "(SELECT NULL AS 'database', NULL AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.USER_PRIVILEGES\n"
@@ -63,7 +61,7 @@ public class AuthentificationThread implements Runnable {
 					+ "SELECT table_schema AS 'database', table_name AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.TABLE_PRIVILEGES\n"
 					+ "UNION\n"
 					+ "SELECT table_schema AS 'database', table_name AS 'table', column_name AS 'column', privilege_type AS 'privilege' FROM information_schema.COLUMN_PRIVILEGES)\n"
-					+ "AS privilegeTable WHERE (privilegeTable.database IS NULL OR privilegeTable.database = '" + DataSourceFactory.getDataSource().getDatabaseName() + "')"
+					+ "AS privilegeTable WHERE (privilegeTable.database IS NULL OR privilegeTable.database = '" + DataSourceFactory.getDatabaseName() + "')"
 					);
 			ArrayList<HashMap<String, String>> privileges = new ArrayList<HashMap<String, String>>();
 			while (resultSet.next()) {
@@ -80,19 +78,6 @@ public class AuthentificationThread implements Runnable {
 		} catch (SQLException e) {
 			this.error = e;
 		}
-    }
-    
-    /**
-     * Update the current user if they are successful during authentification
-     */
-    private void updateCurrentUser() {
-    	DataSourceFactory.getDataSource().setUser(username);
-    	DataSourceFactory.getDataSource().setPassword(password);
-    	DataSourceFactory.setIsNewUser(true);
-    	Platform.runLater(() -> {
-        	DataSourceFactory.getCurrentUser().set(username);
-    		Logging.LOGGER.log(Level.INFO, "Connection of " + DataSourceFactory.getCurrentUser().getValue());
-    	});
     }
     
     /**

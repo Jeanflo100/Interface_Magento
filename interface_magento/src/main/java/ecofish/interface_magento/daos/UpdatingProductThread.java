@@ -75,7 +75,8 @@ public class UpdatingProductThread implements Runnable {
      */
     private void updatingProducts() {
     	try {
-			Connection connection = DataSourceFactory.getDataSource().getConnection();
+			//Connection connection = DataSourceFactory.getDataSource().getConnection();
+    		Connection connection = DataSourceFactory.getConnection();
 			Statement stmt = connection.createStatement();
 			for (Product product : updatingProducts) {
 				if (product.getChangeActive() == true || product.getNewPrice() != null) {
@@ -109,7 +110,7 @@ public class UpdatingProductThread implements Runnable {
 			connection.close();
 		}
 		catch (SQLException e) {
-			Logging.LOGGER.log(Level.SEVERE, "Error when updating products list:\n" + e.getMessage());
+			Logging.getLogger().log(Level.SEVERE, "Error when updating products list:\n" + e.getMessage());
 			error = true;
 		}
     	finally {
@@ -117,7 +118,8 @@ public class UpdatingProductThread implements Runnable {
     			for (Product product : this.updatedProducts) {
     				this.updatingProducts.remove(product);
     			}
-    			Logging.LOGGER.log(Level.INFO, this.nb_update_products + "/" + this.nb_products + " products have been updated: " + updatedProductsLog);
+    			ProductService.setUpdatingProducts(updatingProducts);
+    			Logging.getLogger().log(Level.INFO, this.nb_update_products + "/" + this.nb_products + " products have been updated: " + updatedProductsLog);
     		}
     	}
     }

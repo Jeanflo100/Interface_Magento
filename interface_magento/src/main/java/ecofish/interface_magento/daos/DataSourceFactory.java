@@ -1,5 +1,6 @@
 package ecofish.interface_magento.daos;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,16 +33,17 @@ public class DataSourceFactory {
 	 * Initialization of variables
 	 */
 	private DataSourceFactory() {
-		dataSource = new MysqlDataSource();
+		dataSource = DatabaseAccess.getInformationConnection();
 		currentUser = new SimpleStringProperty();
 		currentUserPrivileges = new ArrayList<HashMap<String, String>>();
 	}
 	
 	/**
-	 * Initialization of connection data to the database
+	 * Provides the name of the database 
+	 * @return Name of the database
 	 */
-	public static void initDatabase() {
-		DatabaseAccess.getInformationConnection(getDataSource());	
+	protected static String getDatabaseName() {
+		return DataSourceFactoryHolder.INSTANCE.dataSource.getDatabaseName();
 	}
 	
 	/**
@@ -60,7 +62,7 @@ public class DataSourceFactory {
 	 * @return Custom message
 	 */
 	protected static String getCustomMessageFailureConnection(SQLException error) {
-		Logging.LOGGER.log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
+		Logging.getLogger().log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
 		else if (error.getErrorCode() == 1049) return "Database not founded.\nPlease check the name of the database registered in the configuration file";
 		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
@@ -123,11 +125,23 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Returns the variable used to establish connections to the database
-	 * @return the variable used to establish connections to the database
+	 * Provides a connection to the database
+	 * @return Connection to the database
+	 * @throws SQLException - error when connecting
 	 */
-	protected static MysqlDataSource getDataSource() {
-		return DataSourceFactoryHolder.INSTANCE.dataSource;
+	protected static Connection getConnection() throws SQLException{
+		return DataSourceFactoryHolder.INSTANCE.dataSource.getConnection();
+	}
+	
+	/**
+	 * Provides a connection to the database using an username and a password
+	 * @param username - username to use to the connection
+	 * @param password - password to use to the connection
+	 * @return Connection to the database
+	 * @throws SQLException - error when connecting
+	 */
+	protected static Connection getConnection(String username, String password) throws SQLException {
+		return DataSourceFactoryHolder.INSTANCE.dataSource.getConnection(username, password);
 	}
 	
 	/**
@@ -142,8 +156,21 @@ public class DataSourceFactory {
 	 * Updates the authentication of a new user or not
 	 * @param isNewUser - true if it's a new user authenticated, false else
 	 */
-	protected static void setIsNewUser(Boolean isNewUser) {
+	private static void setIsNewUser(Boolean isNewUser) {
 		DataSourceFactoryHolder.INSTANCE.isNewUser = isNewUser;
+	}
+	
+	/**
+	 * Recording of new user information
+	 * @param username - username of new user
+	 * @param password - password of new user
+	 */
+	protected static void setNewUser(String username, String password) {
+		DataSourceFactoryHolder.INSTANCE.dataSource.setUser(username);
+		DataSourceFactoryHolder.INSTANCE.dataSource.setPassword(password);
+    	DataSourceFactory.setIsNewUser(true);
+    	DataSourceFactory.getCurrentUser().set(username);
+		Logging.getLogger().log(Level.INFO, "Connection of " + DataSourceFactory.getCurrentUser().getValue());
 	}
 	
 	/**

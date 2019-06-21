@@ -70,7 +70,7 @@ public class GettingProductThread implements Runnable {
      */
     private void loadingProducts() {
     	try {
-    		Connection connection = DataSourceFactory.getDataSource().getConnection();
+    		Connection connection = DataSourceFactory.getConnection();
 			Statement statement = connection.createStatement();
 			
 			ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM product");
@@ -107,7 +107,7 @@ public class GettingProductThread implements Runnable {
 			Filters.updateGroups(groups);
 		}
 		catch (SQLException e){
-			Logging.LOGGER.log(Level.SEVERE, "Error when getting products list:\n" + e.getMessage());
+			Logging.getLogger().log(Level.SEVERE, "Error when getting products list:\n" + e.getMessage());
 			error = true;
 		}
     }

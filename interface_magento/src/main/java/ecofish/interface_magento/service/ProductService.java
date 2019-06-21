@@ -63,24 +63,29 @@ public class ProductService {
 	}
 	
 	/**
+	 * Initialize the list of products to be updated
+	 * @param updatingProducts - list of products to be updated
+	 */
+	public static void setUpdatingProducts(TreeSet<Product> updatingProducts) {
+		ProductServiceHolder.INSTANCE.updatingProducts.clear();
+		ProductServiceHolder.INSTANCE.updatingProducts.addAll(updatingProducts);
+	}
+	
+	/**
 	 * Updates the list of products to be updated
 	 * @param product - adds, leaves or removes the product from the list if updates are still present or not
 	 */
 	public static void updateUpdatingProducts(Product product) {
-		if (product.getChangeActive() == false && product.getNewPrice() == null) {
-			ProductServiceHolder.INSTANCE.updatingProducts.remove(product);
-		}
-		else {
-			ProductServiceHolder.INSTANCE.updatingProducts.add(product);
-		}
+		if (product.getChangeActive() == false && product.getNewPrice() == null) ProductServiceHolder.INSTANCE.updatingProducts.remove(product);
+		else ProductServiceHolder.INSTANCE.updatingProducts.add(product);
 	}
 	
 	/**
-	 * Returns the list of products to be updated
-	 * @return List of products to be updated
+	 * Returns a copy of the list of products to be updated
+	 * @return Copy of the list of products to be updated
 	 */
 	public static TreeSet<Product> getUpdatingProducts() {
-		return ProductServiceHolder.INSTANCE.updatingProducts;
+		return new TreeSet<Product>(ProductServiceHolder.INSTANCE.updatingProducts);
 	}
 	
 	/**

@@ -20,18 +20,19 @@ import javafx.scene.control.Alert;
  */
 public class Logging{
 	
-	private static String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "Interface_Magento_test.log";
+	private final String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "Interface_Magento_test.log";
 	
-	public static final Logger LOGGER = Logger.getLogger(Logging.class.getName());
+	private final Logger LOGGER;
 	
-	private static Formatter logFormatter = null;
-	private static Handler logConsoleHandler = null;
-	private static Handler logFileHandler = null;
+	private Formatter logFormatter;
+	private Handler logConsoleHandler;
+	private Handler logFileHandler;
 	
 	/**
 	 * Initialization of the different handlers to write logs
 	 */
-	public static void setLogging() {
+	private Logging() {
+		this.LOGGER = Logger.getLogger(Logging.class.getName());
 		setLoggingConsole();
 		setLoggingFile();
 	}
@@ -39,17 +40,17 @@ public class Logging{
 	/**
 	 * Initialization of the display of logs in the console
 	 */
-	private static void setLoggingConsole() {
-		logConsoleHandler = new ConsoleHandler();
-		LOGGER.addHandler(logConsoleHandler);
+	private void setLoggingConsole() {
+		this.logConsoleHandler = new ConsoleHandler();
+		this.LOGGER.addHandler(this.logConsoleHandler);
 	}
 	
 	/**
 	 * Initialization of the display of logs in a file
 	 */
-	private static void setLoggingFile() {
+	private void setLoggingFile() {
 		
-		logFormatter = new Formatter() {
+		this.logFormatter = new Formatter() {
 			@Override
 			public String format(LogRecord record) {
 				String log = "";
@@ -61,17 +62,21 @@ public class Logging{
 		};
 		
 		try {
-			logFileHandler = new FileHandler(pathFile, 0, 1, true);
+			this.logFileHandler = new FileHandler(this.pathFile, 0, 1, true);
 		} catch (IOException e) {
-			LOGGER.log(Level.WARNING, "Writing logs to file isn't set");
+			this.LOGGER.log(Level.WARNING, "Writing logs to file isn't set");
 		}
 		
-		if (logFileHandler != null) {
-			logFileHandler.setFormatter(logFormatter);
-			logFileHandler.setLevel(Level.INFO);
-			LOGGER.addHandler(logFileHandler);
+		if (this.logFileHandler != null) {
+			this.logFileHandler.setFormatter(this.logFormatter);
+			this.logFileHandler.setLevel(Level.INFO);
+			this.LOGGER.addHandler(this.logFileHandler);
 		}
 
+	}
+	
+	public static Logger getLogger() {
+		return LoggingHolder.INSTANCE.LOGGER;
 	}
 	
 	/**
@@ -79,14 +84,23 @@ public class Logging{
 	 */
 	public static void openLoggingFile() {
 		try {
-			Desktop.getDesktop().open(new File(pathFile));
+			Desktop.getDesktop().open(new File(LoggingHolder.INSTANCE.pathFile));
 		} catch (IOException e) {
-			Logging.LOGGER.log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
+			Logging.getLogger().log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.setHeaderText("Error when opening logs file");
 			alert.setContentText("Retry the action or restart the application if the problem persists");
 			alert.showAndWait();
 		}
+	}
+	
+
+	/**
+	 * Make the class static
+	 * @author Jean-Florian Tassart
+	 */
+	private static class LoggingHolder {
+		private static Logging INSTANCE = new Logging();
 	}
 	
 }
