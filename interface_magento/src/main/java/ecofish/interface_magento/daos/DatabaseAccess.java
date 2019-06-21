@@ -22,10 +22,10 @@ public class DatabaseAccess	{
 	
 	/**
 	 * Retrieve database connection information
-	 * @param dataSource - variable to be initialized with the information, allowing to establish the connections
-	 * @return Variable allowing the connections initialized
+	 * @return Variable allowing initialization of connections
 	 */
-	protected static MysqlDataSource getInformationConnection(MysqlDataSource dataSource) {
+	protected static MysqlDataSource getInformationConnection() {
+		MysqlDataSource dataSource = new MysqlDataSource();
 		try {
 			Wini ini = new Wini(new File(DatabaseAccessHolder.INSTANCE.pathFile));
 			String server = ini.get("database", "server");
@@ -46,7 +46,7 @@ public class DatabaseAccess	{
 			dataSource.setDatabaseName(name);
 		}
 		catch (IOException e){
-			Logging.LOGGER.log(Level.WARNING, "Error when recovering database connection data: " + "Impossible to open the configuration file");
+			Logging.getLogger().log(Level.WARNING, "Error when recovering database connection data: " + "Impossible to open the configuration file");
 			String message = "";
 			if (createDefaultConfigurationFile()) {
 				message = "Configuration file not founded.\n"
@@ -84,10 +84,10 @@ public class DatabaseAccess	{
 				ini.store();
 				return true;
 			} catch (IOException e) {
-				Logging.LOGGER.log(Level.CONFIG, "Error when writing in configuration file:\n" + e.getMessage());
+				Logging.getLogger().log(Level.CONFIG, "Error when writing in configuration file:\n" + e.getMessage());
 			}
 		} catch (IOException e) {
-			Logging.LOGGER.log(Level.CONFIG, "Error when creation of configuration file:\n" + e.getMessage());
+			Logging.getLogger().log(Level.CONFIG, "Error when creation of configuration file:\n" + e.getMessage());
 		}
 		return false;
 	}
@@ -99,7 +99,7 @@ public class DatabaseAccess	{
 		try {
 			Desktop.getDesktop().open(new File(DatabaseAccessHolder.INSTANCE.pathFile));
 		} catch (IOException e) {
-			Logging.LOGGER.log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
+			Logging.getLogger().log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.setHeaderText("Error when opening configuration file");
 			alert.setContentText("Retry the action or restart the application if the problem persists");

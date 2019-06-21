@@ -6,16 +6,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
-import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.view.LoginScreenController;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 /**
- * Thread retrieving products from the database
+ * Thread attempting a connection with the new user entered and retrieving his privileges if there is one
  * @author Jean-Florian Tassart
  */
 public class AuthentificationThread implements Runnable {
@@ -27,9 +25,9 @@ public class AuthentificationThread implements Runnable {
 	
     /**
      * Initialization of parameters
-     * @param loginScreen 
-     * @param username 
-     * @param password 
+     * @param loginScreen - view performing the connection attempt in order to perform the appropriate actions on it according to the authentication result
+     * @param username - username with which the connection is made
+     * @param password - password with which the connection is made
      */
     public AuthentificationThread(LoginScreenController loginScreen, String username, String password) {
     	this.loginScreen = loginScreen;
@@ -39,21 +37,21 @@ public class AuthentificationThread implements Runnable {
     }
  
     /**
-     * Checks if the user has the necessary privileges and then get the products if he has them, suggests changing users otherwise
+     * Action to be performed for authentication
      */
     public void run() {
     	authentification();
-    	if (error == null) updateCurrentUser();
+    	if (error == null) Platform.runLater(() -> DataSourceFactory.setNewUser(this.username, this.password));
     	updateInterface();
     }
     
     /**
-     * Getting produts
+     * Attempt to connect and recover privileges if successful
      */
     private void authentification() {
     	try {
-			Connection connection = DataSourceFactory.getDataSource().getConnection(this.username, this.password);
-			Statement statement = connection.createStatement();
+			Connection connection = DataSourceFactory.getConnection(this.username, this.password);
+    		Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(
 					"SELECT * FROM\n"
 					+ "(SELECT NULL AS 'database', NULL AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.USER_PRIVILEGES\n"
@@ -63,7 +61,7 @@ public class AuthentificationThread implements Runnable {
 					+ "SELECT table_schema AS 'database', table_name AS 'table', NULL AS 'column', privilege_type AS 'privilege' FROM information_schema.TABLE_PRIVILEGES\n"
 					+ "UNION\n"
 					+ "SELECT table_schema AS 'database', table_name AS 'table', column_name AS 'column', privilege_type AS 'privilege' FROM information_schema.COLUMN_PRIVILEGES)\n"
-					+ "AS privilegeTable WHERE (privilegeTable.database IS NULL OR privilegeTable.database = '" + DataSourceFactory.getDataSource().getDatabaseName() + "')"
+					+ "AS privilegeTable WHERE (privilegeTable.database IS NULL OR privilegeTable.database = '" + DataSourceFactory.getDatabaseName() + "')"
 					);
 			ArrayList<HashMap<String, String>> privileges = new ArrayList<HashMap<String, String>>();
 			while (resultSet.next()) {
@@ -74,22 +72,12 @@ public class AuthentificationThread implements Runnable {
 				privilege.put("privilege", resultSet.getString("privilege"));
 				privileges.add(privilege);
 			}
-			DataSourceFactory.changeCurrentUserPrivileges(privileges);
+			DataSourceFactory.setCurrentUserPrivileges(privileges);
 			statement.close();
 			connection.close();
 		} catch (SQLException e) {
 			this.error = e;
 		}
-    }
-    
-    private void updateCurrentUser() {
-    	DataSourceFactory.getDataSource().setUser(username);
-    	DataSourceFactory.getDataSource().setPassword(password);
-    	DataSourceFactory.setIsNewUser(true);
-    	Platform.runLater(() -> {
-        	DataSourceFactory.getCurrentUser().set(username);
-    		Logging.LOGGER.log(Level.INFO, "Connection of " + DataSourceFactory.getCurrentUser().getValue());
-    	});
     }
     
     /**

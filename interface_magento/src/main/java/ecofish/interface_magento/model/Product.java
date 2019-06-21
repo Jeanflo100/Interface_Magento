@@ -4,7 +4,7 @@ package ecofish.interface_magento.model;
  * Product model
  * @author Jean-Florian Tassart
  */
-public class Product implements Comparable<Product>{
+public class Product implements Cloneable, Comparable<Product>{
 	
 	private Integer idProduct;
 	private String name;
@@ -39,6 +39,25 @@ public class Product implements Comparable<Product>{
 		this.newPrice = null;
 		this.active = active;
 		this.changeActive = false;
+	}
+	
+	public Product (Product product) {
+		this.idProduct = product.getIdProduct();
+		this.name = product.getName();
+		this.category = product.getCategory();
+		this.family = product.getFamily();
+		this.quality = product.getQuality();
+		this.size = product.getSize();
+		this.actualPrice = product.getActualPrice();
+		this.newPrice = product.getNewPrice();
+		this.active = product.getActive();
+		this.changeActive = product.getChangeActive();
+		System.out.println("passage");
+	}
+	
+	@Override
+	public Product clone() throws CloneNotSupportedException {
+		return (Product)super.clone();
 	}
 	
 	public void setName(String name) {
@@ -113,7 +132,7 @@ public class Product implements Comparable<Product>{
 	public String toString() {
 		return "Name : " + name + "\n" + "Size : " + size + "\n" + "Quality : " + quality + "\n";
 	}
-
+	
 	/**
 	 * Comparison order : category, family, name, size, quality, idProduct
 	 */

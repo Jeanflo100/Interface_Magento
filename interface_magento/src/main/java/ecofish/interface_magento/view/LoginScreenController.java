@@ -64,6 +64,10 @@ public class LoginScreenController {
 		}
 	}
 	
+	/**
+	 * Action to be done on the view according to the result of the authentication
+	 * @param success - authentication result. True if success, false else
+	 */
 	public void resultAuthentification(Boolean success) {
 		this.componentsAnchorPane.setDisable(false);
 		this.backgroundAnchorPane.setCursor(Cursor.DEFAULT);
