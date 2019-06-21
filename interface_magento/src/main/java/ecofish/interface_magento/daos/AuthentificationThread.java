@@ -72,7 +72,7 @@ public class AuthentificationThread implements Runnable {
 				privilege.put("privilege", resultSet.getString("privilege"));
 				privileges.add(privilege);
 			}
-			DataSourceFactory.changeCurrentUserPrivileges(privileges);
+			DataSourceFactory.setCurrentUserPrivileges(privileges);
 			statement.close();
 			connection.close();
 		} catch (SQLException e) {

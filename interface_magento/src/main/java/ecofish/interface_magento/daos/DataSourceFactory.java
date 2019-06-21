@@ -39,14 +39,6 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Provides the name of the database 
-	 * @return Name of the database
-	 */
-	protected static String getDatabaseName() {
-		return DataSourceFactoryHolder.INSTANCE.dataSource.getDatabaseName();
-	}
-	
-	/**
 	 * Opens the window allowing a new user to authenticate himself
 	 * @return True if a new user has been authenticated, false else
 	 */
@@ -54,20 +46,6 @@ public class DataSourceFactory {
 		setIsNewUser(false);
 		StageService.showView(Views.viewsSecondaryStage.LoginScreen, true);
 		return getIsNewUser();
-	}
-	
-	/**
-	 * Returns a custom message according to the connection errors.
-	 * @param error - error concerned
-	 * @return Custom message
-	 */
-	protected static String getCustomMessageFailureConnection(SQLException error) {
-		Logging.getLogger().log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
-		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
-		else if (error.getErrorCode() == 1049) return "Database not founded.\nPlease check the name of the database registered in the configuration file";
-		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
-		else if (error.getSQLState().equals("08S01")) return "Unable to connect to the database. Please try again";
-		else return "Unexpected error. Please try again";
 	}
 	
 	/**
@@ -100,28 +78,11 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Returns the currently authenticated user
-	 * @return the currently authenticated user
+	 * Provides the name of the database 
+	 * @return Name of the database
 	 */
-	public static SimpleStringProperty getCurrentUser() {
-		return DataSourceFactoryHolder.INSTANCE.currentUser;
-	}
-	
-	/**
-	 * Returns the user's privileges
-	 * @return the user's privileges
-	 */
-	private static ArrayList<HashMap<String, String>> getCurrentUserPrivileges(){
-		return DataSourceFactoryHolder.INSTANCE.currentUserPrivileges;
-	}
-	
-	/**
-	 * Privileges owned by the user
-	 * @param privileges
-	 */
-	protected static void changeCurrentUserPrivileges(Collection<HashMap<String, String>> privileges) {
-		getCurrentUserPrivileges().clear();
-		getCurrentUserPrivileges().addAll(privileges);
+	protected static String getDatabaseName() {
+		return DataSourceFactoryHolder.INSTANCE.dataSource.getDatabaseName();
 	}
 	
 	/**
@@ -145,19 +106,27 @@ public class DataSourceFactory {
 	}
 	
 	/**
+	 * Returns the currently authenticated user
+	 * @return the currently authenticated user
+	 */
+	public static SimpleStringProperty getCurrentUser() {
+		return DataSourceFactoryHolder.INSTANCE.currentUser;
+	}
+	
+	/**
+	 * Returns the user's privileges
+	 * @return the user's privileges
+	 */
+	private static ArrayList<HashMap<String, String>> getCurrentUserPrivileges(){
+		return DataSourceFactoryHolder.INSTANCE.currentUserPrivileges;
+	}
+	
+	/**
 	 * Returns whether after the authentication window a new user has been authenticated
 	 * @return True if it's a new user, false else
 	 */
 	private static Boolean getIsNewUser() {
 		return DataSourceFactoryHolder.INSTANCE.isNewUser;
-	}
-	
-	/**
-	 * Updates the authentication of a new user or not
-	 * @param isNewUser - true if it's a new user authenticated, false else
-	 */
-	private static void setIsNewUser(Boolean isNewUser) {
-		DataSourceFactoryHolder.INSTANCE.isNewUser = isNewUser;
 	}
 	
 	/**
@@ -171,6 +140,37 @@ public class DataSourceFactory {
     	DataSourceFactory.setIsNewUser(true);
     	DataSourceFactory.getCurrentUser().set(username);
 		Logging.getLogger().log(Level.INFO, "Connection of " + DataSourceFactory.getCurrentUser().getValue());
+	}
+	
+	/**
+	 * Privileges owned by the user
+	 * @param privileges
+	 */
+	protected static void setCurrentUserPrivileges(Collection<HashMap<String, String>> privileges) {
+		getCurrentUserPrivileges().clear();
+		getCurrentUserPrivileges().addAll(privileges);
+	}
+	
+	/**
+	 * Updates the authentication of a new user or not
+	 * @param isNewUser - true if it's a new user authenticated, false else
+	 */
+	private static void setIsNewUser(Boolean isNewUser) {
+		DataSourceFactoryHolder.INSTANCE.isNewUser = isNewUser;
+	}
+	
+	/**
+	 * Returns a custom message according to the connection errors.
+	 * @param error - error concerned
+	 * @return Custom message
+	 */
+	protected static String getCustomMessageFailureConnection(SQLException error) {
+		Logging.getLogger().log(Level.CONFIG, "Error when connecting to database:\n" + error.getMessage());
+		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
+		else if (error.getErrorCode() == 1049) return "Database not founded.\nPlease check the name of the database registered in the configuration file";
+		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
+		else if (error.getSQLState().equals("08S01")) return "Unable to connect to the database. Please try again";
+		else return "Unexpected error. Please try again";
 	}
 	
 	/**

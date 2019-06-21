@@ -75,7 +75,6 @@ public class UpdatingProductThread implements Runnable {
      */
     private void updatingProducts() {
     	try {
-			//Connection connection = DataSourceFactory.getDataSource().getConnection();
     		Connection connection = DataSourceFactory.getConnection();
 			Statement stmt = connection.createStatement();
 			for (Product product : updatingProducts) {
