@@ -10,8 +10,8 @@ public class Product implements Comparable<Product>{
 	private final String category;
 	private final String family;
 	private final String name;
-	private final String quality;
 	private final String size;
+	private final String quality;
 
 	private Double actualPrice;
 	private Double newPrice;
@@ -29,30 +29,18 @@ public class Product implements Comparable<Product>{
 	 * @param actualPrice - actual product price
 	 * @param active - active or inactive status product
 	 */
-	public Product(Integer idProduct, String category, String family, String name, String quality, String size, Double actualPrice, Boolean active) {
+	public Product(Integer idProduct, String category, String family, String name, String size, String quality, Double actualPrice, Boolean active) {
 		this.idProduct = idProduct;
 		this.category = category;
 		this.family = family;
 		this.name = name;
-		this.quality = quality;
 		this.size = size;
+		this.quality = quality;
 		this.actualPrice = actualPrice;
 		this.newPrice = null;
 		this.active = active;
 		this.changeActive = false;
 	}
-	
-	/*public void setName(String name) {
-		this.name = name;
-	}
-	
-	public void setQuality(String quality) {
-		this.quality = quality;
-	}
-	
-	public void setSize(String size) {
-		this.size = size;
-	}*/
 	
 	public void setActualPrice(Double actualPrice) {
 		this.actualPrice = actualPrice;

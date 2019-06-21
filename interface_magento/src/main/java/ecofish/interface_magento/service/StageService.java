@@ -57,14 +57,6 @@ public class StageService {
 		this.viewPrimaryStage = new Hashtable<viewsPrimaryStage, Pane>();
 		this.viewSecondaryStage = new Hashtable<viewsSecondaryStage, Scene>();
 	}
-
-	/**
-	 * Provides the instance of main layout
-	 * @return Instance of main layout
-	 */
-	/*public static BorderPane getMainLayoutBorderPane() {
-		return StageServiceHolder.INSTANCE.mainLayout;
-	}*/
 	
 	/**
 	 * Provides the instance of main window

@@ -18,7 +18,7 @@ import javafx.scene.control.Alert;
  */
 public class DatabaseAccess	{
 	
-	private final String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "config_test.ini";
+	private static final String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "config_test.ini";
 	
 	/**
 	 * Retrieve database connection information
@@ -27,7 +27,7 @@ public class DatabaseAccess	{
 	protected static MysqlDataSource getInformationConnection() {
 		MysqlDataSource dataSource = new MysqlDataSource();
 		try {
-			Wini ini = new Wini(new File(DatabaseAccessHolder.INSTANCE.pathFile));
+			Wini ini = new Wini(new File(pathFile));
 			String server = ini.get("database", "server");
 			String port = ini.get("database", "port");
 			String name = ini.get("database", "name");
@@ -71,7 +71,7 @@ public class DatabaseAccess	{
 	 * @return True is the file has been created, false else
 	 */
 	private static Boolean createDefaultConfigurationFile() {
-		File file = new File(DatabaseAccessHolder.INSTANCE.pathFile);
+		File file = new File(pathFile);
 		if (file.exists()) return false;
 		try {
 			file.createNewFile();
@@ -97,7 +97,7 @@ public class DatabaseAccess	{
 	 */
 	public static void openConfigurationFile() {
 		try {
-			Desktop.getDesktop().open(new File(DatabaseAccessHolder.INSTANCE.pathFile));
+			Desktop.getDesktop().open(new File(pathFile));
 		} catch (IOException e) {
 			Logging.getLogger().log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
 			Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -105,14 +105,6 @@ public class DatabaseAccess	{
 			alert.setContentText("Retry the action or restart the application if the problem persists");
 			alert.showAndWait();
 		}
-	}
-	
-	/**
-	 * Make the class static
-	 * @author Jean-Florian Tassart
-	 */
-	private static class DatabaseAccessHolder {
-		private static DatabaseAccess INSTANCE = new DatabaseAccess();
 	}
 	
 }
