@@ -19,7 +19,7 @@ import javafx.scene.control.Alert;
 public class DatabaseAccess	{
 	
 	private static final String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "config.ini";
-	
+
 	/**
 	 * Retrieve database connection information
 	 * @return Variable allowing initialization of connections

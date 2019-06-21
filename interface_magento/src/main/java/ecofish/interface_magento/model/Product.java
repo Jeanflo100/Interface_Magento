@@ -42,18 +42,6 @@ public class Product implements Comparable<Product>{
 		this.changeActive = false;
 	}
 	
-	/*public void setName(String name) {
-		this.name = name;
-	}
-	
-	public void setSize(String size) {
-		this.size = size;
-	}
-	
-	public void setQuality(String quality) {
-		this.quality = quality;
-	}*/
-	
 	public void setActualPrice(Double actualPrice) {
 		this.actualPrice = actualPrice;
 	}
