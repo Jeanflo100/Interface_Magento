@@ -4,16 +4,17 @@ package ecofish.interface_magento.model;
  * Product model
  * @author Jean-Florian Tassart
  */
-public class Product implements Cloneable, Comparable<Product>{
+public class Product implements Comparable<Product>{
 	
-	private Integer idProduct;
-	private String name;
-	private String category;
-	private String family;
-	private String quality;
-	private String size;
-	private Double newPrice;
+	private final Integer idProduct;
+	private final String category;
+	private final String family;
+	private final String name;
+	private final String quality;
+	private final String size;
+
 	private Double actualPrice;
+	private Double newPrice;
 	private Boolean active;
 	private Boolean changeActive;
 	
@@ -28,11 +29,11 @@ public class Product implements Cloneable, Comparable<Product>{
 	 * @param actualPrice - actual product price
 	 * @param active - active or inactive status product
 	 */
-	public Product(Integer idProduct, String name, String category, String family, String quality, String size, Double actualPrice, Boolean active) {
+	public Product(Integer idProduct, String category, String family, String name, String quality, String size, Double actualPrice, Boolean active) {
 		this.idProduct = idProduct;
-		this.name = name;
 		this.category = category;
 		this.family = family;
+		this.name = name;
 		this.quality = quality;
 		this.size = size;
 		this.actualPrice = actualPrice;
@@ -41,26 +42,7 @@ public class Product implements Cloneable, Comparable<Product>{
 		this.changeActive = false;
 	}
 	
-	public Product (Product product) {
-		this.idProduct = product.getIdProduct();
-		this.name = product.getName();
-		this.category = product.getCategory();
-		this.family = product.getFamily();
-		this.quality = product.getQuality();
-		this.size = product.getSize();
-		this.actualPrice = product.getActualPrice();
-		this.newPrice = product.getNewPrice();
-		this.active = product.getActive();
-		this.changeActive = product.getChangeActive();
-		System.out.println("passage");
-	}
-	
-	@Override
-	public Product clone() throws CloneNotSupportedException {
-		return (Product)super.clone();
-	}
-	
-	public void setName(String name) {
+	/*public void setName(String name) {
 		this.name = name;
 	}
 	
@@ -70,14 +52,14 @@ public class Product implements Cloneable, Comparable<Product>{
 	
 	public void setSize(String size) {
 		this.size = size;
+	}*/
+	
+	public void setActualPrice(Double actualPrice) {
+		this.actualPrice = actualPrice;
 	}
 	
 	public void setNewPrice(Double newPrice) {
 		this.newPrice = newPrice;
-	}
-	
-	public void setActualPrice(Double actualPrice) {
-		this.actualPrice = actualPrice;
 	}
 	
 	public void setActive(Boolean active) {
@@ -92,10 +74,6 @@ public class Product implements Cloneable, Comparable<Product>{
 		return idProduct;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
 	public String getCategory() {
 		return category;
 	}
@@ -104,20 +82,24 @@ public class Product implements Cloneable, Comparable<Product>{
 		return family;
 	}
 	
-	public String getQuality() {
-		return quality;
+	public String getName() {
+		return name;
 	}
 	
 	public String getSize() {
 		return size;
 	}
 	
-	public Double getNewPrice() {
-		return newPrice;
+	public String getQuality() {
+		return quality;
 	}
 	
 	public Double getActualPrice() {
 		return actualPrice;
+	}
+	
+	public Double getNewPrice() {
+		return newPrice;
 	}
 	
 	public Boolean getActive() {

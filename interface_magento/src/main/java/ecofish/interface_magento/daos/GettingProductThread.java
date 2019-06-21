@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -55,9 +56,9 @@ public class GettingProductThread implements Runnable {
      */
     private Boolean privilegeChecking() {
     	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "idproduct")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "name")) return false;
     	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "category")) return false;
     	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "family")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "name")) return false;
     	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "quality")) return false;
     	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "size")) return false;
     	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "actual_price")) return false;
@@ -78,6 +79,8 @@ public class GettingProductThread implements Runnable {
 			Integer nb_products = retour.getInt("nb_products");
 			Integer nb_loading_products = 0;
 			
+			ArrayList<Product> activeProducts = new ArrayList<Product>();
+			ArrayList<Product> inactiveProducts = new ArrayList<Product>();
 			TreeMap<String, TreeSet<String>> groups = new TreeMap<String, TreeSet<String>>();
 			TreeSet<String> familySet;
 
@@ -85,15 +88,15 @@ public class GettingProductThread implements Runnable {
 			while(resultSet.next()) {
 				Product product = new Product(
 						resultSet.getInt("idproduct"),
-						resultSet.getString("name"),
 						resultSet.getString("category"),
 						resultSet.getString("family"),
+						resultSet.getString("name"),
 						resultSet.getString("quality"),
 						resultSet.getString("size"),
 						resultSet.getDouble("actual_price"),
 						resultSet.getBoolean("active"));
-				if (product.getActive()) ProductService.addActiveProduct(product);
-				else ProductService.addInactiveProduct(product);
+				if (product.getActive()) activeProducts.add(product);
+				else inactiveProducts.add(product);
 
 				String category = resultSet.getString("category");
 				String family = resultSet.getString("family");
@@ -104,7 +107,9 @@ public class GettingProductThread implements Runnable {
 				nb_loading_products += 1;
 				LoadingProductController.updateLoadingProductProgressBar((double)nb_loading_products/nb_products);
 			}
-			Filters.updateGroups(groups);
+			ProductService.setActiveProducts(activeProducts);
+			ProductService.setInactiveProducts(inactiveProducts);
+			Filters.setGroups(groups);
 		}
 		catch (SQLException e){
 			Logging.getLogger().log(Level.SEVERE, "Error when getting products list:\n" + e.getMessage());

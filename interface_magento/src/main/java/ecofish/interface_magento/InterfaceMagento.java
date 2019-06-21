@@ -21,9 +21,7 @@ public class InterfaceMagento extends Application {
 	public void start(Stage primaryStage) {
 		//StageService.initPrimaryStage(primaryStage);
 		//StageService.showView(ViewService.getView("test"));
-		StageService.initPrimaryStage(primaryStage);
-		StageService.createSecondaryStage();
-		
+		StageService.setStageProvidesByApplication(primaryStage);
 		if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
 	}
 

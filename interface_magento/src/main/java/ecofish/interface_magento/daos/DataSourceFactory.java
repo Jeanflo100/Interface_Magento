@@ -23,9 +23,9 @@ import javafx.scene.control.ButtonType;
  */
 public class DataSourceFactory {
 
-	private MysqlDataSource dataSource;
-	private SimpleStringProperty currentUser;
-	private ArrayList<HashMap<String, String>> currentUserPrivileges;
+	private final MysqlDataSource dataSource;
+	private final SimpleStringProperty currentUser;
+	private final ArrayList<HashMap<String, String>> currentUserPrivileges;
 	
 	private Boolean isNewUser;
 	

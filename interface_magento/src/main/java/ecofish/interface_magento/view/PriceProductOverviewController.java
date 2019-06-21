@@ -73,15 +73,15 @@ public class PriceProductOverviewController {
 	@FXML
 	Text successfulBackupText;
 	
-	private Integer numberVisibleRow;
+    private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
+    private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
 	
-	private Product currentProduct;
+	private Integer numberVisibleRow;
 	
 	private Filters filters;
 	
-    private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
-    private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
-    
+	private Product currentProduct;
+	
 	/**
 	 * Checking conditions before updating the price
 	 */

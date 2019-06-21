@@ -18,9 +18,10 @@ import javafx.scene.control.Alert;
  */
 public class AuthentificationThread implements Runnable {
 
-	private LoginScreenController loginScreen;
-	private String username;
-	private String password;
+	private final LoginScreenController loginScreen;
+	private final String username;
+	private final String password;
+	
 	private SQLException error;
 	
     /**

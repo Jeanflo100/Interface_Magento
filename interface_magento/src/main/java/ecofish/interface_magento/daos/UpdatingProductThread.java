@@ -21,9 +21,10 @@ import javafx.scene.control.Alert;
  */
 public class UpdatingProductThread implements Runnable {
 
-	private TreeSet<Product> updatingProducts;
-	private TreeSet<Product> updatedProducts;
-    private Integer nb_products;
+	private final TreeSet<Product> updatingProducts;
+	private final TreeSet<Product> updatedProducts;
+    private final Integer nb_products;
+    
     private Integer nb_update_products;
     private String updatedProductsLog;
 	private String separatorLog;

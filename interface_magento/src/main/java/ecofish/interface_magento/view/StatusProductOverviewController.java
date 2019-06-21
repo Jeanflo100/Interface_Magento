@@ -68,16 +68,16 @@ public class StatusProductOverviewController {
 	ComboBox<String> categoryComboBox;
 	
 	@FXML
-	ComboBox<String> familyComboBox;	
+	ComboBox<String> familyComboBox;
+	
+    private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("inactive-to-active");
+    private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
+	
+	private Filters filters;
 	
 	private Product currentInactiveProduct;
 	
 	private Product currentActiveProduct;
-	
-	private Filters filters;
-	
-    private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("inactive-to-active");
-    private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
 	
     /**
      * Go to show product price view

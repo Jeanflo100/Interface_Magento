@@ -20,17 +20,15 @@ public class LoadingProductController {
 	@FXML
 	Text loadingProductText;
 	
-	private static DoubleProperty valueLoadingProductProgressBar;
+	private static final DoubleProperty valueLoadingProductProgressBar = new SimpleDoubleProperty(0.0);
 	
-	private static StringProperty valueLoadingProductText;
+	private static final StringProperty valueLoadingProductText = new SimpleStringProperty("");
 
 	/**
 	 * Links the view components to the ProductService class
 	 */
 	@FXML
 	public void initialize() {
-		valueLoadingProductProgressBar = new SimpleDoubleProperty(0.0);
-		valueLoadingProductText = new SimpleStringProperty("");
 		this.loadingProductProgressBar.progressProperty().bind(valueLoadingProductProgressBar);
 		this.loadingProductText.textProperty().bind(valueLoadingProductText);
 	}

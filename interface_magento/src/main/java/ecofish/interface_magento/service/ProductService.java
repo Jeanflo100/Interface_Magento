@@ -19,11 +19,11 @@ import javafx.scene.control.ButtonType;
  */
 public class ProductService {
 
-	private TreeSet<Product> updatingProducts;
-	private ArrayList<Product> activeProducts;
-	private ArrayList<Product> inactiveProducts;
-	private ObservableList<Product> activeProductsFiltered;
-	private ObservableList<Product> inactiveProductsFiltered;
+	private final TreeSet<Product> updatingProducts;
+	private final ArrayList<Product> activeProducts;
+	private final ArrayList<Product> inactiveProducts;
+	private final ObservableList<Product> activeProductsFiltered;
+	private final ObservableList<Product> inactiveProductsFiltered;
 	
 	/**
 	 * Initialization of parameters
@@ -63,6 +63,22 @@ public class ProductService {
 	}
 	
 	/**
+	 * Set the list of active products
+	 * @param activeProducts - the list of active products
+	 */
+	public static void setActiveProducts(ArrayList<Product> activeProducts){
+		ProductServiceHolder.INSTANCE.activeProducts.addAll(activeProducts);
+	}
+	
+	/**
+	 * Set the list of inactive products
+	 * @param - inactiveProducts - the list of inactive products
+	 */
+	public static void setInactiveProducts(ArrayList<Product> inactiveProducts){
+		ProductServiceHolder.INSTANCE.inactiveProducts.addAll(inactiveProducts);
+	}
+	
+	/**
 	 * Initialize the list of products to be updated
 	 * @param updatingProducts - list of products to be updated
 	 */
@@ -86,22 +102,6 @@ public class ProductService {
 	 */
 	public static TreeSet<Product> getUpdatingProducts() {
 		return new TreeSet<Product>(ProductServiceHolder.INSTANCE.updatingProducts);
-	}
-	
-	/**
-	 * Add a product to the list of active products
-	 * @param product - product to be added to the list of active products
-	 */
-	public static void addActiveProduct(Product product){
-		ProductServiceHolder.INSTANCE.activeProducts.add(product);
-	}
-	
-	/**
-	 * Add a product to the list of inactive products
-	 * @param - product to be added to the list of inactive products
-	 */
-	public static void addInactiveProduct(Product product){
-		ProductServiceHolder.INSTANCE.inactiveProducts.add(product);
 	}
 	
 	/**

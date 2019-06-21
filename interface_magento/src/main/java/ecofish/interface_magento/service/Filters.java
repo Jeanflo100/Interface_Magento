@@ -15,11 +15,11 @@ import javafx.scene.control.ComboBox;
 public abstract class Filters {
 
 	private static TreeMap<String, TreeSet<String>> groups;
-	private ObservableList<String> categories;
-	private ObservableList<String> families;
+	private final ObservableList<String> categories;
+	private final ObservableList<String> families;
 	
-	private ComboBox<String> categoryComboBox;
-	private ComboBox<String> familyComboBox;
+	private final ComboBox<String> categoryComboBox;
+	private final ComboBox<String> familyComboBox;
 	
 	private String currentCategory;
 	private String currentFamily;
@@ -30,7 +30,7 @@ public abstract class Filters {
 	 * Updates existing product groups
 	 * @param productGroups - existing product groups
 	 */
-	public static void updateGroups(TreeMap<String, TreeSet<String>> productGroups){
+	public static void setGroups(TreeMap<String, TreeSet<String>> productGroups){
 		groups = productGroups;
 	}
 	
@@ -40,20 +40,12 @@ public abstract class Filters {
 	 * @param categoryComboBox 
 	 */
 	public Filters(ComboBox<String> categoryComboBox, ComboBox<String> familyComboBox) {
-		initComponents(categoryComboBox, familyComboBox);
-		initItemSelection();
-		setComponents();
-	}
-	
-	/**
-	 * Initialization data to the filter components
-	 */
-	private void initComponents(ComboBox<String> categoryComboBox, ComboBox<String> familyComboBox) {
-		this.categories = FXCollections.observableArrayList();
-		this.families = FXCollections.observableArrayList();		
-
 		this.categoryComboBox = categoryComboBox;
 		this.familyComboBox = familyComboBox;
+		this.categories = FXCollections.observableArrayList();
+		this.families = FXCollections.observableArrayList();
+		initItemSelection();
+		setComponents();
 	}
 	
 	/**
