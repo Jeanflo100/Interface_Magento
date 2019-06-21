@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.TreeSet;
 
-import ecofish.interface_magento.daos.LoadingProductThread;
+import ecofish.interface_magento.daos.GettingProductThread;
 import ecofish.interface_magento.daos.UpdatingProductThread;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,11 +19,11 @@ import javafx.scene.control.ButtonType;
  */
 public class ProductService {
 
-	private TreeSet<Product> updatingProducts;
-	private ArrayList<Product> activeProducts;
-	private ArrayList<Product> inactiveProducts;
-	private ObservableList<Product> activeProductsFiltered;
-	private ObservableList<Product> inactiveProductsFiltered;
+	private final TreeSet<Product> updatingProducts;
+	private final ArrayList<Product> activeProducts;
+	private final ArrayList<Product> inactiveProducts;
+	private final ObservableList<Product> activeProductsFiltered;
+	private final ObservableList<Product> inactiveProductsFiltered;
 	
 	/**
 	 * Initialization of parameters
@@ -40,7 +40,7 @@ public class ProductService {
 	 * Launching the product loading thread
 	 */
 	public static void loadProduct() {
-		LoadingProductThread loadingProduct = new LoadingProductThread();
+		GettingProductThread loadingProduct = new GettingProductThread();
 		new Thread(loadingProduct).start();
 	}
 	
@@ -63,40 +63,45 @@ public class ProductService {
 	}
 	
 	/**
+	 * Set the list of active products
+	 * @param activeProducts - the list of active products
+	 */
+	public static void setActiveProducts(ArrayList<Product> activeProducts){
+		ProductServiceHolder.INSTANCE.activeProducts.addAll(activeProducts);
+	}
+	
+	/**
+	 * Set the list of inactive products
+	 * @param - inactiveProducts - the list of inactive products
+	 */
+	public static void setInactiveProducts(ArrayList<Product> inactiveProducts){
+		ProductServiceHolder.INSTANCE.inactiveProducts.addAll(inactiveProducts);
+	}
+	
+	/**
+	 * Initialize the list of products to be updated
+	 * @param updatingProducts - list of products to be updated
+	 */
+	public static void setUpdatingProducts(TreeSet<Product> updatingProducts) {
+		ProductServiceHolder.INSTANCE.updatingProducts.clear();
+		ProductServiceHolder.INSTANCE.updatingProducts.addAll(updatingProducts);
+	}
+	
+	/**
 	 * Updates the list of products to be updated
 	 * @param product - adds, leaves or removes the product from the list if updates are still present or not
 	 */
 	public static void updateUpdatingProducts(Product product) {
-		if (product.getChangeActive() == false && product.getNewPrice() == null) {
-			ProductServiceHolder.INSTANCE.updatingProducts.remove(product);
-		}
-		else {
-			ProductServiceHolder.INSTANCE.updatingProducts.add(product);
-		}
+		if (product.getChangeActive() == false && product.getNewPrice() == null) ProductServiceHolder.INSTANCE.updatingProducts.remove(product);
+		else ProductServiceHolder.INSTANCE.updatingProducts.add(product);
 	}
 	
 	/**
-	 * Returns the list of products to be updated
-	 * @return List of products to be updated
+	 * Returns a copy of the list of products to be updated
+	 * @return Copy of the list of products to be updated
 	 */
 	public static TreeSet<Product> getUpdatingProducts() {
-		return ProductServiceHolder.INSTANCE.updatingProducts;
-	}
-	
-	/**
-	 * Returns the list of products with active status
-	 * @return List of products with active status
-	 */
-	public static ArrayList<Product> getActiveProducts(){
-		return ProductServiceHolder.INSTANCE.activeProducts;
-	}
-	
-	/**
-	 * Returns the list of products with inactive status
-	 * @return List of products with inactive status
-	 */
-	public static ArrayList<Product> getInactiveProducts(){
-		return ProductServiceHolder.INSTANCE.inactiveProducts;
+		return new TreeSet<Product>(ProductServiceHolder.INSTANCE.updatingProducts);
 	}
 	
 	/**

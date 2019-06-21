@@ -6,23 +6,24 @@ package ecofish.interface_magento.model;
  */
 public class Product implements Comparable<Product>{
 	
-	private String sku;
-	private String category;
-	private String family;
-	private String name;
-	private String size;
-	private String quality;
-	private Double newPrice;
+	private final String sku;
+	private final String category;
+	private final String family;
+	private final String name;
+	private final String size;
+	private final String quality;
+
 	private Double actualPrice;
+	private Double newPrice;
 	private Boolean active;
 	private Boolean changeActive;
 	
 	/**
 	 * Constructor of product
 	 * @param sku - unique product ID
-	 * @param name - product name
 	 * @param category - product category
 	 * @param family - product family
+	 * @param name - product name
 	 * @param quality - product quality
 	 * @param size - product size
 	 * @param actualPrice - actual product price
@@ -30,7 +31,6 @@ public class Product implements Comparable<Product>{
 	 */
 	public Product(String sku, String category, String family, String name, String size, String quality, Double actualPrice, Boolean active) {
 		this.sku = sku;
-		this.name = name;
 		this.category = category;
 		this.family = family;
 		this.name = name;
@@ -42,7 +42,7 @@ public class Product implements Comparable<Product>{
 		this.changeActive = false;
 	}
 	
-	public void setName(String name) {
+	/*public void setName(String name) {
 		this.name = name;
 	}
 	
@@ -52,14 +52,14 @@ public class Product implements Comparable<Product>{
 	
 	public void setQuality(String quality) {
 		this.quality = quality;
+	}*/
+	
+	public void setActualPrice(Double actualPrice) {
+		this.actualPrice = actualPrice;
 	}
 	
 	public void setNewPrice(Double newPrice) {
 		this.newPrice = newPrice;
-	}
-	
-	public void setActualPrice(Double actualPrice) {
-		this.actualPrice = actualPrice;
 	}
 	
 	public void setActive(Boolean active) {
@@ -94,12 +94,12 @@ public class Product implements Comparable<Product>{
 		return quality;
 	}
 	
-	public Double getNewPrice() {
-		return newPrice;
-	}
-	
 	public Double getActualPrice() {
 		return actualPrice;
+	}
+	
+	public Double getNewPrice() {
+		return newPrice;
 	}
 	
 	public Boolean getActive() {
@@ -117,7 +117,7 @@ public class Product implements Comparable<Product>{
 		if (quality != null) description += "Quality : " + quality + "\n";
 		return description;
 	}
-
+	
 	/**
 	 * Comparison order : category, family, name, size, quality, sku
 	 */

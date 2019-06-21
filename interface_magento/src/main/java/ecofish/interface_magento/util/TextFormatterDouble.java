@@ -15,8 +15,8 @@ import javafx.util.StringConverter;
  */
 public class TextFormatterDouble {
 
-    private DecimalFormat df ;
-    private TextFormatter<Double> textFormatter ;
+    private final DecimalFormat df ;
+    private final TextFormatter<Double> textFormatter ;
     
     /**
      * Initialization of the format
@@ -69,7 +69,7 @@ public class TextFormatterDouble {
      * @return Instance of the format
      */
     public TextFormatter<Double> getTextFormatterDouble(){
-    	return textFormatter;
+    	return this.textFormatter;
     }
     
 }

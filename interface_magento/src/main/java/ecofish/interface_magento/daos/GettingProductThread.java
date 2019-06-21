@@ -7,9 +7,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
+import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.FilterService;
+import ecofish.interface_magento.service.Filters;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
@@ -20,22 +23,17 @@ import javafx.application.Platform;
  * Thread retrieving products from the database
  * @author Jean-Florian Tassart
  */
-public class LoadingProductThread implements Runnable {
+public class GettingProductThread implements Runnable {
 
-	private ArrayList<Product> activeProducts;
-	private ArrayList<Product> inactiveProducts;
-	private TreeMap<String, TreeSet<String>> groups;
     private Boolean error;
  
     /**
      * Initialization of parameters
      */
-    public LoadingProductThread() {
-    	this.groups = FilterService.getGroups();
-
+    public GettingProductThread() {
     	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, false);
     	LoadingProductController.updateLoadingProductProgressBar(0.0);
-    	LoadingProductController.updateLoadingProductText("Loading Products...");
+    	LoadingProductController.updateLoadingProductText("Getting Products...");
 
     	this.error = false;
     }
@@ -82,6 +80,9 @@ public class LoadingProductThread implements Runnable {
 			Integer nb_products = nb_elements.getInt("nb_products");
 			Integer nb_loading_products = 0;
 			
+			ArrayList<Product> activeProducts = new ArrayList<Product>();
+			ArrayList<Product> inactiveProducts = new ArrayList<Product>();
+			TreeMap<String, TreeSet<String>> groups = new TreeMap<String, TreeSet<String>>();
 			TreeSet<String> familySet;
 
 			ResultSet resultSet = statement.executeQuery(
@@ -143,8 +144,8 @@ public class LoadingProductThread implements Runnable {
 						resultSet.getString("quality"),
 						resultSet.getDouble("price"),
 						resultSet.getBoolean("status"));
-				if (product.getActive()) this.activeProducts.add(product);
-				else this.inactiveProducts.add(product);
+				if (product.getActive()) activeProducts.add(product);
+				else inactiveProducts.add(product);
 
 				familySet = groups.containsKey(category) ? groups.get(category) : new TreeSet<>();
 				familySet.add(family);
@@ -153,9 +154,12 @@ public class LoadingProductThread implements Runnable {
 				nb_loading_products += 1;
 				LoadingProductController.updateLoadingProductProgressBar((double)nb_loading_products/nb_products);
 			}
+			ProductService.setActiveProducts(activeProducts);
+			ProductService.setInactiveProducts(inactiveProducts);
+			Filters.setGroups(groups);
 		}
 		catch (SQLException e){
-			//Logging.LOGGER.log(Level.SEVERE, "Error when getting products list:\n" + e.getMessage());
+			Logging.getLogger().log(Level.SEVERE, "Error when getting products list:\n" + e.getMessage());
 			error = true;
 		}
     }

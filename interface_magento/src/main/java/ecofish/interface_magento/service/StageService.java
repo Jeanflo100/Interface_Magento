@@ -22,39 +22,49 @@ import javafx.stage.WindowEvent;
  * @author Jean-Florian Tassart
  */
 public class StageService {
+	
+	private static Stage stageApplication;
+	
+	private final Stage primaryStage;
+	private final Stage secondaryStage;
+	
+	private final BorderPane mainLayout;
+	private final Double baseHeightMainLayout;
+	
+	private final Hashtable<viewsPrimaryStage, Pane> viewPrimaryStage;
+	private final Hashtable<viewsSecondaryStage, Scene> viewSecondaryStage;
 
 	/**
-	 * Initializes the main layout
+	 * Set the main stage provided by the application
+	 * @param stageProvidesByApplication - main stage provided by the application
+	 */
+	public static void setStageProvidesByApplication(Stage stageProvidesByApplication) {
+		stageApplication = stageProvidesByApplication;
+	}
+	
+	/**
+	 * Initializes the parameters
 	 */
 	private StageService() {
-		mainLayout = Views.getView(Views.viewsPrimaryStage.MainLayout);
-		baseHeightMainLayout = mainLayout.getPrefHeight();
+		this.mainLayout = Views.getView(Views.viewsPrimaryStage.MainLayout);
+		this.baseHeightMainLayout = mainLayout.getPrefHeight();
+		
+		primaryStage = stageApplication == null ? new Stage() : stageApplication;
+		initPrimaryStage(stageApplication);
+		secondaryStage = new Stage();
+		initSecondaryStage(secondaryStage);
+		
+		this.viewPrimaryStage = new Hashtable<viewsPrimaryStage, Pane>();
+		this.viewSecondaryStage = new Hashtable<viewsSecondaryStage, Scene>();
 	}
-
-	/**
-	 * Make the class static
-	 * @author Jean-Florian Tassart
-	 */
-	private static class StageServiceHolder {
-		private static final StageService INSTANCE = new StageService();
-	}
-	
-	private Stage primaryStage;
-	private Stage secondaryStage;
-	
-	private BorderPane mainLayout;
-	private Double baseHeightMainLayout;
-	
-	private Hashtable<viewsPrimaryStage, Pane> viewPrimaryStage = new Hashtable<>();
-	private Hashtable<viewsSecondaryStage, Scene> viewSecondaryStage = new Hashtable<>();
 
 	/**
 	 * Provides the instance of main layout
 	 * @return Instance of main layout
 	 */
-	public static BorderPane getMainLayoutBorderPane() {
+	/*public static BorderPane getMainLayoutBorderPane() {
 		return StageServiceHolder.INSTANCE.mainLayout;
-	}
+	}*/
 	
 	/**
 	 * Provides the instance of main window
@@ -76,16 +86,15 @@ public class StageService {
 	 * Initialization of main window
 	 * @param primaryStage - stage provided by the mother class
 	 */
-	public static void initPrimaryStage(Stage primaryStage) {
+	private void initPrimaryStage(Stage primaryStage) {
 		primaryStage.setTitle("Ecofish Products");
 		primaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
-		primaryStage.setScene(new Scene(StageServiceHolder.INSTANCE.mainLayout));
+		primaryStage.setScene(new Scene(this.mainLayout));
 		primaryStage.setResizable(false);
 		primaryStage.setOnCloseRequest(event -> {
 			if (!ProductService.getUpdatingProducts().isEmpty()) {
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 				alert.initOwner(StageService.getPrimaryStage());
-				alert.setTitle("ATTENTION");
 				alert.setHeaderText("Changes have not been updated in the database, continue?");
 				Optional<ButtonType> option = alert.showAndWait();
 				if (option.get() == ButtonType.CANCEL) {
@@ -94,19 +103,16 @@ public class StageService {
 		    	}
 			}
 		});
-		StageServiceHolder.INSTANCE.primaryStage = primaryStage;
 	}
 	
 	/**
 	 * Creation and initialization of secondary window
 	 */
-	public static void createSecondaryStage() {
-		Stage secondaryStage = new Stage();
+	private void initSecondaryStage(Stage secondaryStage) {
 		secondaryStage.getIcons().setAll(new Image(InterfaceMagento.class.getResource("image/ecofish-logo.png").toExternalForm()));
-		secondaryStage.initOwner(StageService.getPrimaryStage());
+		secondaryStage.initOwner(this.primaryStage);
 		secondaryStage.initModality(Modality.WINDOW_MODAL);
 		secondaryStage.initStyle(StageStyle.UNDECORATED);
-		StageServiceHolder.INSTANCE.secondaryStage = secondaryStage;
 	}
 	
 	/**
@@ -160,17 +166,25 @@ public class StageService {
 	}
 	
 	/**
-	 * Clear views of secondary stage
-	 */
-	public static void closeSecondaryStage() {
-		StageServiceHolder.INSTANCE.secondaryStage.close();
-	}
-	
-	/**
 	 * Triggers the closing of the application
 	 */
 	public static void closePrimaryStage() {
 		StageServiceHolder.INSTANCE.primaryStage.fireEvent(new WindowEvent(StageServiceHolder.INSTANCE.primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
+	}
+	
+	/**
+	 * Close the secondary stage
+	 */
+	public static void closeSecondaryStage() {
+		StageServiceHolder.INSTANCE.secondaryStage.close();
+	}
+
+	/**
+	 * Make the class static
+	 * @author Jean-Florian Tassart
+	 */
+	private static class StageServiceHolder {
+		private static final StageService INSTANCE = new StageService();
 	}
 
 }

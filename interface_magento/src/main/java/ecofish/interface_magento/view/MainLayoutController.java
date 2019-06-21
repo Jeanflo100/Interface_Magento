@@ -16,11 +16,17 @@ public class MainLayoutController {
 	@FXML
 	Label currentUserLabel;
 	
+	/**
+	 * Initialization of parametre
+	 */
 	@FXML
 	private void initialize() {
 		this.currentUserLabel.textProperty().bind(DataSourceFactory.getCurrentUser());
 	}
 	
+	/**
+	 * Shows the views to change the user
+	 */
 	public void changeUser(){
 		DataSourceFactory.goAuthentification();
 	}
