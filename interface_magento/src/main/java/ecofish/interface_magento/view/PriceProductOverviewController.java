@@ -1,6 +1,5 @@
 package ecofish.interface_magento.view;
 
-
 import java.util.Optional;
 
 import ecofish.interface_magento.model.Product;
@@ -10,6 +9,8 @@ import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.util.DetailsTableView;
 import ecofish.interface_magento.util.TextFormatterDouble;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -132,24 +133,6 @@ public class PriceProductOverviewController {
 	}
 	
 	/**
-	 * Display the list of family
-	 */
-	@FXML
-	private void showFamily() {
-		this.filters.showFamily();
-	}
-	
-	/**
-	 * Select the product table
-	 */
-	@FXML
-	private void showProductTable() {
-		if (!this.productTable.getItems().isEmpty()) this.productTable.requestFocus();
-		this.productTable.getSelectionModel().selectFirst();
-		this.productTable.scrollTo(this.currentProduct);
-	}
-	
-	/**
 	 * Initialization of the view
 	 */
 	@FXML
@@ -157,7 +140,6 @@ public class PriceProductOverviewController {
 		initProductTable();
 		initItemSelectionTable();
 		initKeyPressesTable();
-		initFilter();
 		setComponents();
 	}
 	
@@ -224,32 +206,32 @@ public class PriceProductOverviewController {
 		});
 	}
 	
-	private void initFilter() {
-		this.filters = new Filters(this.categoryComboBox, this.familyComboBox) {
-			@Override
-			protected void updateTable(String category, String family) {
-				productTable.setItems(ProductService.getActiveProductsFiltered(category, family));
-				sortProductTable();
-				productTable.refresh();
-			}
-			@Override
-			public void showTable() {
-				showProductTable();
-			}
-		};
-	}
-	
 	/**
 	 * Adding data to the view components
 	 */
 	private void setComponents() {
-		this.productTable.setItems(ProductService.getActiveProductsFiltered(null, null));
-		this.productTable.refresh();
-		this.productTable.getSortOrder().add(this.nameColumn);
-		this.productTable.getSortOrder().add(this.sizeColumn);
-		this.productTable.getSortOrder().add(this.qualityColumn);
-		sortProductTable();
+		SortedList<Product> sortedActiveProducts = ProductService.getActiveProducts();
+		sortedActiveProducts.setComparator((Product o1, Product o2) -> {
+			if (o1.getName().compareTo(o2.getName()) != 0) return o1.getName().compareTo(o2.getName());
+			else if (o1.getSize().compareTo(o2.getSize()) != 0) return o1.getSize().compareTo(o2.getSize());
+			else if (o1.getQuality().compareTo(o2.getQuality()) != 0) return o1.getQuality().compareTo(o2.getQuality());
+			else if (o1.getActualPrice().compareTo(o2.getActualPrice()) != 0) return o1.getActualPrice().compareTo(o2.getActualPrice());
+			else if (o1.getNewPrice().compareTo(o2.getNewPrice()) != 0) return o1.getNewPrice().compareTo(o2.getNewPrice());
+			else return o1.getIdProduct().compareTo(o2.getIdProduct());
+		});
+		
+		FilteredList<Product> sortedAndFilteredActiveProducts = new FilteredList<Product>(sortedActiveProducts);
+		this.productTable.setItems(sortedAndFilteredActiveProducts);
 		this.productTable.getSelectionModel().selectFirst();
+		
+		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, sortedAndFilteredActiveProducts) {
+			@Override
+			public void showTable() {
+				if (!productTable.getItems().isEmpty()) productTable.requestFocus();
+				productTable.getSelectionModel().selectFirst();
+				productTable.scrollTo(currentProduct);
+			}
+		};
 		
 		TextFormatterDouble textFormatter = new TextFormatterDouble();
 		this.newPriceTextField.setTextFormatter(textFormatter.getTextFormatterDouble());
@@ -305,18 +287,6 @@ public class PriceProductOverviewController {
 			else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
 			this.productTable.refresh();
 		}
-	}
-	
-	/**
-	 * Sort products in the table
-	 */
-	private void sortProductTable() {
-		this.nameColumn.setSortable(true);
-		this.sizeColumn.setSortable(true);
-		this.qualityColumn.setSortable(true);
-		this.qualityColumn.setSortable(false);
-		this.sizeColumn.setSortable(false);
-		this.nameColumn.setSortable(false);
 	}
 	
 }

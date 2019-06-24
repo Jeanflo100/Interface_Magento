@@ -20,7 +20,7 @@ import javafx.scene.control.Alert;
  */
 public class Logging{
 	
-	private static final String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "Interface_Magento_test.log";
+	private static final File logFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "Interface_Magento_test.log");
 	
 	private final Logger LOGGER;
 	
@@ -62,7 +62,7 @@ public class Logging{
 		};
 		
 		try {
-			this.logFileHandler = new FileHandler(pathFile, 0, 1, true);
+			this.logFileHandler = new FileHandler(logFile.getPath(), 0, 1, true);
 		} catch (IOException e) {
 			this.LOGGER.log(Level.WARNING, "Writing logs to file isn't set");
 		}
@@ -84,7 +84,8 @@ public class Logging{
 	 */
 	public static void openLoggingFile() {
 		try {
-			Desktop.getDesktop().open(new File(pathFile));
+			if (!logFile.exists()) logFile.createNewFile();
+			Desktop.getDesktop().open(logFile);
 		} catch (IOException e) {
 			Logging.getLogger().log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
 			Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -94,7 +95,6 @@ public class Logging{
 		}
 	}
 	
-
 	/**
 	 * Make the class static
 	 * @author Jean-Florian Tassart

@@ -18,7 +18,7 @@ import javafx.scene.control.Alert;
  */
 public class DatabaseAccess	{
 	
-	private static final String pathFile = System.getProperty("user.dir") + System.getProperty("file.separator") + "config_test.ini";
+	private static final File configFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "config_test.ini");
 	
 	/**
 	 * Retrieve database connection information
@@ -27,7 +27,7 @@ public class DatabaseAccess	{
 	protected static MysqlDataSource getInformationConnection() {
 		MysqlDataSource dataSource = new MysqlDataSource();
 		try {
-			Wini ini = new Wini(new File(pathFile));
+			Wini ini = new Wini(configFile);
 			String server = ini.get("database", "server");
 			String port = ini.get("database", "port");
 			String name = ini.get("database", "name");
@@ -48,7 +48,7 @@ public class DatabaseAccess	{
 		catch (IOException e){
 			Logging.getLogger().log(Level.WARNING, "Error when recovering database connection data: " + "Impossible to open the configuration file");
 			String message = "";
-			if (createDefaultConfigurationFile()) {
+			if (!configFile.exists() && createDefaultConfigurationFile()) {
 				message = "Configuration file not founded.\n"
 						+ "A new one has been created at the expected location.\n"
 						+ "It must now be initialized and the application will have to restart to recover the changes.\n"
@@ -71,12 +71,10 @@ public class DatabaseAccess	{
 	 * @return True is the file has been created, false else
 	 */
 	private static Boolean createDefaultConfigurationFile() {
-		File file = new File(pathFile);
-		if (file.exists()) return false;
 		try {
-			file.createNewFile();
+			configFile.createNewFile();
 			try {
-				Wini ini = new Wini(file);
+				Wini ini = new Wini(configFile);
 				ini.setComment("If modifications are made, the application will have to be restarted to retrieve them");
 				ini.put("database", "server", null);
 				ini.put("database", "port", null);
@@ -97,7 +95,8 @@ public class DatabaseAccess	{
 	 */
 	public static void openConfigurationFile() {
 		try {
-			Desktop.getDesktop().open(new File(pathFile));
+			if (!configFile.exists()) createDefaultConfigurationFile();
+			Desktop.getDesktop().open(configFile);
 		} catch (IOException e) {
 			Logging.getLogger().log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
 			Alert alert = new Alert(Alert.AlertType.WARNING);

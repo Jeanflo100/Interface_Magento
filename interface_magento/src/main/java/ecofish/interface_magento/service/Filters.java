@@ -1,11 +1,15 @@
 package ecofish.interface_magento.service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import ecofish.interface_magento.model.Product;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
 
 /**
@@ -20,11 +24,12 @@ public abstract class Filters {
 	
 	private final ComboBox<String> categoryComboBox;
 	private final ComboBox<String> familyComboBox;
+	private final List<FilteredList<Product>> filteredLists;
 	
 	private String currentCategory;
 	private String currentFamily;
 	
-	private Boolean newCategorySelected;
+	private Boolean isNewCategory;
 	
 	/**
 	 * Updates existing product groups
@@ -36,20 +41,36 @@ public abstract class Filters {
 	
 	/**
 	 * Initialization of parameters
-	 * @param familyComboBox 
-	 * @param categoryComboBox 
+	 * @param categoryComboBox - combobox in which the categories will be displayed
+	 * @param familyComboBox - combobox in which the families will be displayed
+	 * @param filteredList - list to be updated according to the category and family selected
 	 */
-	public Filters(ComboBox<String> categoryComboBox, ComboBox<String> familyComboBox) {
-		this.categoryComboBox = categoryComboBox;
-		this.familyComboBox = familyComboBox;
-		this.categories = FXCollections.observableArrayList();
-		this.families = FXCollections.observableArrayList();
-		initItemSelection();
-		setComponents();
+	public Filters(ComboBox<String> categoryComboBox, ComboBox<String> familyComboBox, FilteredList<Product> filteredList) {
+		this(categoryComboBox, familyComboBox, Arrays.asList(filteredList));
 	}
 	
 	/**
-	 * Adding action on the item element
+	 * Initialization of parameters
+	 * @param categoryComboBox - combobox in which the categories will be displayed
+	 * @param familyComboBox - combobox in which the families will be displayed
+	 * @param filteredLists - lists to be updated according to the category and family selected
+	 */
+	public Filters(ComboBox<String> categoryComboBox, ComboBox<String> familyComboBox, List<FilteredList<Product>> filteredLists) {
+		this.categoryComboBox = categoryComboBox;
+		this.familyComboBox = familyComboBox;
+		this.filteredLists = filteredLists;
+
+		this.categories = FXCollections.observableArrayList();
+		this.families = FXCollections.observableArrayList();
+		
+		initItemSelection();
+		setComponents();
+		
+		updateCategories();
+	}
+	
+	/**
+	 * Adding action on the item selectionned and the action performed at the closure of the combobox
 	 */
 	private void initItemSelection() {
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -57,8 +78,10 @@ public abstract class Filters {
 				categoryComboBox.show();
 			}
 			currentCategory = newValue;
-			newCategorySelected = true;
-			updateTable(currentCategory, null);
+			if (newValue != null) isNewCategory = true;
+			else isNewCategory = false;
+			updateFamilies(newValue);
+			updateList(newValue, null);
 		});
 		
 		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -66,7 +89,19 @@ public abstract class Filters {
 				familyComboBox.show();
 			}
 			currentFamily = newValue;
-			updateTable(currentCategory, currentFamily);
+			updateList(currentCategory, newValue);
+		});
+		
+		this.categoryComboBox.setOnHidden(hidden -> {
+			if (isNewCategory) {
+				isNewCategory = false;
+				showFamily();
+			}
+			else showTable();
+		});
+		
+		this.familyComboBox.setOnHidden(hidden -> {
+			showTable();
 		});
 	}
 	
@@ -74,42 +109,34 @@ public abstract class Filters {
 	 * Adding data to the view components
 	 */
 	private void setComponents() {
-		this.categoryComboBox.setItems(getCategories());
+		this.categoryComboBox.setItems(categories);
+		this.familyComboBox.setItems(families);
 		this.familyComboBox.setDisable(true);
-		this.newCategorySelected = false;
+		this.isNewCategory = false;
 	}
 	
 	/**
-	 * Returns the list of categories
-	 * @return List of categories
+	 * Updates the list of categories
 	 */
-	private ObservableList<String> getCategories(){
-		this.categories.clear();
-		for (String category : groups.keySet()) {
-			this.categories.add(category);
-		}
-		return this.categories;
+	private void updateCategories(){
+		if (groups != null) this.categories.setAll(groups.keySet());
 	}
 	
 	/**
-	 * Returns the list of families of the category passed in parameter
+	 * Updates the list of families of the category passed in parameter
 	 * @param category - desired category
-	 * @return List of families in the chosen category
 	 */
-	private ObservableList<String> getFamilies(String category){
-		this.families.clear();
-		for (String family : groups.get(category)) {
-			this.families.add(family);
-		}
-		return this.families;
+	private void updateFamilies(String category){
+		if (groups != null && category != null) this.families.setAll(groups.get(category));
 	}
 	
 	/**
 	 * Reset the filter by category
 	 */
 	public void resetCategory() {
+		resetFamily();
+		this.familyComboBox.setDisable(true);
 		if (this.currentCategory != null) {
-			this.familyComboBox.setDisable(true);
 			this.categoryComboBox.getSelectionModel().clearSelection();
 			showTable();
 		}
@@ -129,26 +156,31 @@ public abstract class Filters {
 	 * Show the list of family
 	 */
 	public void showFamily() {
-		if (this.currentCategory != null) {
-			if (this.newCategorySelected == true) {
-				this.newCategorySelected = false;
-				this.familyComboBox.setItems(getFamilies(this.currentCategory));
-				this.familyComboBox.setDisable(false);
-			}
-			this.familyComboBox.requestFocus();
-			this.familyComboBox.show();
-		}
-		else {
-			showTable();
-		}
+		this.familyComboBox.setDisable(false);
+		this.familyComboBox.requestFocus();
+		this.familyComboBox.show();
 	}
 	
 	/**
-	 * Update product table with filtering by category and family
+	 * Update lists with filtering by category and family
 	 * @param category - the category to be used for filtering
 	 * @param family - the family to be used for filtering
 	 */
-	protected abstract void updateTable(String category, String family);
+	private void updateList(String category, String family) {
+		for (FilteredList<Product> filteredList : this.filteredLists)
+			filteredList.setPredicate(product -> {
+			if (category == null && family == null) {
+				return true;
+			}
+			else if (product.getCategory().equals(category) && family == null) {
+				return true;
+			}
+			else if ((product.getCategory().contentEquals(category)) && (product.getFamily().contentEquals(family))) {
+				return true;
+			}
+			return false;
+		});
+	}
 	
 	/**
 	 * Select the product tables
