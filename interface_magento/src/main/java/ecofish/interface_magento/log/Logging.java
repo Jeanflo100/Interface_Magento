@@ -42,6 +42,7 @@ public class Logging{
 	 */
 	private void setLoggingConsole() {
 		this.logConsoleHandler = new ConsoleHandler();
+		this.logConsoleHandler.setLevel(Level.ALL);
 		this.LOGGER.addHandler(this.logConsoleHandler);
 	}
 	

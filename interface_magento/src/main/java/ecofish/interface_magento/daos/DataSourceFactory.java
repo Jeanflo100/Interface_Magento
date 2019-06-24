@@ -14,6 +14,7 @@ import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableStringValue;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -43,9 +44,9 @@ public class DataSourceFactory {
 	 * @return True if a new user has been authenticated, false else
 	 */
 	public static Boolean goAuthentification() {
-		setIsNewUser(false);
+		DataSourceFactoryHolder.INSTANCE.isNewUser = false;
 		StageService.showView(Views.viewsSecondaryStage.LoginScreen, true);
-		return getIsNewUser();
+		return DataSourceFactoryHolder.INSTANCE.isNewUser;
 	}
 	
 	/**
@@ -109,7 +110,7 @@ public class DataSourceFactory {
 	 * Returns the currently authenticated user
 	 * @return the currently authenticated user
 	 */
-	public static SimpleStringProperty getCurrentUser() {
+	public static ObservableStringValue getCurrentUser() {
 		return DataSourceFactoryHolder.INSTANCE.currentUser;
 	}
 	
@@ -122,14 +123,6 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Returns whether after the authentication window a new user has been authenticated
-	 * @return True if it's a new user, false else
-	 */
-	private static Boolean getIsNewUser() {
-		return DataSourceFactoryHolder.INSTANCE.isNewUser;
-	}
-	
-	/**
 	 * Recording of new user information
 	 * @param username - username of new user
 	 * @param password - password of new user
@@ -137,8 +130,8 @@ public class DataSourceFactory {
 	protected static void setNewUser(String username, String password) {
 		DataSourceFactoryHolder.INSTANCE.dataSource.setUser(username);
 		DataSourceFactoryHolder.INSTANCE.dataSource.setPassword(password);
-    	DataSourceFactory.setIsNewUser(true);
-    	DataSourceFactory.getCurrentUser().set(username);
+    	DataSourceFactoryHolder.INSTANCE.currentUser.set(username);
+		DataSourceFactoryHolder.INSTANCE.isNewUser = true;
 		Logging.getLogger().log(Level.INFO, "Connection of " + DataSourceFactory.getCurrentUser().getValue());
 	}
 	
@@ -149,14 +142,6 @@ public class DataSourceFactory {
 	protected static void setCurrentUserPrivileges(Collection<HashMap<String, String>> privileges) {
 		getCurrentUserPrivileges().clear();
 		getCurrentUserPrivileges().addAll(privileges);
-	}
-	
-	/**
-	 * Updates the authentication of a new user or not
-	 * @param isNewUser - true if it's a new user authenticated, false else
-	 */
-	private static void setIsNewUser(Boolean isNewUser) {
-		DataSourceFactoryHolder.INSTANCE.isNewUser = isNewUser;
 	}
 	
 	/**
