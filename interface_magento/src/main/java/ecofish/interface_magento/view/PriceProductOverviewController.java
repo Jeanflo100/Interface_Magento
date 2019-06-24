@@ -153,16 +153,17 @@ public class PriceProductOverviewController {
 		this.qualityColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
 		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("actualPrice"));
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("newPrice"));
-		this.productTable.setFixedCellSize(25);
+		this.productTable.setFixedCellSize(DetailsTableView.CellSize);
 		this.numberVisibleRow = DetailsTableView.getNumberVisibleRow(this.productTable);
 		this.productTable.setRowFactory(productTable -> new TableRow<Product>() {
 		    @Override
 		    protected void updateItem(Product product, boolean empty) {
 		        super.updateItem(product, empty);
+		        this.pseudoClassStateChanged(increasePrice, false);
+		        this.pseudoClassStateChanged(decreasePrice, false);
 		        if (product != null && product.getNewPrice() != null) {
 		        	if (product.getNewPrice() > product.getActualPrice()) this.pseudoClassStateChanged(increasePrice, true);
 		        	else if (product.getNewPrice() < product.getActualPrice()) this.pseudoClassStateChanged(decreasePrice, true);
-		        	else {this.pseudoClassStateChanged(increasePrice, false); this.pseudoClassStateChanged(decreasePrice, false);}
 		        }
 		    }
 		});
@@ -213,10 +214,10 @@ public class PriceProductOverviewController {
 		SortedList<Product> sortedActiveProducts = ProductService.getActiveProducts();
 		sortedActiveProducts.setComparator((Product o1, Product o2) -> {
 			if (o1.getName().compareTo(o2.getName()) != 0) return o1.getName().compareTo(o2.getName());
-			else if (o1.getSize().compareTo(o2.getSize()) != 0) return o1.getSize().compareTo(o2.getSize());
-			else if (o1.getQuality().compareTo(o2.getQuality()) != 0) return o1.getQuality().compareTo(o2.getQuality());
-			else if (o1.getActualPrice().compareTo(o2.getActualPrice()) != 0) return o1.getActualPrice().compareTo(o2.getActualPrice());
-			else if (o1.getNewPrice().compareTo(o2.getNewPrice()) != 0) return o1.getNewPrice().compareTo(o2.getNewPrice());
+			else if (o1.getSize() != null && o2.getSize() != null && o1.getSize().compareTo(o2.getSize()) != 0) return o1.getSize().compareTo(o2.getSize());
+			else if (o1.getQuality() != null && o2.getQuality() != null && o1.getQuality().compareTo(o2.getQuality()) != 0) return o1.getQuality().compareTo(o2.getQuality());
+			else if (o1.getActualPrice() != null && o2.getActualPrice() != null && o1.getActualPrice().compareTo(o2.getActualPrice()) != 0) return o1.getActualPrice().compareTo(o2.getActualPrice());
+			else if (o1.getNewPrice() != null && o2.getNewPrice() != null && o1.getNewPrice().compareTo(o2.getNewPrice()) != 0) return o1.getNewPrice().compareTo(o2.getNewPrice());
 			else return o1.getIdProduct().compareTo(o2.getIdProduct());
 		});
 		
@@ -266,12 +267,7 @@ public class PriceProductOverviewController {
 	 */
 	private void selectNextProduct() {
 		this.productTable.getSelectionModel().selectNext();
-		if(this.numberVisibleRow/2 - this.productTable.getSelectionModel().getSelectedIndex() <= 0) {
-			this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRow/2);
-		}
-		else {
-			this.productTable.scrollTo(0);
-		}
+		this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRow/2);
 	}
 	
 	/**

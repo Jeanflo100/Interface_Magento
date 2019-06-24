@@ -9,6 +9,9 @@ import javafx.scene.control.TableView;
  */
 public class DetailsTableView {
 	
+	public static final Integer CellSize = 25;
+	public static final Integer ColumnRowSize = 20;
+	
     /**
      * Returns the number of rows of the table visible on the screen
      * @param table - table concerned
@@ -24,7 +27,7 @@ public class DetailsTableView {
 			}
 		}
 		numberColumnRow = newNumberColumnRow;
-		Integer numberVisibleRow = (int) ((table.getPrefHeight() - numberColumnRow * 20) / table.getFixedCellSize());
+		Integer numberVisibleRow = (int) ((table.getPrefHeight() - numberColumnRow * ColumnRowSize) / table.getFixedCellSize());
 		return numberVisibleRow;
 	}
 	
