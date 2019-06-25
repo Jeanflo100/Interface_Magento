@@ -97,7 +97,7 @@ public class Logging{
 	}
 	
 	/**
-	 * Make the class static
+	 * Get a single instance to manage the logs
 	 * @author Jean-Florian Tassart
 	 */
 	private static class LoggingHolder {

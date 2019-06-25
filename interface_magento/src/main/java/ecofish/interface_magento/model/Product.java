@@ -117,10 +117,10 @@ public class Product implements Comparable<Product>{
 		else if (this.getName().compareTo(product.getName()) != 0) {
 			return this.getName().compareTo(product.getName());
 		}
-		else if (this.getSize().compareTo(product.getSize()) != 0) {
+		else if (this.getSize() != null && product.getSize() != null && this.getSize().compareTo(product.getSize()) != 0) {
 			return this.getSize().compareTo(product.getSize());
 		}
-		else if (this.getQuality().compareTo(product.getQuality()) != 0) {
+		else if (this.getQuality() != null && product.getQuality() != null && this.getQuality().compareTo(product.getQuality()) != 0) {
 			return this.getQuality().compareTo(product.getQuality());
 		}
 		else {

@@ -150,7 +150,7 @@ public class ProductService {
 	}
 	
 	/**
-	 * Make the class static
+	 * Obtain a single instance managing all products
 	 * @author Jean-Florian Tassart
 	 */
 	private static class ProductServiceHolder {

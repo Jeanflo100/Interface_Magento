@@ -198,7 +198,7 @@ public class DataSourceFactory {
 	}
 	
 	/**
-	 * Make the class static
+	 * Obtain a single instance containing the information on the database
 	 * @author Jean-Florian Tassart
 	 */
 	private static class DataSourceFactoryHolder {
