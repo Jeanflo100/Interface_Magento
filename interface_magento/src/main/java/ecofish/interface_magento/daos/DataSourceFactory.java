@@ -91,7 +91,7 @@ public class DataSourceFactory {
 	 * @return Connection to the database
 	 * @throws SQLException - error when connecting
 	 */
-	protected static Connection getConnection() throws SQLException{
+	protected static Connection getConnection() throws SQLException {
 		return DataSourceFactoryHolder.INSTANCE.dataSource.getConnection();
 	}
 	
