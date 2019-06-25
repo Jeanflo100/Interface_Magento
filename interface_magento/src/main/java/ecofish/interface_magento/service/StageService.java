@@ -172,7 +172,7 @@ public class StageService {
 	}
 
 	/**
-	 * Make the class static
+	 * Obtain a single instance dealing with the different windows of the interface
 	 * @author Jean-Florian Tassart
 	 */
 	private static class StageServiceHolder {

@@ -10,6 +10,7 @@ import ecofish.interface_magento.daos.GettingProductThread;
 import ecofish.interface_magento.daos.UpdatingProductThread;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
@@ -20,20 +21,16 @@ import javafx.scene.control.ButtonType;
 public class ProductService {
 
 	private final TreeSet<Product> updatingProducts;
-	private final ArrayList<Product> activeProducts;
-	private final ArrayList<Product> inactiveProducts;
-	private final ObservableList<Product> activeProductsFiltered;
-	private final ObservableList<Product> inactiveProductsFiltered;
+	private final ObservableList<Product> activeProducts;
+	private final ObservableList<Product> inactiveProducts;
 	
 	/**
 	 * Initialization of parameters
 	 */
 	private ProductService() {
 		updatingProducts = new TreeSet<Product>();
-		activeProducts = new ArrayList<Product>();
-		inactiveProducts = new ArrayList<Product>();
-		activeProductsFiltered = FXCollections.observableArrayList();
-		inactiveProductsFiltered = FXCollections.observableArrayList();
+		activeProducts = FXCollections.observableArrayList();
+		inactiveProducts = FXCollections.observableArrayList();
 	}
 	
 	/**
@@ -105,51 +102,19 @@ public class ProductService {
 	}
 	
 	/**
-	 * Filters the list of active products by category and family then returns the result
-	 * @param category - the category to be used for filtering
-	 * @param family - the family to be used for filtering
-	 * @return The list after filtering
+	 * Returns a copy of the list of active products which can be sorted
+	 * @return Copy of the list of active products
 	 */
-	public static ObservableList<Product> getActiveProductsFiltered(String category, String family){
-		return getProductsFiltered(ProductServiceHolder.INSTANCE.activeProductsFiltered, ProductServiceHolder.INSTANCE.activeProducts, category, family);
+	public static SortedList<Product> getActiveProducts() {
+		return new SortedList<Product>(ProductServiceHolder.INSTANCE.activeProducts);
 	}
 	
 	/**
-	 * Filters the list of inactive products by category and family then returns the result
-	 * @param category - the category to be used for filtering
-	 * @param family - the family to be used for filtering
-	 * @return The list after filtering
+	 * Returns a copy of the list of inactive products which can be sorted
+	 * @return Copy of the list of inactive products
 	 */
-	public static ObservableList<Product> getInactiveProductsFiltered(String category, String family){
-		return getProductsFiltered(ProductServiceHolder.INSTANCE.inactiveProductsFiltered, ProductServiceHolder.INSTANCE.inactiveProducts, category, family);
-	}
-	
-	/**
-	 * Filters the given list of products by category and family then returns the result
-	 * @param productsFiltered - list containing products filtred
-	 * @param products - list of products to be filtered
-	 * @param category - the category to be used for filtering
-	 * @param family - the family to be used for filtering
-	 * @return List filtred
-	 */
-	private static ObservableList<Product> getProductsFiltered(ObservableList<Product> productsFiltered, ArrayList<Product> products, String category, String family) {
-		productsFiltered.clear();
-		for (Product product : products) {
-			if ((category != null) && (family != null)){
-				if ((product.getCategory().contentEquals(category)) && (product.getFamily().contentEquals(family))) {
-					productsFiltered.add(product);
-				}
-			}
-			else if (category != null) {
-				if (product.getCategory().equals(category)) {
-					productsFiltered.add(product);
-				}
-			}
-			else {
-				productsFiltered.add(product);
-			}
-		}
-		return productsFiltered;
+	public static SortedList<Product> getInactiveProducts() {
+		return new SortedList<Product>(ProductServiceHolder.INSTANCE.inactiveProducts);
 	}
 	
 	/**
@@ -175,21 +140,17 @@ public class ProductService {
 		product.setChangeActive(!product.getChangeActive());
 		if (product.getActive()) {
 			ProductServiceHolder.INSTANCE.inactiveProducts.remove(product);
-			ProductServiceHolder.INSTANCE.inactiveProductsFiltered.remove(product);
 			ProductServiceHolder.INSTANCE.activeProducts.add(product);
-			ProductServiceHolder.INSTANCE.activeProductsFiltered.add(product);
 		}
 		else {
 			ProductServiceHolder.INSTANCE.inactiveProducts.add(product);
-			ProductServiceHolder.INSTANCE.inactiveProductsFiltered.add(product);
 			ProductServiceHolder.INSTANCE.activeProducts.remove(product);
-			ProductServiceHolder.INSTANCE.activeProductsFiltered.remove(product);
 		}
 		ProductService.updateUpdatingProducts(product);
 	}
 	
 	/**
-	 * Make the class static
+	 * Obtain a single instance managing all products
 	 * @author Jean-Florian Tassart
 	 */
 	private static class ProductServiceHolder {

@@ -41,9 +41,22 @@ public class AuthentificationThread implements Runnable {
      * Action to be performed for authentication
      */
     public void run() {
-    	authentification();
-    	if (error == null) Platform.runLater(() -> DataSourceFactory.setNewUser(this.username, this.password));
-    	updateInterface();
+    	if (!DataSourceFactory.getDatabaseName().isEmpty()) {
+        	authentification();
+        	if (error == null) Platform.runLater(() -> DataSourceFactory.setNewUser(this.username, this.password));
+        	updateInterface();    		
+    	}
+    	else {
+    		Platform.runLater(() -> {
+	    		Alert alert = new Alert(Alert.AlertType.WARNING);
+	    		alert.initOwner(StageService.getSecondaryStage());
+	    		alert.setHeaderText("Error when connecting to database");
+	    		alert.setContentText("No database has been entered in the configuration file.\n"
+	    							+ "Please initialize this then restart the application");
+	    		alert.showAndWait();
+        		this.loginScreen.resultAuthentification(false);
+    		});
+    	}
     }
     
     /**

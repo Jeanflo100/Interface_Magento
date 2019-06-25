@@ -1,5 +1,7 @@
 package ecofish.interface_magento.view;
 
+import java.util.Arrays;
+import java.util.Comparator;
 
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.Filters;
@@ -7,6 +9,8 @@ import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -101,7 +105,6 @@ public class StatusProductOverviewController {
 	@FXML
 	private void handleLeftToRightButton() {
 		if (currentInactiveProduct != null) ProductService.changeStatusProduct(currentInactiveProduct);
-		sortActiveProductTable();
 		this.inactiveProductTable.requestFocus();
 	}
 	
@@ -111,7 +114,6 @@ public class StatusProductOverviewController {
 	@FXML
 	private void handleRightToLeftButton() {
 		if (currentActiveProduct != null) ProductService.changeStatusProduct(currentActiveProduct);
-		sortInactiveProductTable();
 		this.activeProductTable.requestFocus();
 	}
 	
@@ -132,27 +134,6 @@ public class StatusProductOverviewController {
 	}
 	
 	/**
-	 * Show the list of family
-	 */
-	@FXML
-	private void showFamily() {
-		this.filters.showFamily();
-	}
-	
-	/**
-	 * Select the product tables
-	 */
-	@FXML
-	private void showProductTables() {
-		if (!this.inactiveProductTable.getItems().isEmpty()) this.inactiveProductTable.requestFocus();
-		else if (!this.activeProductTable.getItems().isEmpty()) this.activeProductTable.requestFocus();
-		this.inactiveProductTable.getSelectionModel().selectFirst();
-		this.activeProductTable.getSelectionModel().selectFirst();
-		this.inactiveProductTable.scrollTo(this.currentInactiveProduct);
-		this.activeProductTable.scrollTo(this.currentActiveProduct);
-	}
-	
-	/**
 	 * Initialization of the view
 	 */
 	@FXML
@@ -161,7 +142,6 @@ public class StatusProductOverviewController {
 		initActiveProductTable();
 		initItemSelectionTables();
 		initKeyPressesTables();
-		initFilter();
 		setComponents();
 	}
 	
@@ -239,67 +219,46 @@ public class StatusProductOverviewController {
 		});
 	}
 	
-	private void initFilter() {
-		this.filters = new Filters(this.categoryComboBox, this.familyComboBox) {
-			@Override
-			protected void updateTable(String category, String family) {
-				inactiveProductTable.setItems(ProductService.getInactiveProductsFiltered(category, family));
-				activeProductTable.setItems(ProductService.getActiveProductsFiltered(category, family));
-				sortInactiveProductTable();
-				sortActiveProductTable();
-				inactiveProductTable.refresh();
-				activeProductTable.refresh();
-			}
-			@Override
-			public void showTable() {
-				showProductTables();
-			}
-		};
-	}
-	
 	/**
 	 * Adding data to the view components
 	 */
 	private void setComponents() {
-		this.inactiveProductTable.setItems(ProductService.getInactiveProductsFiltered(null, null));
-		this.inactiveProductTable.refresh();
-		this.inactiveProductTable.getSortOrder().add(this.nameInactiveProductColumn);
-		this.inactiveProductTable.getSortOrder().add(this.sizeInactiveProductColumn);
-		this.inactiveProductTable.getSortOrder().add(this.qualityInactiveProductColumn);
-		sortInactiveProductTable();
+		Comparator<Product> comparatorProduct = new Comparator<Product>() {
+			@Override
+			public int compare(Product o1, Product o2) {
+				if (o1.getName().compareTo(o2.getName()) != 0) return o1.getName().compareTo(o2.getName());
+				else if (o1.getSize() != null && o2.getSize() != null && o1.getSize().compareTo(o2.getSize()) != 0) return o1.getSize().compareTo(o2.getSize());
+				else if (o1.getQuality() != null && o2.getQuality() != null && o1.getQuality().compareTo(o2.getQuality()) != 0) return o1.getQuality().compareTo(o2.getQuality());
+				else return o1.getSku().compareTo(o2.getSku());
+			}
+		};
+		
+		SortedList<Product> sortedInactiveProducts = ProductService.getInactiveProducts();
+		SortedList<Product> sortedActiveProducts = ProductService.getActiveProducts();
+		
+		sortedInactiveProducts.setComparator(comparatorProduct);
+		sortedActiveProducts.setComparator(comparatorProduct);
+		
+		FilteredList<Product> sortedAndFilteredInactiveProducts = new FilteredList<Product>(sortedInactiveProducts);
+		FilteredList<Product> sortedAndFilteredActiveProducts = new FilteredList<Product>(sortedActiveProducts);
+		
+		this.inactiveProductTable.setItems(sortedAndFilteredInactiveProducts);
+		this.activeProductTable.setItems(sortedAndFilteredActiveProducts);
+		
 		this.inactiveProductTable.getSelectionModel().selectFirst();
-
-		this.activeProductTable.setItems(ProductService.getActiveProductsFiltered(null, null));
-		this.activeProductTable.refresh();
-		this.activeProductTable.getSortOrder().add(this.nameActiveProductColumn);
-		this.activeProductTable.getSortOrder().add(this.sizeActiveProductColumn);
-		this.activeProductTable.getSortOrder().add(this.qualityActiveProductColumn);
-		sortActiveProductTable();
 		this.activeProductTable.getSelectionModel().selectFirst();
-	}
-
-	/**
-	 * Sort products in the inactive table
-	 */
-	private void sortInactiveProductTable() {
-		this.nameInactiveProductColumn.setSortable(true);
-		this.sizeInactiveProductColumn.setSortable(true);
-		this.qualityInactiveProductColumn.setSortable(true);
-		this.qualityInactiveProductColumn.setSortable(false);
-		this.sizeInactiveProductColumn.setSortable(false);
-		this.nameInactiveProductColumn.setSortable(false);
-	}
-	
-	/**
-	 * Sort products in the active table
-	 */
-	private void sortActiveProductTable() {
-		this.nameActiveProductColumn.setSortable(true);
-		this.sizeActiveProductColumn.setSortable(true);
-		this.qualityActiveProductColumn.setSortable(true);
-		this.qualityActiveProductColumn.setSortable(false);
-		this.sizeActiveProductColumn.setSortable(false);
-		this.nameActiveProductColumn.setSortable(false);
+		
+		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, Arrays.asList(sortedAndFilteredInactiveProducts, sortedAndFilteredActiveProducts)) {
+			@Override
+			public void showTable() {
+				if (!inactiveProductTable.getItems().isEmpty()) inactiveProductTable.requestFocus();
+				else if (!activeProductTable.getItems().isEmpty()) activeProductTable.requestFocus();
+				inactiveProductTable.getSelectionModel().selectFirst();
+				activeProductTable.getSelectionModel().selectFirst();
+				inactiveProductTable.scrollTo(currentInactiveProduct);
+				activeProductTable.scrollTo(currentActiveProduct);
+			}
+		};
 	}
 	
 	/**

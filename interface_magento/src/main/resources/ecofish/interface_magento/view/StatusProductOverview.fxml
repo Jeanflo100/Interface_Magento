@@ -49,7 +49,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="541.0" onHidden="#showFamily" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
+      <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="541.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
       <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="540.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
@@ -63,7 +63,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="597.0" onHidden="#showProductTables" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
+      <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="597.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
       <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="596.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
