@@ -24,19 +24,27 @@ import javafx.scene.control.ButtonType;
  */
 public class DataSourceFactory {
 
-	private final MysqlDataSource dataSource;
 	private final SimpleStringProperty currentUser;
 	private final ArrayList<HashMap<String, String>> currentUserPrivileges;
 	
+	private MysqlDataSource dataSource;
 	private Boolean isNewUser;
 	
 	/**
 	 * Initialization of variables
 	 */
 	private DataSourceFactory() {
-		dataSource = DatabaseAccess.getInformationConnection();
 		currentUser = new SimpleStringProperty();
 		currentUserPrivileges = new ArrayList<HashMap<String, String>>();
+	}
+	
+	public static Boolean loadConnectionInformation() {
+		MysqlDataSource dataSource = DatabaseAccess.getConnectionInformation();
+		if (dataSource != null) {
+			DataSourceFactoryHolder.INSTANCE.dataSource = dataSource;
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -154,7 +162,7 @@ public class DataSourceFactory {
 		if (error.getErrorCode() == 1044) return "You are not authorized to access this database";
 		else if (error.getErrorCode() == 1049) return "Database not founded.\nPlease check the name of the database registered in the configuration file";
 		else if (error.getSQLState().equals("28000")) return "Incorrect login information";
-		else if (error.getSQLState().equals("08S01")) return "Unable to connect to the database. Please try again";
+		else if (error.getSQLState().equals("08S01")) return "Unable to connect to the database.\nPlease check connection information in the configuration file then try again";
 		else return "Unexpected error. Please try again";
 	}
 	

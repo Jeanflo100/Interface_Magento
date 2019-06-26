@@ -32,13 +32,14 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Label layoutX="86.0" layoutY="75.0" text="CATEGORY :">
+      <TextField fx:id="nameTextField" layoutX="53.0" layoutY="49.0" promptText="Search product by name" />
+      <Label layoutX="86.0" layoutY="98.0" text="CATEGORY :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="categoryComboBox" layoutX="52.0" layoutY="97.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="201.0" layoutY="96.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
+      <ComboBox fx:id="categoryComboBox" layoutX="52.0" layoutY="120.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="201.0" layoutY="119.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>
@@ -46,13 +47,13 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Label layoutX="98.0" layoutY="141.0" text="FAMILY :">
+      <Label layoutX="98.0" layoutY="164.0" text="FAMILY :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="familyComboBox" layoutX="52.0" layoutY="162.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="201.0" layoutY="161.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
+      <ComboBox fx:id="familyComboBox" layoutX="52.0" layoutY="185.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="201.0" layoutY="184.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>
