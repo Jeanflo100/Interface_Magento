@@ -15,7 +15,6 @@
 
 <AnchorPane prefHeight="671.0" prefWidth="770.0" stylesheets="@StatusProductOverview.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
    <children>
-      <TextField fx:id="nameTextField" layoutX="313.0" layoutY="14.0" promptText="Search product by name" />
       <TableView fx:id="inactiveProductTable" editable="true" layoutX="36.0" layoutY="50.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
          <columns>
             <TableColumn prefWidth="312.0" sortable="false" text="Inactive products">
@@ -46,6 +45,7 @@
       </TableView>
       <Button fx:id="leftToRightButton" layoutX="352.0" layoutY="258.0" mnemonicParsing="false" onAction="#handleLeftToRightButton" prefHeight="25.0" prefWidth="69.0" text="&gt;&gt;&gt;&gt;&gt;&gt;" />
       <Button fx:id="rightToLeftButton" layoutX="352.0" layoutY="304.0" mnemonicParsing="false" onAction="#handleRightToLeftButton" prefHeight="25.0" prefWidth="69.0" text="&lt;&lt;&lt;&lt;&lt;&lt;" />
+      <TextField fx:id="nameTextField" layoutX="313.0" layoutY="14.0" promptText="Search product by name" />
       <Label layoutX="346.0" layoutY="535.0" text="CATEGORY :">
          <font>
             <Font size="15.0" />

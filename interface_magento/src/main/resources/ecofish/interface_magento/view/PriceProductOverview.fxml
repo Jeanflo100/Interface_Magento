@@ -32,6 +32,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
+      <TextField fx:id="nameTextField" layoutX="53.0" layoutY="49.0" promptText="Search product by name" />
       <Label layoutX="86.0" layoutY="98.0" text="CATEGORY :">
          <font>
             <Font size="15.0" />
@@ -94,6 +95,5 @@
          </font>
       </Text>
       <Button fx:id="saveButton" layoutX="161.0" layoutY="342.0" mnemonicParsing="false" onAction="#handleSaveChangesButton" prefHeight="51.0" prefWidth="110.0" text="Save changes" />
-      <TextField fx:id="nameTextField" layoutX="53.0" layoutY="49.0" promptText="Search product by name" />
    </children>
 </AnchorPane>
