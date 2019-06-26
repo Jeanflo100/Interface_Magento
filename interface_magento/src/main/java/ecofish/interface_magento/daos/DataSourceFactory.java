@@ -32,14 +32,8 @@ public class DataSourceFactory {
 	
 	/**
 	 * Initialization of variables
-<<<<<<< HEAD
 	 */
 	private DataSourceFactory() {
-		dataSource = DatabaseAccess.getInformationConnection();
-=======
-	 */
-	private DataSourceFactory() {
->>>>>>> refs/heads/upgrading
 		currentUser = new SimpleStringProperty();
 		currentUserPrivileges = new ArrayList<HashMap<String, String>>();
 	}

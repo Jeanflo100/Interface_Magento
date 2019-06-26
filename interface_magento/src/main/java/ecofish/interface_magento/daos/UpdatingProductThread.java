@@ -80,32 +80,16 @@ public class UpdatingProductThread implements Runnable {
 			Statement stmt = connection.createStatement();
 			for (Product product : updatingProducts) {
 				if (product.getChangeActive() == true || product.getNewPrice() != null) {
+					String SQLquery = "UPDATE product SET";
 					if (product.getChangeActive() == true) {
-						stmt.executeUpdate(
-								"UPDATE mg_catalog_product_entity_int AS statusTable\n"
-								+ "SET statusTable.value = " + product.getActive() + " \n"
-								+ "WHERE statusTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-								+ "										FROM mg_eav_attribute AS attributeTable\n" 
-								+ "										WHERE attributeTable.attribute_code = 'status')\n"
-								+ "	AND statusTable.entity_id = (SELECT productTable.entity_id\n"
-								+ "									FROM mg_catalog_product_entity AS productTable\n"
-								+ "									WHERE productTable.sku = '" + product.getSku() + "')\n"
-								);
+						SQLquery += " product.active = " + product.getActive() + ",";
 					}
-					if (product.getActive() == true && product.getNewPrice() != null) {
-						stmt.executeUpdate(
-								"UPDATE mg_catalog_product_entity_decimal AS priceTable\n"
-								+ "SET priceTable.value = " + product.getNewPrice() + " \n"
-								+ "WHERE priceTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-								+ "										FROM mg_eav_attribute AS attributeTable\n" 
-								+ "										WHERE attributeTable.attribute_code = 'price')\n"
-								+ "	AND priceTable.entity_id = (SELECT productTable.entity_id\n"
-								+ "									FROM mg_catalog_product_entity AS productTable\n"
-								+ "									WHERE productTable.sku = '" + product.getSku() + "')\n"
-								);
+					if (product.getNewPrice() != null) {
+						SQLquery +=  " product.actual_price = " + product.getNewPrice() + ",";
 					}
-					
-					this.updatedProductsLog += "\n" + product.getSku() + " (" + product.getCategory() + " - " + product.getFamily() + " - " + product.getName()
+					SQLquery = SQLquery.substring(0, SQLquery.length()-1) +  " WHERE product.idproduct = " + product.getIdProduct();
+					stmt.executeUpdate(SQLquery);
+					this.updatedProductsLog += "\n" + product.getIdProduct() + " (" + product.getCategory() + " - " + product.getFamily() + " - " + product.getName()
 												+ " - " + product.getSize() + " - " + product.getQuality() + "): ";
 					if (product.getChangeActive() == true) {
 						this.updatedProductsLog += "Status = " + (product.getActive() == true ? "not active" : "active") + " -> " + (product.getActive() == true ? "active" : "not active") + this.separatorLog;
@@ -117,7 +101,6 @@ public class UpdatingProductThread implements Runnable {
 						product.setNewPrice(null);
 					}
 					updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(separatorLog));
-					
 					this.updatedProducts.add(product);
 				}
 				this.nb_update_products += 1;

@@ -233,7 +233,7 @@ public class StatusProductOverviewController {
 				if (o1.getName().compareTo(o2.getName()) != 0) return o1.getName().compareTo(o2.getName());
 				else if (o1.getSize() != null && o2.getSize() != null && o1.getSize().compareTo(o2.getSize()) != 0) return o1.getSize().compareTo(o2.getSize());
 				else if (o1.getQuality() != null && o2.getQuality() != null && o1.getQuality().compareTo(o2.getQuality()) != 0) return o1.getQuality().compareTo(o2.getQuality());
-				else return o1.getSku().compareTo(o2.getSku());
+				else return o1.getIdProduct().compareTo(o2.getIdProduct());
 			}
 		};
 		

@@ -11,7 +11,6 @@ import java.util.logging.Level;
 
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.model.Product;
-import ecofish.interface_magento.service.FilterService;
 import ecofish.interface_magento.service.Filters;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
@@ -56,14 +55,14 @@ public class GettingProductThread implements Runnable {
      * @return True if the user has all necessary privileges, false else
      */
     private Boolean privilegeChecking() {
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity", "sku")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity_varchar", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity_decimal", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity_int", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_category_entity_varchar", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_eav_attribute_option_value", "value")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_eav_attribute", "attribute_id")) return false;
-    	if (!DataSourceFactory.checkPrivilege("SELECT", "mg_catalog_product_entity_int", "attribute_id")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "idproduct")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "category")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "family")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "name")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "quality")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "size")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "actual_price")) return false;
+    	if (!DataSourceFactory.checkPrivilege("SELECT", "products", "active")) return false;
     	return true;
     }
     
@@ -75,9 +74,9 @@ public class GettingProductThread implements Runnable {
     		Connection connection = DataSourceFactory.getConnection();
 			Statement statement = connection.createStatement();
 			
-			ResultSet nb_elements = statement.executeQuery("SELECT COUNT(productTable.sku) AS nb_products FROM mg_catalog_product_entity AS productTable");
-			nb_elements.next();
-			Integer nb_products = nb_elements.getInt("nb_products");
+			ResultSet retour = statement.executeQuery("SELECT COUNT(*) AS nb_products FROM product");
+			retour.next();
+			Integer nb_products = retour.getInt("nb_products");
 			Integer nb_loading_products = 0;
 			
 			ArrayList<Product> activeProducts = new ArrayList<Product>();
@@ -85,68 +84,22 @@ public class GettingProductThread implements Runnable {
 			TreeMap<String, TreeSet<String>> groups = new TreeMap<String, TreeSet<String>>();
 			TreeSet<String> familySet;
 
-			ResultSet resultSet = statement.executeQuery(
-					"SELECT DISTINCT productTable.sku AS sku, nameTable.value AS name, sizeTable.value AS size, qualityTable.value AS quality, priceTable.value AS price, statusTable.value AS status, categoryTable.value AS category, familyTable.value AS family\n"	
-					+ "FROM mg_catalog_product_entity AS productTable\n"
-					+ "LEFT JOIN mg_catalog_product_entity_varchar AS nameTable USING (entity_id)\n"
-					+ "LEFT JOIN mg_catalog_product_entity_varchar AS sizeTable using (entity_id)\n"
-					+ "LEFT JOIN mg_catalog_product_entity_varchar AS qualityTable using (entity_id)\n"
-					+ "LEFT JOIN mg_catalog_product_entity_decimal AS priceTable USING (entity_id)\n"
-					+ "LEFT JOIN mg_catalog_product_entity_int AS statusTable USING (entity_id)\n"
-					+ "LEFT JOIN mg_catalog_category_product AS matchProductCategoryTable ON productTable.entity_id = matchProductCategoryTable.product_id\n"
-					+ "LEFT JOIN mg_catalog_category_entity_varchar AS categoryTable ON matchProductCategoryTable.category_id = categoryTable.entity_id\n"
-					+ "LEFT JOIN mg_catalog_product_entity_int AS matchProductFamilyTable ON productTable.entity_id = matchProductFamilyTable.entity_id\n"
-					+ "LEFT JOIN mg_eav_attribute_option_value AS familyTable ON (matchProductFamilyTable.value = familyTable.option_id\n"
-					+ "																AND matchProductFamilyTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-					+ "																											FROM mg_eav_attribute AS attributeTable\n"
-					+ "																											WHERE attributeTable.attribute_code = 'product_family'))\n"
-					+ "WHERE nameTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-					+ "										FROM mg_eav_attribute AS attributeTable\n"
-					+ "										LEFT JOIN mg_eav_entity_type AS attributeTypeTable USING (entity_type_id)\n"
-					+ "										WHERE (attributeTable.attribute_code = 'name' AND attributeTypeTable.entity_type_code = 'catalog_product'))\n"
-					+ "	AND sizeTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-					+ "										FROM mg_eav_attribute AS attributeTable\n"
-					+ "										WHERE attributeTable.attribute_code = 'product_size')\n"
-					+ "	AND qualityTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-					+ "										FROM mg_eav_attribute AS attributeTable\n"
-					+ "										WHERE attributeTable.attribute_code = 'product_quality')\n"
-					+ "	AND priceTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-					+ "										FROM mg_eav_attribute AS attributeTable\n"
-					+ "										WHERE attributeTable.attribute_code = 'price')\n"
-					+ "	AND statusTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-					+ "										FROM mg_eav_attribute AS attributeTable\n"
-					+ "										WHERE attributeTable.attribute_code = 'status')\n"
-					+ "	AND categoryTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-					+ "										FROM mg_eav_attribute AS attributeTable\n"
-					+ "										LEFT JOIN mg_eav_entity_type AS attributeTypeTable USING (entity_type_id)\n"
-					+ "										WHERE (attributeTable.attribute_code = 'name' AND attributeTypeTable.entity_type_code = 'catalog_category'))\n"
-					+ "	AND ((matchProductFamilyTable.attribute_id = (SELECT attributeTable.attribute_id\n"
-					+ "													FROM mg_eav_attribute AS attributeTable\n"
-					+ "													WHERE attributeTable.attribute_code = 'product_family')\n"
-					+ "			AND familyTable.store_id = false)\n"
-					+ "		OR (SELECT attributeTable.attribute_id\n"
-					+ " 		FROM mg_eav_attribute AS attributeTable\n"
-					+ "			WHERE attributeTable.attribute_code = 'product_family')\n"
-					+ "				NOT IN (SELECT matchProductFamilyTable_tmp.attribute_id\n"
-					+ "						FROM mg_catalog_product_entity_int AS matchProductFamilyTable_tmp\n"
-					+ "						WHERE matchProductFamilyTable_tmp.entity_id = matchProductFamilyTable.entity_id))\n"
-					);
-			
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM product");
 			while(resultSet.next()) {
-				String category = resultSet.getString("category");
-				String family = resultSet.getString("family") == null ? FilterService.getDefaultFamily() : resultSet.getString("family");
 				Product product = new Product(
-						resultSet.getString("sku"),
-						category,
-						family,
+						resultSet.getInt("idproduct"),
+						resultSet.getString("category"),
+						resultSet.getString("family"),
 						resultSet.getString("name"),
-						resultSet.getString("size"),
 						resultSet.getString("quality"),
-						resultSet.getDouble("price"),
-						resultSet.getBoolean("status"));
+						resultSet.getString("size"),
+						resultSet.getDouble("actual_price"),
+						resultSet.getBoolean("active"));
 				if (product.getActive()) activeProducts.add(product);
 				else inactiveProducts.add(product);
 
+				String category = resultSet.getString("category");
+				String family = resultSet.getString("family");
 				familySet = groups.containsKey(category) ? groups.get(category) : new TreeSet<>();
 				familySet.add(family);
 				groups.put(category, familySet);

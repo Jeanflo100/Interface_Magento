@@ -19,7 +19,7 @@ import javafx.scene.control.Alert;
  */
 public class DatabaseAccess	{
 	
-	private static final File configFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "config.ini");
+	private static final File configFile = new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "config_test.ini");
 
 	private static final String generalComment = "If modifications are made, the application will have to be restarted to retrieve them";	
 	private static final String databaseSection = "database";
@@ -35,22 +35,6 @@ public class DatabaseAccess	{
 	 * Initialization of database connection information
 	 * @return Variable allowing initialization of connections
 	 */
-<<<<<<< HEAD
-	protected static MysqlDataSource getInformationConnection() {
-		readingConfigurationFile();
-		MysqlDataSource dataSource = new MysqlDataSource();
-		dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
-		dataSource.setServerName(server);
-		try {
-			dataSource.setPort(Integer.parseInt(port));
-		} catch (NumberFormatException e) {
-			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setHeaderText("Error when recovering database connection data");
-			alert.setContentText("The port specified in the configuration file is invalid.\n"
-									+ "Please correct this and restart the application.\n"
-									+ "--> Access to the configuration file by clicking on the database file icon on the authentication screen that follows");
-			alert.showAndWait();
-=======
 	protected static MysqlDataSource getConnectionInformation() {
 		if (readingConfigurationFile()) {
 			if (server != null && port != null && name != null && !server.isEmpty() && !port.isEmpty() && !name.isEmpty()) {
@@ -81,7 +65,6 @@ public class DatabaseAccess	{
 									+ "--> Access to the configuration file by clicking on the database file icon on the authentication screen");
 				alert.showAndWait();
 			}
->>>>>>> refs/heads/upgrading
 		}
 		return null;
 	}

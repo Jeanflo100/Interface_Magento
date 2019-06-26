@@ -218,7 +218,7 @@ public class PriceProductOverviewController {
 			else if (o1.getQuality() != null && o2.getQuality() != null && o1.getQuality().compareTo(o2.getQuality()) != 0) return o1.getQuality().compareTo(o2.getQuality());
 			else if (o1.getActualPrice() != null && o2.getActualPrice() != null && o1.getActualPrice().compareTo(o2.getActualPrice()) != 0) return o1.getActualPrice().compareTo(o2.getActualPrice());
 			else if (o1.getNewPrice() != null && o2.getNewPrice() != null && o1.getNewPrice().compareTo(o2.getNewPrice()) != 0) return o1.getNewPrice().compareTo(o2.getNewPrice());
-			else return o1.getSku().compareTo(o2.getSku());
+			else return o1.getIdProduct().compareTo(o2.getIdProduct());
 		});
 		
 		FilteredList<Product> sortedAndFilteredActiveProducts = new FilteredList<Product>(sortedActiveProducts);

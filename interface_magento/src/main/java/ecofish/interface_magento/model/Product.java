@@ -6,7 +6,7 @@ package ecofish.interface_magento.model;
  */
 public class Product implements Comparable<Product>{
 	
-	private final String sku;
+	private final Integer idProduct;
 	private final String category;
 	private final String family;
 	private final String name;
@@ -20,17 +20,17 @@ public class Product implements Comparable<Product>{
 	
 	/**
 	 * Constructor of product
-	 * @param sku - unique product ID
+	 * @param idProduct - unique product ID
+	 * @param name - product name
 	 * @param category - product category
 	 * @param family - product family
-	 * @param name - product name
 	 * @param quality - product quality
 	 * @param size - product size
 	 * @param actualPrice - actual product price
 	 * @param active - active or inactive status product
 	 */
-	public Product(String sku, String category, String family, String name, String size, String quality, Double actualPrice, Boolean active) {
-		this.sku = sku;
+	public Product(Integer idProduct, String category, String family, String name, String size, String quality, Double actualPrice, Boolean active) {
+		this.idProduct = idProduct;
 		this.category = category;
 		this.family = family;
 		this.name = name;
@@ -58,8 +58,8 @@ public class Product implements Comparable<Product>{
 		this.changeActive = changeActive;
 	}
 	
-	public String getSku() {
-		return sku;
+	public Integer getIdProduct() {
+		return idProduct;
 	}
 	
 	public String getCategory() {
@@ -100,14 +100,11 @@ public class Product implements Comparable<Product>{
 	
 	@Override
 	public String toString() {
-		String description = "Name : " + name + "\n";
-		if (size != null) description += "Size : " + size + "\n";
-		if (quality != null) description += "Quality : " + quality + "\n";
-		return description;
+		return "Name : " + name + "\n" + "Size : " + size + "\n" + "Quality : " + quality + "\n";
 	}
 	
 	/**
-	 * Comparison order : category, family, name, size, quality, sku
+	 * Comparison order : category, family, name, size, quality, idProduct
 	 */
 	@Override
 	public int compareTo(Product product) {
@@ -127,7 +124,7 @@ public class Product implements Comparable<Product>{
 			return this.getQuality().compareTo(product.getQuality());
 		}
 		else {
-			return this.getSku().compareTo(product.getSku()); 
+			return this.getIdProduct().compareTo(product.getIdProduct()); 
 		}
 	}
 	
