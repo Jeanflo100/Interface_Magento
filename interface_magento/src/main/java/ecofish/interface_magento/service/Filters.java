@@ -121,7 +121,7 @@ public abstract class Filters {
 		});
 		
 		this.nametextField.setOnKeyPressed(keyEvent -> {
-			if(keyEvent.getCode() == KeyCode.ENTER) showTable();
+			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.ESCAPE) showTable();
 		});
 	}
 	
