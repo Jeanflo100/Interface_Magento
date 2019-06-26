@@ -5,6 +5,7 @@ import java.io.IOException;
 import ecofish.interface_magento.daos.DataSourceFactory;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
+import ecofish.interface_magento.service.Views.viewsPrimaryStage;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -19,10 +20,11 @@ public class InterfaceMagento extends Application {
 	 */
 	@Override
 	public void start(Stage primaryStage) {
-		//StageService.initPrimaryStage(primaryStage);
-		//StageService.showView(ViewService.getView("test"));
 		StageService.setStageProvidesByApplication(primaryStage);
 		if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
+		
+		//StageService.showView(viewsPrimaryStage.DetailsProductOverview);
+		//StageService.showView(viewsPrimaryStage.test);
 	}
 
 	/**

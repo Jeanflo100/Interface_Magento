@@ -24,19 +24,27 @@ import javafx.scene.control.ButtonType;
  */
 public class DataSourceFactory {
 
-	private final MysqlDataSource dataSource;
 	private final SimpleStringProperty currentUser;
 	private final ArrayList<HashMap<String, String>> currentUserPrivileges;
 	
+	private MysqlDataSource dataSource;
 	private Boolean isNewUser;
 	
 	/**
 	 * Initialization of variables
 	 */
 	private DataSourceFactory() {
-		dataSource = DatabaseAccess.getInformationConnection();
 		currentUser = new SimpleStringProperty();
 		currentUserPrivileges = new ArrayList<HashMap<String, String>>();
+	}
+	
+	public static Boolean loadConnectionInformation() {
+		MysqlDataSource dataSource = DatabaseAccess.getConnectionInformation();
+		if (dataSource != null) {
+			DataSourceFactoryHolder.INSTANCE.dataSource = dataSource;
+			return true;
+		}
+		return false;
 	}
 	
 	/**

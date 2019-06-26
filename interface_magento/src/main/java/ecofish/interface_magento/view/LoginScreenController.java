@@ -1,6 +1,7 @@
 package ecofish.interface_magento.view;
 
 import ecofish.interface_magento.daos.AuthentificationThread;
+import ecofish.interface_magento.daos.DataSourceFactory;
 import ecofish.interface_magento.daos.DatabaseAccess;
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.service.StageService;
@@ -56,7 +57,7 @@ public class LoginScreenController {
 	 */
 	@FXML
 	private void getInformationConnection() {
-		if (!this.usernameTextField.getText().isEmpty()) {
+		if (!this.usernameTextField.getText().isEmpty() && DataSourceFactory.loadConnectionInformation()) {
 			this.backgroundAnchorPane.setCursor(Cursor.WAIT);
 			this.componentsAnchorPane.setDisable(true);
 			AuthentificationThread authentification = new AuthentificationThread(this, this.usernameTextField.getText(), this.passwordPasswordField.getText());
