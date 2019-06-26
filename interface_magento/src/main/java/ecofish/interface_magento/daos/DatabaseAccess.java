@@ -31,6 +31,8 @@ public class DatabaseAccess	{
 	private static String port;
 	private static String name;
 	
+	private static Boolean newConfigFile;
+	
 	/**
 	 * Initialization of database connection information
 	 * @return Variable allowing initialization of connections
@@ -73,12 +75,12 @@ public class DatabaseAccess	{
 	 * Checks if the file information is compliant and retrieve the connection information
 	 */
 	private static Boolean readingConfigurationFile() {
-		Boolean newFile = false;
+		newConfigFile = false;
 		
 		try {
 			if (!configFile.exists()) {
-				newFile = true;
 				configFile.createNewFile();
+				newConfigFile = true;
 			}
 		} catch (IOException e) {
 			Logging.getLogger().log(Level.CONFIG, "Error when creating the configuration file:\n" + e.getMessage());
@@ -109,13 +111,14 @@ public class DatabaseAccess	{
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.initOwner(StageService.getSecondaryStage());
 			alert.setHeaderText("Error when opening the configuration file\n");
-			alert.setContentText("Impossible to recover connection data.\n"
+			alert.setContentText("Impossible to recover connection information.\n"
 								+ "Please try again or restart the application if the problems persists");
 			alert.showAndWait();
+			newConfigFile = false;
 			return false;
 		}
 			
-		if (newFile) {
+		if (newConfigFile) {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.initOwner(StageService.getSecondaryStage());
 			alert.setHeaderText("Error when accessing the configuration file");
@@ -134,23 +137,15 @@ public class DatabaseAccess	{
 	 * Opens the configuration file
 	 */
 	public static void openConfigurationFile() {
-		if (!configFile.exists()) {
-			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.initOwner(StageService.getSecondaryStage());
-			alert.setHeaderText("Error when accessing the configuration file");
-			alert.setContentText("Retry the action or restart the application if the problem persists.\n"
-								+ "If the file has been deleted, a new default file will be created on restart");
-			alert.showAndWait();
-		}
-		else {
+		if (readingConfigurationFile() || newConfigFile) {
 			try {
 				Desktop.getDesktop().open(configFile);
 			} catch (IOException e) {
-				Logging.getLogger().log(Level.CONFIG, "Error when opening logs file:\n" + e.getMessage());
+				Logging.getLogger().log(Level.CONFIG, "Error when opening configuration file:\n" + e.getMessage());
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.initOwner(StageService.getSecondaryStage());
 				alert.setHeaderText("Error when opening configuration file");
-				alert.setContentText("Retry the action or restart the application if the problem persists");
+				alert.setContentText("Please try again or restart the application if the problems persists");
 				alert.showAndWait();
 			}
 		}
