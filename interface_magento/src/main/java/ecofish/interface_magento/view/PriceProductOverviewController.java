@@ -33,6 +33,9 @@ import javafx.scene.control.Label;
 public class PriceProductOverviewController {
 	
 	@FXML
+	TextField nameTextField;
+	
+	@FXML
 	ComboBox<String> categoryComboBox;
 	
 	@FXML
@@ -70,9 +73,6 @@ public class PriceProductOverviewController {
 	
 	@FXML
 	Button saveButton;
-	
-	@FXML
-	Text successfulBackupText;
 	
     private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
     private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
@@ -225,7 +225,7 @@ public class PriceProductOverviewController {
 		this.productTable.setItems(sortedAndFilteredActiveProducts);
 		this.productTable.getSelectionModel().selectFirst();
 		
-		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, sortedAndFilteredActiveProducts) {
+		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, this.nameTextField, sortedAndFilteredActiveProducts) {
 			@Override
 			public void showTable() {
 				if (!productTable.getItems().isEmpty()) productTable.requestFocus();

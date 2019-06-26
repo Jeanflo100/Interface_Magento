@@ -11,6 +11,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 
 /**
  * Provides processing for category and family ComboBox
@@ -24,10 +26,12 @@ public abstract class Filters {
 	
 	private final ComboBox<String> categoryComboBox;
 	private final ComboBox<String> familyComboBox;
+	private final TextField nametextField;
 	private final List<FilteredList<Product>> filteredLists;
 	
 	private String currentCategory;
 	private String currentFamily;
+	private String currentName;
 	
 	private Boolean isNewCategory;
 	
@@ -45,8 +49,8 @@ public abstract class Filters {
 	 * @param familyComboBox - combobox in which the families will be displayed
 	 * @param filteredList - list to be updated according to the category and family selected
 	 */
-	public Filters(ComboBox<String> categoryComboBox, ComboBox<String> familyComboBox, FilteredList<Product> filteredList) {
-		this(categoryComboBox, familyComboBox, Arrays.asList(filteredList));
+	public Filters(ComboBox<String> categoryComboBox, ComboBox<String> familyComboBox, TextField nameTextField, FilteredList<Product> filteredList) {
+		this(categoryComboBox, familyComboBox, nameTextField, Arrays.asList(filteredList));
 	}
 	
 	/**
@@ -55,22 +59,24 @@ public abstract class Filters {
 	 * @param familyComboBox - combobox in which the families will be displayed
 	 * @param filteredLists - lists to be updated according to the category and family selected
 	 */
-	public Filters(ComboBox<String> categoryComboBox, ComboBox<String> familyComboBox, List<FilteredList<Product>> filteredLists) {
+	public Filters(ComboBox<String> categoryComboBox, ComboBox<String> familyComboBox, TextField nameTextField, List<FilteredList<Product>> filteredLists) {
 		this.categoryComboBox = categoryComboBox;
 		this.familyComboBox = familyComboBox;
+		this.nametextField = nameTextField;
 		this.filteredLists = filteredLists;
 
 		this.categories = FXCollections.observableArrayList();
 		this.families = FXCollections.observableArrayList();
 		
 		initItemSelection();
+		initSmoothness();
 		setComponents();
 		
 		updateCategories();
 	}
 	
 	/**
-	 * Adding action on the item selectionned and the action performed at the closure of the combobox
+	 * Addition action on the item selectionned
 	 */
 	private void initItemSelection() {
 		this.categoryComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -81,7 +87,7 @@ public abstract class Filters {
 			if (newValue != null) isNewCategory = true;
 			else isNewCategory = false;
 			updateFamilies(newValue);
-			updateList(newValue, null);
+			updateList(newValue, currentFamily, currentName);
 		});
 		
 		this.familyComboBox.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -89,9 +95,19 @@ public abstract class Filters {
 				familyComboBox.show();
 			}
 			currentFamily = newValue;
-			updateList(currentCategory, newValue);
+			updateList(currentCategory, newValue, currentName);
 		});
 		
+		this.nametextField.textProperty().addListener((observable, oldValue, newValue) -> {
+			currentName = newValue;
+			updateList(currentCategory, currentFamily, newValue);
+		});
+	}
+	
+	/**
+	 * Addition of events allowing a smooth use of the interface
+	 */
+	private void initSmoothness() {
 		this.categoryComboBox.setOnHidden(hidden -> {
 			if (isNewCategory) {
 				isNewCategory = false;
@@ -102,6 +118,10 @@ public abstract class Filters {
 		
 		this.familyComboBox.setOnHidden(hidden -> {
 			showTable();
+		});
+		
+		this.nametextField.setOnKeyPressed(keyEvent -> {
+			if(keyEvent.getCode() == KeyCode.ENTER) showTable();
 		});
 	}
 	
@@ -166,20 +186,23 @@ public abstract class Filters {
 	 * @param category - the category to be used for filtering
 	 * @param family - the family to be used for filtering
 	 */
-	private void updateList(String category, String family) {
-		for (FilteredList<Product> filteredList : this.filteredLists)
+	private void updateList(String category, String family, String name) {
+		for (FilteredList<Product> filteredList : this.filteredLists) {
 			filteredList.setPredicate(product -> {
-			if (category == null && family == null) {
-				return true;
-			}
-			else if (product.getCategory().equals(category) && family == null) {
-				return true;
-			}
-			else if ((product.getCategory().contentEquals(category)) && (product.getFamily().contentEquals(family))) {
-				return true;
-			}
-			return false;
-		});
+				if (product.getName().toLowerCase().contains(name.toLowerCase()) || product.getIdProduct().toString().toLowerCase().contains(name.toLowerCase())) {
+					if (category == null && family == null) {
+						return true;
+					}
+					else if (product.getCategory().equals(category) && family == null) {
+						return true;
+					}
+					else if ((product.getCategory().contentEquals(category)) && (product.getFamily().contentEquals(family))) {
+						return true;
+					}
+				}
+				return false;
+			});
+		}
 	}
 	
 	/**

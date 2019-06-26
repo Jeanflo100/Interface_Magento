@@ -18,6 +18,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.text.Text;
@@ -28,6 +29,15 @@ import javafx.scene.control.Label;
  * @author Jean-Florian Tassart
  */
 public class StatusProductOverviewController {
+	
+	@FXML
+	TextField nameTextField;
+	
+	@FXML
+	ComboBox<String> categoryComboBox;
+	
+	@FXML
+	ComboBox<String> familyComboBox;
 
 	@FXML
 	TableView<Product> inactiveProductTable;
@@ -67,12 +77,6 @@ public class StatusProductOverviewController {
 	
 	@FXML
 	Text descriptionText;
-	
-	@FXML
-	ComboBox<String> categoryComboBox;
-	
-	@FXML
-	ComboBox<String> familyComboBox;
 	
     private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("inactive-to-active");
     private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
@@ -248,7 +252,7 @@ public class StatusProductOverviewController {
 		this.inactiveProductTable.getSelectionModel().selectFirst();
 		this.activeProductTable.getSelectionModel().selectFirst();
 		
-		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, Arrays.asList(sortedAndFilteredInactiveProducts, sortedAndFilteredActiveProducts)) {
+		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, this.nameTextField, Arrays.asList(sortedAndFilteredInactiveProducts, sortedAndFilteredActiveProducts)) {
 			@Override
 			public void showTable() {
 				if (!inactiveProductTable.getItems().isEmpty()) inactiveProductTable.requestFocus();

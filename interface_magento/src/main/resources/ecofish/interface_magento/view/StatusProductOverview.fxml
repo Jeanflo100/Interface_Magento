@@ -6,15 +6,17 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="660.0" prefWidth="770.0" stylesheets="@StatusProductOverview.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
+<AnchorPane prefHeight="671.0" prefWidth="770.0" stylesheets="@StatusProductOverview.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
    <children>
-      <TableView fx:id="inactiveProductTable" editable="true" layoutX="36.0" layoutY="34.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
+      <TextField fx:id="nameTextField" layoutX="313.0" layoutY="14.0" promptText="Search product by name" />
+      <TableView fx:id="inactiveProductTable" editable="true" layoutX="36.0" layoutY="50.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
          <columns>
             <TableColumn prefWidth="312.0" sortable="false" text="Inactive products">
                <columns>
@@ -28,7 +30,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <TableView fx:id="activeProductTable" layoutX="425.0" layoutY="34.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
+      <TableView fx:id="activeProductTable" layoutX="425.0" layoutY="50.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
          <columns>
             <TableColumn prefWidth="312.0" sortable="false" text="Active products">
                <columns>
@@ -42,15 +44,15 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Button fx:id="leftToRightButton" layoutX="352.0" layoutY="242.0" mnemonicParsing="false" onAction="#handleLeftToRightButton" prefHeight="25.0" prefWidth="69.0" text="&gt;&gt;&gt;&gt;&gt;&gt;" />
-      <Button fx:id="rightToLeftButton" layoutX="352.0" layoutY="288.0" mnemonicParsing="false" onAction="#handleRightToLeftButton" prefHeight="25.0" prefWidth="69.0" text="&lt;&lt;&lt;&lt;&lt;&lt;" />
-      <Label layoutX="346.0" layoutY="520.0" text="CATEGORY :">
+      <Button fx:id="leftToRightButton" layoutX="352.0" layoutY="258.0" mnemonicParsing="false" onAction="#handleLeftToRightButton" prefHeight="25.0" prefWidth="69.0" text="&gt;&gt;&gt;&gt;&gt;&gt;" />
+      <Button fx:id="rightToLeftButton" layoutX="352.0" layoutY="304.0" mnemonicParsing="false" onAction="#handleRightToLeftButton" prefHeight="25.0" prefWidth="69.0" text="&lt;&lt;&lt;&lt;&lt;&lt;" />
+      <Label layoutX="346.0" layoutY="535.0" text="CATEGORY :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="541.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="540.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
+      <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="556.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="555.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>
@@ -58,13 +60,13 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Label layoutX="358.0" layoutY="575.0" text="FAMILY :">
+      <Label layoutX="358.0" layoutY="590.0" text="FAMILY :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="597.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="596.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
+      <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="612.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="611.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>
@@ -72,12 +74,12 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Button fx:id="updatePriceButton" layoutX="577.0" layoutY="551.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" prefHeight="45.0" prefWidth="96.0" text="Update prices" />
-      <Text fx:id="descriptionText" layoutX="17.0" layoutY="531.0" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="278.0000029206276">
+      <Button fx:id="updatePriceButton" layoutX="577.0" layoutY="566.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" prefHeight="45.0" prefWidth="96.0" text="Update prices" />
+      <Text fx:id="descriptionText" layoutX="17.0" layoutY="546.0" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="278.0000029206276">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Button fx:id="productDetailsButton" layoutX="108.0" layoutY="619.0" mnemonicParsing="false" onAction="#handleProductDetailsButton" prefHeight="27.0" prefWidth="96.0" text="Product details" />
+      <Button fx:id="productDetailsButton" layoutX="108.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleProductDetailsButton" prefHeight="27.0" prefWidth="96.0" text="Product details" />
    </children>
 </AnchorPane>
