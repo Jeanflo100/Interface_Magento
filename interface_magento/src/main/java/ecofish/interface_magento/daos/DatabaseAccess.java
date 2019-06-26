@@ -37,7 +37,7 @@ public class DatabaseAccess	{
 	 */
 	protected static MysqlDataSource getConnectionInformation() {
 		if (readingConfigurationFile()) {
-			if (!server.isEmpty() && !port.isEmpty() && !name.isEmpty()) {
+			if (server != null && port != null && name != null && !server.isEmpty() && !port.isEmpty() && !name.isEmpty()) {
 				MysqlDataSource dataSource = new MysqlDataSource();
 				dataSource.setURL("jdbc:mysql://" + server + ":" + port + "/" + name);
 				dataSource.setServerName(server);
