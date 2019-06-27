@@ -189,7 +189,7 @@ public abstract class Filters {
 	private void updateList(String category, String family, String name) {
 		for (FilteredList<Product> filteredList : this.filteredLists) {
 			filteredList.setPredicate(product -> {
-				if (product.getName().toLowerCase().contains(name.toLowerCase()) || product.getIdProduct().toString().toLowerCase().contains(name.toLowerCase())) {
+				if (name == null || product.getName().toLowerCase().contains(name.toLowerCase()) || product.getIdProduct().toString().toLowerCase().contains(name.toLowerCase())) {
 					if (category == null && family == null) {
 						return true;
 					}

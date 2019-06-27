@@ -1,0 +1,12 @@
+:label {
+	-fx-background: #76C778;
+}
+
+
+.gridpane-cell:medium-season {
+	-fx-background: #EAA471;
+}
+
+.gridpane-cell:low-season {
+	-fx-background: #FFE655;
+}
