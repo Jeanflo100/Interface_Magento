@@ -10,6 +10,7 @@ import ecofish.interface_magento.daos.GettingProductThread;
 import ecofish.interface_magento.daos.UpdatingProductThread;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -20,7 +21,7 @@ import javafx.scene.control.ButtonType;
  */
 public class ProductService {
 
-	private final TreeSet<Product> updatingProducts;
+	private final ObservableList<Product> updatingProducts;
 	private final ObservableList<Product> activeProducts;
 	private final ObservableList<Product> inactiveProducts;
 	
@@ -28,7 +29,7 @@ public class ProductService {
 	 * Initialization of parameters
 	 */
 	private ProductService() {
-		updatingProducts = new TreeSet<Product>();
+		updatingProducts = FXCollections.observableArrayList();
 		activeProducts = FXCollections.observableArrayList();
 		inactiveProducts = FXCollections.observableArrayList();
 	}
@@ -90,7 +91,29 @@ public class ProductService {
 	 */
 	public static void updateUpdatingProducts(Product product) {
 		if (product.getChangeActive() == false && product.getNewPrice() == null) ProductServiceHolder.INSTANCE.updatingProducts.remove(product);
-		else ProductServiceHolder.INSTANCE.updatingProducts.add(product);
+		else if (!ProductServiceHolder.INSTANCE.updatingProducts.contains(product)) ProductServiceHolder.INSTANCE.updatingProducts.add(product);
+	}
+	
+	/**
+	 * Provides a filtered observable list of products that have had a status change
+	 * @return A filtered observable list of products that have had a status change
+	 */
+	public static FilteredList<Product> getUpdatingProductsOnStatus() {
+		return new FilteredList<Product>(ProductServiceHolder.INSTANCE.updatingProducts, product ->  {
+			if (product.getChangeActive()) return true;
+			return false;
+		});
+	}
+	
+	/**
+	 * Provides a filtered observable list of products that have had a price change
+	 * @return A filtered observable list of products that have had a price change
+	 */
+	public static FilteredList<Product> getUpdatingProductsOnPrice() {
+		return new FilteredList<Product>(ProductServiceHolder.INSTANCE.updatingProducts, product ->  {
+			if (product.getNewPrice() != null) return true;
+			return false;
+		});
 	}
 	
 	/**
@@ -122,7 +145,7 @@ public class ProductService {
 	 * If the product had a new price, a confirmation will be displayed to confirm the deletion or not of the price and therefore the change of status
 	 * @param product - product whose status needs to be changed
 	 */
-	public static void changeStatusProduct(Product product) {
+	public static Boolean changeStatusProduct(Product product) {
 		if (product.getNewPrice() != null) {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.initOwner(StageService.getPrimaryStage());
@@ -132,10 +155,10 @@ public class ProductService {
 								"Continue?");
 			Optional<ButtonType> option = alert.showAndWait();
 			if (option.get() != ButtonType.OK) {
-				return;
+				return false;
 	    	}
 			product.setNewPrice(null);
-		}
+		}		
 		product.setActive(!product.getActive());
 		product.setChangeActive(!product.getChangeActive());
 		if (product.getActive()) {
@@ -147,6 +170,7 @@ public class ProductService {
 			ProductServiceHolder.INSTANCE.activeProducts.remove(product);
 		}
 		ProductService.updateUpdatingProducts(product);
+		return true;
 	}
 	
 	/**

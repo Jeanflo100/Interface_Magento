@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -31,6 +32,9 @@ import javafx.scene.control.Label;
  * @author Jean-Florian Tassart
  */
 public class PriceProductOverviewController {
+	
+	@FXML
+	CheckBox onlyModifiedProductsCheckBox;
 	
 	@FXML
 	TextField nameTextField;
@@ -82,6 +86,7 @@ public class PriceProductOverviewController {
 	private Filters filters;
 	
 	private Product currentProduct;
+	private Integer currentValidIndexProduct;
 	
 	/**
 	 * Checking conditions before updating the price
@@ -175,6 +180,7 @@ public class PriceProductOverviewController {
 	private void initItemSelectionTable() {
 		this.productTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
 			showProduct(newValue);
+			if (this.productTable.getSelectionModel().getSelectedIndex() != -1) this.currentValidIndexProduct = this.productTable.getSelectionModel().getSelectedIndex();
 		});
 	}
 	
@@ -225,7 +231,7 @@ public class PriceProductOverviewController {
 		this.productTable.setItems(sortedAndFilteredActiveProducts);
 		this.productTable.getSelectionModel().selectFirst();
 		
-		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, this.nameTextField, sortedAndFilteredActiveProducts) {
+		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, this.nameTextField, this.onlyModifiedProductsCheckBox, ProductService.getUpdatingProductsOnPrice(), sortedAndFilteredActiveProducts) {
 			@Override
 			public void showTable() {
 				if (!productTable.getItems().isEmpty()) productTable.requestFocus();
@@ -263,14 +269,6 @@ public class PriceProductOverviewController {
 	}
 	
 	/**
-	 * Customize the display of the selection in the table to have the currently selected product around the center of the table
-	 */
-	private void selectNextProduct() {
-		this.productTable.getSelectionModel().selectNext();
-		this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRow/2);
-	}
-	
-	/**
 	 * Update the price of the current product
 	 * @param newPrice - price to be updated on the current product 
 	 */
@@ -279,10 +277,24 @@ public class PriceProductOverviewController {
 			if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
 			this.currentProduct.setNewPrice(newPrice);
 			ProductService.updateUpdatingProducts(this.currentProduct);
-			if (this.currentProduct.getNewPrice() != null) this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
-			else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
 			this.productTable.refresh();
 		}
+	}
+	
+	/**
+	 * Customize the display of the selection in the table to have the currently selected product around the center of the table
+	 */
+	private void selectNextProduct() {
+		if (this.currentProduct != null) {
+			this.productTable.getSelectionModel().selectNext();
+		}
+		else if (this.currentValidIndexProduct < this.productTable.getSelectionModel().getSelectedItems().size()){
+			this.productTable.getSelectionModel().select(this.currentValidIndexProduct);
+		}
+		else {
+			this.productTable.getSelectionModel().selectLast();
+		}
+		this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRow/2);
 	}
 	
 }
