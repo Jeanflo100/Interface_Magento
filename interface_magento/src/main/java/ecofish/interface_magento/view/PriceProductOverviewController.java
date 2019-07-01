@@ -78,10 +78,10 @@ public class PriceProductOverviewController {
 	@FXML
 	Button saveButton;
 	
-    private static final PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
-    private static final PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
+    private static final PseudoClass increasePrice = PseudoClass.getPseudoClass("high");
+    private static final PseudoClass decreasePrice = PseudoClass.getPseudoClass("medium");
 	
-    private static final Integer percentageAllowedBetweenNewAndOldPrice = 10;
+    private static final Double percentageAllowedBetweenNewAndOldPrice = 10.0;
     
 	private Integer numberVisibleRowProductTable;
 	
@@ -98,11 +98,10 @@ public class PriceProductOverviewController {
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
 			Double actualPrice = this.currentProduct.getActualPrice();
 			Double newPrice = Double.parseDouble(this.newPriceTextField.getText());
-			if (Math.abs(newPrice - actualPrice) / actualPrice > percentageAllowedBetweenNewAndOldPrice/100) {
+			if ((Math.abs(newPrice - actualPrice) / actualPrice) > (percentageAllowedBetweenNewAndOldPrice/100)) {
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 				alert.initOwner(StageService.getPrimaryStage());
-				alert.setTitle("WARNING");
-				alert.setHeaderText("The difference between the actual and the new price is more than " + percentageAllowedBetweenNewAndOldPrice +"%, continue ?");
+				alert.setHeaderText("The difference between the actual and the new price is more than " + percentageAllowedBetweenNewAndOldPrice +" %, continue ?");
 				Optional<ButtonType> option = alert.showAndWait();
 				if (option.get() != ButtonType.OK) {
 					return;

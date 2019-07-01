@@ -83,8 +83,8 @@ public class StatusProductOverviewController {
 	@FXML
 	Text descriptionText;
 	
-    private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("inactive-to-active");
-    private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
+    private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("high");
+    private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("medium");
 	
 	private Filters filters;
 
