@@ -53,7 +53,6 @@ public class ProductService {
 		else {
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.initOwner(StageService.getPrimaryStage());
-			alert.setTitle("INFORMATION");
 			alert.setHeaderText("No product to update");
 			alert.setContentText("No product have been changed");
 			alert.showAndWait();
@@ -111,7 +110,6 @@ public class ProductService {
 	 */
 	public static FilteredList<Product> getUpdatingProductsOnPrice() {
 		return new FilteredList<Product>(ProductServiceHolder.INSTANCE.updatingProducts, product ->  {
-			System.out.println("change");
 			if (product.getNewPrice() != null) return true;
 			return false;
 		});
@@ -150,7 +148,6 @@ public class ProductService {
 		if (product.getNewPrice() != null) {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.initOwner(StageService.getPrimaryStage());
-			alert.setTitle("WARNING");
 			alert.setHeaderText("This product has a new price.\r\n" + 
 								"If the product is disabled, the new price will be deleted.\r\n" + 
 								"Continue?");
