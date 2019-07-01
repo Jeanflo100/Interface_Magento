@@ -88,7 +88,8 @@ public class PriceProductOverviewController {
 	private Filters filters;
 	
 	private Product currentProduct;
-	private Integer lastIndexValidCurrentProduct;
+	private Product previousProduct;
+	private Integer lastValidIndexCurrentProduct;
 	
 	/**
 	 * Checking conditions before updating the price
@@ -181,7 +182,8 @@ public class PriceProductOverviewController {
 	private void initItemSelectionTable() {
 		this.productTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
 			this.currentProduct = newValue;
-			if (newValue != null) this.lastIndexValidCurrentProduct = this.productTable.getSelectionModel().getSelectedIndex();
+			this.previousProduct = oldValue;
+			if (newValue != null) this.lastValidIndexCurrentProduct = this.productTable.getSelectionModel().getSelectedIndex();
 			showProduct(newValue);
 		});
 	}
@@ -240,8 +242,8 @@ public class PriceProductOverviewController {
 			public void showTable() {
 				productTable.getSelectionModel().clearSelection();
 				if (!productTable.getItems().isEmpty()) productTable.requestFocus();
-				if (productTable.getItems().contains(currentProduct)) {
-					productTable.getSelectionModel().select(currentProduct);
+				if (productTable.getItems().contains(previousProduct)) {
+					productTable.getSelectionModel().select(previousProduct);
 					productTable.scrollTo(productTable.getSelectionModel().getSelectedIndex() - numberVisibleRowProductTable/2);
 				}
 				else productTable.getSelectionModel().select(0);
@@ -293,12 +295,12 @@ public class PriceProductOverviewController {
 	 */
 	private void selectNextProduct() {
 		if (!this.productTable.getItems().contains(this.currentProduct)) {
-			if (this.lastIndexValidCurrentProduct > this.productTable.getItems().size()-1) this.productTable.getSelectionModel().select(this.lastIndexValidCurrentProduct-1);
-			else this.productTable.getSelectionModel().select(this.lastIndexValidCurrentProduct);
+			if (this.lastValidIndexCurrentProduct > this.productTable.getItems().size()-1) this.productTable.getSelectionModel().select(this.lastValidIndexCurrentProduct-1);
+			else this.productTable.getSelectionModel().select(this.lastValidIndexCurrentProduct);
 		}
 		else {
-			if (this.lastIndexValidCurrentProduct+1 > this.productTable.getItems().size()-1) this.productTable.getSelectionModel().select(this.lastIndexValidCurrentProduct);
-			else this.productTable.getSelectionModel().select(this.lastIndexValidCurrentProduct+1);
+			if (this.lastValidIndexCurrentProduct+1 > this.productTable.getItems().size()-1) this.productTable.getSelectionModel().select(this.lastValidIndexCurrentProduct);
+			else this.productTable.getSelectionModel().select(this.lastValidIndexCurrentProduct+1);
 		}		
 		this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRowProductTable/2);
 	}

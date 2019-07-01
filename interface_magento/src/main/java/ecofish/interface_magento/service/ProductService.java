@@ -90,8 +90,8 @@ public class ProductService {
 	 * @param product - adds, leaves or removes the product from the list if updates are still present or not
 	 */
 	public static void updateUpdatingProducts(Product product) {
-		if (product.getChangeActive() == false && product.getNewPrice() == null) ProductServiceHolder.INSTANCE.updatingProducts.remove(product);
-		else if (!ProductServiceHolder.INSTANCE.updatingProducts.contains(product)) ProductServiceHolder.INSTANCE.updatingProducts.add(product);
+		ProductServiceHolder.INSTANCE.updatingProducts.remove(product);
+		if (product.getChangeActive() == true || product.getNewPrice() != null) ProductServiceHolder.INSTANCE.updatingProducts.add(product);
 	}
 	
 	/**
@@ -111,6 +111,7 @@ public class ProductService {
 	 */
 	public static FilteredList<Product> getUpdatingProductsOnPrice() {
 		return new FilteredList<Product>(ProductServiceHolder.INSTANCE.updatingProducts, product ->  {
+			System.out.println("change");
 			if (product.getNewPrice() != null) return true;
 			return false;
 		});
