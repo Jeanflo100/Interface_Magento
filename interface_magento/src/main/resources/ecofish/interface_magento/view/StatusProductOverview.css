@@ -1,8 +1,0 @@
-.table-row-cell:inactive-to-active{
-	-fx-background: #76C778;
-}
-
-
-.table-row-cell:active-to-inactive {
-	-fx-background: #EAA471;
-}

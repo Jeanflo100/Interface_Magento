@@ -2,6 +2,7 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -13,9 +14,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="671.0" prefWidth="770.0" stylesheets="@StatusProductOverview.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
+<AnchorPane prefHeight="671.0" prefWidth="770.0" styleClass="root" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.StatusProductOverviewController">
    <children>
-      <TableView fx:id="inactiveProductTable" editable="true" layoutX="36.0" layoutY="50.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
+      <TableView fx:id="inactiveProductTable" editable="true" layoutX="36.0" layoutY="50.0" prefHeight="450.0" prefWidth="312.0">
          <columns>
             <TableColumn prefWidth="312.0" sortable="false" text="Inactive products">
                <columns>
@@ -29,7 +30,7 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <TableView fx:id="activeProductTable" layoutX="425.0" layoutY="50.0" prefHeight="460.0" prefWidth="312.0" styleClass="table-row-cell">
+      <TableView fx:id="activeProductTable" editable="true" layoutX="425.0" layoutY="50.0" prefHeight="450.0" prefWidth="312.0">
          <columns>
             <TableColumn prefWidth="312.0" sortable="false" text="Active products">
                <columns>
@@ -46,13 +47,13 @@
       <Button fx:id="leftToRightButton" layoutX="352.0" layoutY="258.0" mnemonicParsing="false" onAction="#handleLeftToRightButton" prefHeight="25.0" prefWidth="69.0" text="&gt;&gt;&gt;&gt;&gt;&gt;" />
       <Button fx:id="rightToLeftButton" layoutX="352.0" layoutY="304.0" mnemonicParsing="false" onAction="#handleRightToLeftButton" prefHeight="25.0" prefWidth="69.0" text="&lt;&lt;&lt;&lt;&lt;&lt;" />
       <TextField fx:id="nameTextField" layoutX="313.0" layoutY="14.0" promptText="Search product by name" />
-      <Label layoutX="346.0" layoutY="535.0" text="CATEGORY :">
+      <Label layoutX="346.0" layoutY="516.0" text="CATEGORY :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="556.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="555.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
+      <ComboBox fx:id="categoryComboBox" layoutX="312.0" layoutY="537.0" prefHeight="25.0" prefWidth="149.0" promptText="Select CATEGORY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="536.0" onMouseClicked="#resetCategory" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>
@@ -60,13 +61,13 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Label layoutX="358.0" layoutY="590.0" text="FAMILY :">
+      <Label layoutX="358.0" layoutY="571.0" text="FAMILY :">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="612.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
-      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="611.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
+      <ComboBox fx:id="familyComboBox" layoutX="312.0" layoutY="593.0" prefHeight="25.0" prefWidth="149.0" promptText="Select FAMILY" />
+      <ImageView fitHeight="32.0" fitWidth="28.0" layoutX="461.0" layoutY="592.0" onMouseClicked="#resetFamily" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../image/black-cross.png" />
          </image>
@@ -74,12 +75,13 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <Button fx:id="updatePriceButton" layoutX="577.0" layoutY="566.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" prefHeight="45.0" prefWidth="96.0" text="Update prices" />
-      <Text fx:id="descriptionText" layoutX="17.0" layoutY="546.0" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="278.0000029206276">
+      <CheckBox fx:id="onlyModifiedProductsCheckBox" alignment="CENTER" contentDisplay="CENTER" layoutX="314.0" layoutY="631.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" prefWidth="147.0" text="Only modified products" textAlignment="JUSTIFY" />
+      <Button fx:id="updatePriceButton" layoutX="577.0" layoutY="559.0" mnemonicParsing="false" onAction="#handleUpdatePriceButton" prefHeight="45.0" prefWidth="96.0" text="Update prices" />
+      <Text fx:id="descriptionText" layoutX="17.0" layoutY="539.0" lineSpacing="5.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="278.0000029206276">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Button fx:id="productDetailsButton" layoutX="108.0" layoutY="634.0" mnemonicParsing="false" onAction="#handleProductDetailsButton" prefHeight="27.0" prefWidth="96.0" text="Product details" />
+      <Button fx:id="productDetailsButton" layoutX="108.0" layoutY="627.0" mnemonicParsing="false" onAction="#handleProductDetailsButton" prefHeight="27.0" prefWidth="96.0" text="Product details" />
    </children>
 </AnchorPane>
