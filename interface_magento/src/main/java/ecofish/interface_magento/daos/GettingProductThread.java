@@ -75,6 +75,12 @@ public class GettingProductThread implements Runnable {
     		Connection connection = DataSourceFactory.getConnection();
 			Statement statement = connection.createStatement();
 			
+			
+			ResultSet retour = statement.executeQuery("SELECT * FROM mg_catalogrule_oldprice");
+			while(retour.next()) {
+				System.out.println(retour.getString(1) + " " + retour.getString(2) + " " + retour.getString(3));
+			}
+			
 			ResultSet nb_elements = statement.executeQuery("SELECT COUNT(productTable.sku) AS nb_products FROM mg_catalog_product_entity AS productTable");
 			nb_elements.next();
 			Integer nb_products = nb_elements.getInt("nb_products");

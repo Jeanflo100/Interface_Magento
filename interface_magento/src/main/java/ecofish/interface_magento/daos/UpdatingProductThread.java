@@ -105,8 +105,11 @@ public class UpdatingProductThread implements Runnable {
 								);
 					}
 					
-					this.updatedProductsLog += "\n" + product.getSku() + " (" + product.getCategory() + " - " + product.getFamily() + " - " + product.getName()
-												+ " - " + product.getSize() + " - " + product.getQuality() + "): ";
+					this.updatedProductsLog += "\n" + product.getSku() + " (" + product.getCategory() + " - " + product.getFamily() + " - " + product.getName();
+					if (product.getSize() != null) this.updatedProductsLog += " - " + product.getSize();
+					if (product.getQuality() != null) this.updatedProductsLog += " - " + product.getQuality();
+					this.updatedProductsLog += "): ";
+					
 					if (product.getChangeActive() == true) {
 						this.updatedProductsLog += "Status = " + (product.getActive() == true ? "not active" : "active") + " -> " + (product.getActive() == true ? "active" : "not active") + this.separatorLog;
 						product.setChangeActive(false);
