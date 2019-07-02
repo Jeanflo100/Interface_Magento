@@ -27,7 +27,6 @@ public class UpdatingProductThread implements Runnable {
     
     private Integer nb_update_products;
     private String updatedProductsLog;
-	private String separatorLog;
     private Boolean error;
     
     /**
@@ -44,7 +43,6 @@ public class UpdatingProductThread implements Runnable {
     	this.nb_products = this.updatingProducts.size();
     	this.nb_update_products = 0;
     	this.updatedProductsLog = "";
-    	this.separatorLog = " | ";
     	this.error = false;
     }
  
@@ -91,16 +89,17 @@ public class UpdatingProductThread implements Runnable {
 					stmt.executeUpdate(SQLquery);
 					this.updatedProductsLog += "\n" + product.getIdProduct() + " (" + product.getCategory() + " - " + product.getFamily() + " - " + product.getName()
 												+ " - " + product.getSize() + " - " + product.getQuality() + "): ";
+					String updatingSeparator = " | ";
 					if (product.getChangeActive() == true) {
-						this.updatedProductsLog += "Status = " + (product.getActive() == true ? "not active" : "active") + " -> " + (product.getActive() == true ? "active" : "not active") + this.separatorLog;
+						this.updatedProductsLog += "Status = " + (product.getActive() == true ? "not active" : "active") + " -> " + (product.getActive() == true ? "active" : "not active") + updatingSeparator;
 						product.setChangeActive(false);
 					}
 					if (product.getNewPrice() != null) {
-						this.updatedProductsLog += "Price = " + product.getActualPrice() + "£ -> " + product.getNewPrice() + "£" + this.separatorLog;
+						this.updatedProductsLog += "Price = " + product.getActualPrice() + "£ -> " + product.getNewPrice() + "£" + updatingSeparator;
 						product.setActualPrice(product.getNewPrice());
 						product.setNewPrice(null);
 					}
-					updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(separatorLog));
+					updatedProductsLog = updatedProductsLog.substring(0, updatedProductsLog.lastIndexOf(updatingSeparator));
 					this.updatedProducts.add(product);
 				}
 				this.nb_update_products += 1;
