@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" styleClass="root" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.DetailsProductOverviewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" styleClass="root" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.DetailsProductOverviewController">
    <children>
       <LineChart layoutY="487.0" prefHeight="213.0" prefWidth="350.0" title="Actual price: 2.45£ ">
         <xAxis>
@@ -48,90 +48,18 @@
       <Separator layoutX="447.0" layoutY="64.0" orientation="VERTICAL" prefHeight="638.0" prefWidth="4.0" />
       <Separator layoutX="-1.0" layoutY="64.0" prefHeight="2.0" prefWidth="900.0" />
       <Separator layoutX="-1.0" layoutY="360.0" prefHeight="2.0" prefWidth="900.0" />
-      <GridPane fx:id="testGridPane" alignment="CENTER" gridLinesVisible="true" layoutX="624.0" layoutY="544.0" prefHeight="142.0" prefWidth="262.0">
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: yellow;" text="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: yellow;" text="2" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: yellow;" text="3" GridPane.columnIndex="2">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: orange;" text="4" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: orange;" text="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #76C778;" text="6" textFill="#385dc3" underline="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #76C778;" text="7" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #76C778;" text="8" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #76C778;" text="9" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: orange;" text="10" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: yellow;" text="11" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: yellow;" text="12" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-         </children>
-      </GridPane>
-      <Label layoutX="607.0" layoutY="496.0" text="Actual season: High">
+      <Label fx:id="currentSeasonLabel" layoutX="755.0" layoutY="500.0" prefHeight="26.0" prefWidth="107.0" text="High" textAlignment="CENTER">
          <font>
             <Font size="17.0" />
          </font>
+         <padding>
+            <Insets left="5.0" />
+         </padding>
       </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="19.0" layoutX="481.0" layoutY="657.0" stroke="GREY" strokeType="INSIDE" width="17.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="YELLOW" height="19.0" layoutX="481.0" layoutY="624.0" stroke="GREY" strokeType="INSIDE" width="17.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="ORANGE" height="19.0" layoutX="481.0" layoutY="589.0" stroke="GREY" strokeType="INSIDE" width="17.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#76c778" height="19.0" layoutX="481.0" layoutY="557.0" stroke="GREY" strokeType="INSIDE" width="17.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#76c778" height="19.0" layoutX="481.0" layoutY="557.0" stroke="GREY" strokeType="INSIDE" style="-fx-fill: high;" width="17.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eaa471" height="19.0" layoutX="481.0" layoutY="589.0" stroke="GREY" strokeType="INSIDE" style="-fx-fill: medium;" width="17.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eae548" height="19.0" layoutX="481.0" layoutY="624.0" stroke="GREY" strokeType="INSIDE" style="-fx-fill: low;" width="17.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="19.0" layoutX="481.0" layoutY="657.0" stroke="GREY" strokeType="INSIDE" style="-fx-fill: unspecified;" width="17.0" />
       <Text layoutX="506.0" layoutY="571.0" strokeType="OUTSIDE" strokeWidth="0.0" text="High season">
          <font>
             <Font size="13.0" />
@@ -152,7 +80,7 @@
             <Font size="13.0" />
          </font>
       </Text>
-      <GridPane fx:id="seasonGridPane" alignment="CENTER" gridLinesVisible="true" layoutX="607.0" layoutY="178.0" prefHeight="142.0" prefWidth="262.0">
+      <GridPane fx:id="seasonGridPane" alignment="CENTER" gridLinesVisible="true" layoutX="624.0" layoutY="544.0" prefHeight="142.0" prefWidth="262.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -166,16 +94,6 @@
          </rowConstraints>
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="1">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="12" GridPane.columnIndex="3" GridPane.rowIndex="2">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="11" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <font>
                   <Font size="15.0" />
                </font>
@@ -195,12 +113,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="7" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="9" GridPane.rowIndex="2">
+            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="5" GridPane.rowIndex="1">
                <font>
                   <Font size="15.0" />
                </font>
@@ -210,12 +123,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="5" GridPane.rowIndex="1">
+            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="7" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <font>
                   <Font size="15.0" />
                </font>
@@ -225,7 +133,32 @@
                   <Font size="15.0" />
                </font>
             </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="9" GridPane.rowIndex="2">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="11" GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="12" GridPane.columnIndex="3" GridPane.rowIndex="2">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
          </children>
       </GridPane>
+      <Text layoutX="648.0" layoutY="520.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Actual season:" textAlignment="JUSTIFY" wrappingWidth="107.0">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

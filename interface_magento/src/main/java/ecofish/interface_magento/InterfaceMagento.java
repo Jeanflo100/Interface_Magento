@@ -21,9 +21,9 @@ public class InterfaceMagento extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		StageService.setStageProvidesByApplication(primaryStage);
-		if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
+		//if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
 		
-		//StageService.showView(viewsPrimaryStage.DetailsProductOverview);
+		StageService.showView(viewsPrimaryStage.DetailsProductOverview);
 		//StageService.showView(viewsPrimaryStage.test);
 	}
 
