@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="234.0" prefWidth="467.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.LoadingProductController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="234.0" prefWidth="467.0" styleClass="root" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.LoadingProductController">
    <children>
       <ImageView fitHeight="104.0" fitWidth="200.0" layoutX="134.0" layoutY="56.0" pickOnBounds="true" preserveRatio="true">
          <image>

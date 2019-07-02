@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -31,6 +32,9 @@ import javafx.scene.control.Label;
  * @author Jean-Florian Tassart
  */
 public class PriceProductOverviewController {
+	
+	@FXML
+	CheckBox onlyModifiedProductsCheckBox;
 	
 	@FXML
 	TextField nameTextField;
@@ -74,14 +78,18 @@ public class PriceProductOverviewController {
 	@FXML
 	Button saveButton;
 	
-    private final static PseudoClass increasePrice = PseudoClass.getPseudoClass("increase-price");
-    private final static PseudoClass decreasePrice = PseudoClass.getPseudoClass("decrease-price");
+    private static final PseudoClass increasePrice = PseudoClass.getPseudoClass("high");
+    private static final PseudoClass decreasePrice = PseudoClass.getPseudoClass("medium");
 	
-	private Integer numberVisibleRow;
+    private static final Double percentageAllowedBetweenNewAndOldPrice = 10.0;
+    
+	private Integer numberVisibleRowProductTable;
 	
 	private Filters filters;
 	
 	private Product currentProduct;
+	private Product previousProduct;
+	private Integer lastValidIndexCurrentProduct;
 	
 	/**
 	 * Checking conditions before updating the price
@@ -91,11 +99,10 @@ public class PriceProductOverviewController {
 		if (this.currentProduct != null && this.newPriceTextField.getText().length() != 0) {
 			Double actualPrice = this.currentProduct.getActualPrice();
 			Double newPrice = Double.parseDouble(this.newPriceTextField.getText());
-			if (Math.abs(newPrice - actualPrice) / actualPrice > 0.1) {
+			if ((Math.abs(newPrice - actualPrice) / actualPrice) > (percentageAllowedBetweenNewAndOldPrice/100)) {
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 				alert.initOwner(StageService.getPrimaryStage());
-				alert.setTitle("WARNING");
-				alert.setHeaderText("The difference between the actual and the new price is more than 10%, continue ?");
+				alert.setHeaderText("The difference between the actual and the new price is more than " + percentageAllowedBetweenNewAndOldPrice +" %, continue ?");
 				Optional<ButtonType> option = alert.showAndWait();
 				if (option.get() != ButtonType.OK) {
 					return;
@@ -154,7 +161,7 @@ public class PriceProductOverviewController {
 		this.actualPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("actualPrice"));
 		this.newPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("newPrice"));
 		this.productTable.setFixedCellSize(DetailsTableView.CellSize);
-		this.numberVisibleRow = DetailsTableView.getNumberVisibleRow(this.productTable);
+		this.numberVisibleRowProductTable = DetailsTableView.getNumberVisibleRow(this.productTable);
 		this.productTable.setRowFactory(productTable -> new TableRow<Product>() {
 		    @Override
 		    protected void updateItem(Product product, boolean empty) {
@@ -174,6 +181,9 @@ public class PriceProductOverviewController {
 	 */
 	private void initItemSelectionTable() {
 		this.productTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
+			this.currentProduct = newValue;
+			this.previousProduct = oldValue;
+			if (newValue != null) this.lastValidIndexCurrentProduct = this.productTable.getSelectionModel().getSelectedIndex();
 			showProduct(newValue);
 		});
 	}
@@ -195,10 +205,12 @@ public class PriceProductOverviewController {
 			if (keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) {
 				this.newPriceTextField.requestFocus();
 			}
-			else if (keyEvent.getCode() == KeyCode.DELETE || keyEvent.getCode() == KeyCode.BACK_SPACE) {
+			if (keyEvent.getCode() == KeyCode.DELETE || keyEvent.getCode() == KeyCode.BACK_SPACE) {
 				updateNewPrice(null);
 				selectNextProduct();
 			}
+			if(keyEvent.getCode() == KeyCode.UP) this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex()-1 - this.numberVisibleRowProductTable/2);
+			if (keyEvent.getCode() == KeyCode.DOWN) this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex()+1 - this.numberVisibleRowProductTable/2);
 		});
 		
 		this.newPriceTextField.setOnKeyPressed(keyEvent -> {
@@ -225,12 +237,16 @@ public class PriceProductOverviewController {
 		this.productTable.setItems(sortedAndFilteredActiveProducts);
 		this.productTable.getSelectionModel().selectFirst();
 		
-		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, this.nameTextField, sortedAndFilteredActiveProducts) {
+		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, this.nameTextField, this.onlyModifiedProductsCheckBox, ProductService.getUpdatingProductsOnPrice(), sortedAndFilteredActiveProducts) {
 			@Override
 			public void showTable() {
+				productTable.getSelectionModel().clearSelection();
 				if (!productTable.getItems().isEmpty()) productTable.requestFocus();
-				productTable.getSelectionModel().selectFirst();
-				productTable.scrollTo(currentProduct);
+				if (productTable.getItems().contains(previousProduct)) {
+					productTable.getSelectionModel().select(previousProduct);
+					productTable.scrollTo(productTable.getSelectionModel().getSelectedIndex() - numberVisibleRowProductTable/2);
+				}
+				else productTable.getSelectionModel().select(0);
 			}
 		};
 		
@@ -243,31 +259,22 @@ public class PriceProductOverviewController {
 	 * @param product - product currently selected
 	 */
 	private void showProduct(Product product) {
-		this.currentProduct = product;
-		if (this.currentProduct == null) {
+		if (product == null) {
 			this.descriptionText.setText(null);
 			this.actualPriceText.setText(null);
 			this.newPriceTextField.setPromptText(null);
 		}
 		else {
-			this.descriptionText.setText(this.currentProduct.toString());
-			this.actualPriceText.setText(this.currentProduct.getActualPrice().toString());
-			if (this.currentProduct.getNewPrice() == null) {
-				this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
+			this.descriptionText.setText(product.toString());
+			this.actualPriceText.setText(product.getActualPrice().toString());
+			if (product.getNewPrice() == null) {
+				this.newPriceTextField.setPromptText(product.getActualPrice().toString());
 			}
 			else {
-				this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
+				this.newPriceTextField.setPromptText(product.getNewPrice().toString());
 			}
 		}
 		
-	}
-	
-	/**
-	 * Customize the display of the selection in the table to have the currently selected product around the center of the table
-	 */
-	private void selectNextProduct() {
-		this.productTable.getSelectionModel().selectNext();
-		this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRow/2);
 	}
 	
 	/**
@@ -279,10 +286,23 @@ public class PriceProductOverviewController {
 			if (this.currentProduct.getActualPrice().equals(newPrice)) newPrice = null;
 			this.currentProduct.setNewPrice(newPrice);
 			ProductService.updateUpdatingProducts(this.currentProduct);
-			if (this.currentProduct.getNewPrice() != null) this.newPriceTextField.setPromptText(this.currentProduct.getNewPrice().toString());
-			else this.newPriceTextField.setPromptText(this.currentProduct.getActualPrice().toString());
 			this.productTable.refresh();
 		}
+	}
+	
+	/**
+	 * Customize the display of the selection in the table to have the currently selected product around the center of the table
+	 */
+	private void selectNextProduct() {
+		if (!this.productTable.getItems().contains(this.currentProduct)) {
+			if (this.lastValidIndexCurrentProduct > this.productTable.getItems().size()-1) this.productTable.getSelectionModel().select(this.lastValidIndexCurrentProduct-1);
+			else this.productTable.getSelectionModel().select(this.lastValidIndexCurrentProduct);
+		}
+		else {
+			if (this.lastValidIndexCurrentProduct+1 > this.productTable.getItems().size()-1) this.productTable.getSelectionModel().select(this.lastValidIndexCurrentProduct);
+			else this.productTable.getSelectionModel().select(this.lastValidIndexCurrentProduct+1);
+		}		
+		this.productTable.scrollTo(this.productTable.getSelectionModel().getSelectedIndex() - this.numberVisibleRowProductTable/2);
 	}
 	
 }

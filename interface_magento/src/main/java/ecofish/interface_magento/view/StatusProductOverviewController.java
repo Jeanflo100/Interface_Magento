@@ -8,12 +8,14 @@ import ecofish.interface_magento.service.Filters;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
+import ecofish.interface_magento.util.DetailsTableView;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -29,6 +31,9 @@ import javafx.scene.control.Label;
  * @author Jean-Florian Tassart
  */
 public class StatusProductOverviewController {
+	
+	@FXML
+	CheckBox onlyModifiedProductsCheckBox;
 	
 	@FXML
 	TextField nameTextField;
@@ -78,14 +83,20 @@ public class StatusProductOverviewController {
 	@FXML
 	Text descriptionText;
 	
-    private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("inactive-to-active");
-    private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("active-to-inactive");
+    private final static PseudoClass inactiveToActive = PseudoClass.getPseudoClass("high");
+    private final static PseudoClass activeToInactive = PseudoClass.getPseudoClass("medium");
 	
 	private Filters filters;
-	
+
 	private Product currentInactiveProduct;
-	
 	private Product currentActiveProduct;
+	private Product previousInactiveProduct;
+	private Product previousActiveProduct;
+	private Integer indexCurrentInactiveProduct;
+	private Integer indexCurrentActiveProduct;
+
+	private Integer numberVisibleRowInactiveProductTable;
+	private Integer numberVisibleRowActiveProductTable;
 	
     /**
      * Go to show product price view
@@ -108,8 +119,17 @@ public class StatusProductOverviewController {
 	 */
 	@FXML
 	private void handleLeftToRightButton() {
-		if (currentInactiveProduct != null) ProductService.changeStatusProduct(currentInactiveProduct);
-		this.inactiveProductTable.requestFocus();
+		if (currentInactiveProduct != null) {
+			Boolean first = this.inactiveProductTable.getSelectionModel().isSelected(0) ? true : false;
+			if (ProductService.changeStatusProduct(currentInactiveProduct)) {
+				activeProductTable.getSelectionModel().select(previousInactiveProduct);
+				activeProductTable.scrollTo(activeProductTable.getSelectionModel().getSelectedIndex() - numberVisibleRowActiveProductTable/2);
+				if (first) this.inactiveProductTable.getSelectionModel().select(0);
+				else if (this.indexCurrentInactiveProduct+1 > this.inactiveProductTable.getItems().size()-1) this.inactiveProductTable.getSelectionModel().select(indexCurrentInactiveProduct);
+				else this.inactiveProductTable.getSelectionModel().select(this.indexCurrentInactiveProduct+1);
+			}
+			this.inactiveProductTable.requestFocus();
+		}
 	}
 	
 	/**
@@ -117,8 +137,17 @@ public class StatusProductOverviewController {
 	 */
 	@FXML
 	private void handleRightToLeftButton() {
-		if (currentActiveProduct != null) ProductService.changeStatusProduct(currentActiveProduct);
-		this.activeProductTable.requestFocus();
+		if (currentActiveProduct != null) {
+			Boolean first = this.activeProductTable.getSelectionModel().isSelected(0) ? true : false;
+			if (ProductService.changeStatusProduct(currentActiveProduct)) {
+				inactiveProductTable.getSelectionModel().select(previousActiveProduct);
+				inactiveProductTable.scrollTo(inactiveProductTable.getSelectionModel().getSelectedIndex() - numberVisibleRowInactiveProductTable/2);
+				if (first) this.activeProductTable.getSelectionModel().select(0);
+				else if (this.indexCurrentActiveProduct+1 > this.activeProductTable.getItems().size()-1) this.activeProductTable.getSelectionModel().select(indexCurrentActiveProduct);
+				else this.activeProductTable.getSelectionModel().select(this.indexCurrentActiveProduct+1);
+			}
+			this.activeProductTable.requestFocus();
+		}
 	}
 	
 	/**
@@ -157,6 +186,8 @@ public class StatusProductOverviewController {
 		this.nameInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.qualityInactiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
+		this.inactiveProductTable.setFixedCellSize(DetailsTableView.CellSize);
+		this.numberVisibleRowInactiveProductTable = DetailsTableView.getNumberVisibleRow(this.inactiveProductTable);
 		this.inactiveProductTable.setRowFactory(productTable -> new TableRow<Product>() {
 		    @Override
 		    protected void updateItem(Product product, boolean empty) {
@@ -175,6 +206,8 @@ public class StatusProductOverviewController {
 		this.nameActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 		this.sizeActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("size"));
 		this.qualityActiveProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("quality"));
+		this.activeProductTable.setFixedCellSize(DetailsTableView.CellSize);
+		this.numberVisibleRowActiveProductTable = DetailsTableView.getNumberVisibleRow(this.activeProductTable);
 		this.activeProductTable.setRowFactory(productTable -> new TableRow<Product>() {
 		    @Override
 		    protected void updateItem(Product product, boolean empty) {
@@ -191,12 +224,16 @@ public class StatusProductOverviewController {
 	private void initItemSelectionTables() {
 		this.inactiveProductTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
 			currentInactiveProduct = newValue;
-			showProduct(currentInactiveProduct);
+			previousInactiveProduct = oldValue;
+			indexCurrentInactiveProduct = this.inactiveProductTable.getSelectionModel().getSelectedIndex();
+			showProduct(newValue);
 		});
 		
 		this.activeProductTable.getSelectionModel().selectedItemProperty().addListener((ObservableValue<? extends Product> observable, Product oldValue, Product newValue) -> {
 			currentActiveProduct = newValue;
-			showProduct(currentActiveProduct);
+			previousActiveProduct = oldValue;
+			indexCurrentActiveProduct = this.activeProductTable.getSelectionModel().getSelectedIndex();
+			showProduct(newValue);
 		});
 		
 		this.inactiveProductTable.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -214,11 +251,15 @@ public class StatusProductOverviewController {
 	private void initKeyPressesTables() {
 		this.inactiveProductTable.setOnKeyPressed(keyEvent -> {
 			if(keyEvent.getCode() == KeyCode.RIGHT) this.activeProductTable.requestFocus();
+			if(keyEvent.getCode() == KeyCode.UP) this.inactiveProductTable.scrollTo(this.inactiveProductTable.getSelectionModel().getSelectedIndex()-1 - this.numberVisibleRowInactiveProductTable/2);
+			if (keyEvent.getCode() == KeyCode.DOWN) this.inactiveProductTable.scrollTo(this.inactiveProductTable.getSelectionModel().getSelectedIndex()+1 - this.numberVisibleRowInactiveProductTable/2);
 			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleLeftToRightButton();
 		});
 		
 		this.activeProductTable.setOnKeyPressed(keyEvent -> {
 			if(keyEvent.getCode() == KeyCode.LEFT) this.inactiveProductTable.requestFocus();
+			if(keyEvent.getCode() == KeyCode.UP) this.activeProductTable.scrollTo(this.activeProductTable.getSelectionModel().getSelectedIndex()-1 - this.numberVisibleRowActiveProductTable/2);
+			if (keyEvent.getCode() == KeyCode.DOWN) this.activeProductTable.scrollTo(this.activeProductTable.getSelectionModel().getSelectedIndex()+1 - this.numberVisibleRowActiveProductTable/2);
 			if(keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) this.handleRightToLeftButton();
 		});
 	}
@@ -252,15 +293,23 @@ public class StatusProductOverviewController {
 		this.inactiveProductTable.getSelectionModel().selectFirst();
 		this.activeProductTable.getSelectionModel().selectFirst();
 		
-		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, this.nameTextField, Arrays.asList(sortedAndFilteredInactiveProducts, sortedAndFilteredActiveProducts)) {
+		this.filters = new Filters(this.categoryComboBox, this.familyComboBox, this.nameTextField, this.onlyModifiedProductsCheckBox, ProductService.getUpdatingProductsOnStatus(), Arrays.asList(sortedAndFilteredInactiveProducts, sortedAndFilteredActiveProducts)) {
 			@Override
 			public void showTable() {
+				inactiveProductTable.getSelectionModel().clearSelection();
+				activeProductTable.getSelectionModel().clearSelection();
 				if (!inactiveProductTable.getItems().isEmpty()) inactiveProductTable.requestFocus();
 				else if (!activeProductTable.getItems().isEmpty()) activeProductTable.requestFocus();
-				inactiveProductTable.getSelectionModel().selectFirst();
-				activeProductTable.getSelectionModel().selectFirst();
-				inactiveProductTable.scrollTo(currentInactiveProduct);
-				activeProductTable.scrollTo(currentActiveProduct);
+				if (inactiveProductTable.getItems().contains(previousInactiveProduct)) {
+					inactiveProductTable.getSelectionModel().select(previousInactiveProduct);
+					inactiveProductTable.scrollTo(inactiveProductTable.getSelectionModel().getSelectedIndex() - numberVisibleRowInactiveProductTable/2);
+				}
+				else inactiveProductTable.getSelectionModel().select(0);
+				if (activeProductTable.getItems().contains(previousActiveProduct)) {
+					activeProductTable.getSelectionModel().select(previousActiveProduct);
+					activeProductTable.scrollTo(activeProductTable.getSelectionModel().getSelectedIndex() - numberVisibleRowActiveProductTable/2);
+				}
+				else activeProductTable.getSelectionModel().select(0);
 			}
 		};
 	}
