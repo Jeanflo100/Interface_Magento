@@ -91,8 +91,8 @@ public class GettingProductThread implements Runnable {
 						resultSet.getString("category"),
 						resultSet.getString("family"),
 						resultSet.getString("name"),
-						resultSet.getString("quality"),
 						resultSet.getString("size"),
+						resultSet.getString("quality"),
 						resultSet.getDouble("actual_price"),
 						resultSet.getBoolean("active"));
 				if (product.getActive()) activeProducts.add(product);
