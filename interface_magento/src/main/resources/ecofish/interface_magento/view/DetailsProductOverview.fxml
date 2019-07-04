@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -14,151 +17,484 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="900.0" styleClass="root" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.DetailsProductOverviewController">
-   <children>
-      <LineChart layoutY="487.0" prefHeight="213.0" prefWidth="350.0" title="Actual price: 2.45£ ">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
-      </LineChart>
-      <Label alignment="CENTER" layoutX="450.0" layoutY="14.0" text="FA41251" textAlignment="CENTER">
-         <font>
-            <Font name="System Bold" size="17.0" />
-         </font>
-         <padding>
-            <Insets left="3.0" />
-         </padding>
-      </Label>
-      <Text layoutX="382.0" layoutY="33.0" stroke="BLACK" strokeMiterLimit="5.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Product:" textAlignment="CENTER" wrappingWidth="67.99999997019768" AnchorPane.bottomAnchor="660.0" AnchorPane.leftAnchor="382.0" AnchorPane.rightAnchor="450.0000000298023" AnchorPane.topAnchor="14.0">
-         <font>
-            <Font name="System Bold" size="17.0" />
-         </font>
-      </Text>
-      <Label alignment="TOP_CENTER" layoutY="40.0" prefHeight="26.0" prefWidth="900.0" text="Agrumes - Orange - Orange New Land - 3 - II" wrapText="true">
-         <font>
-            <Font size="17.0" />
-         </font>
-         <padding>
-            <Insets left="10.0" right="10.0" />
-         </padding>
-      </Label>
-      <Separator layoutX="447.0" layoutY="64.0" orientation="VERTICAL" prefHeight="638.0" prefWidth="4.0" />
-      <Separator layoutX="-1.0" layoutY="64.0" prefHeight="2.0" prefWidth="900.0" />
-      <Separator layoutX="-1.0" layoutY="360.0" prefHeight="2.0" prefWidth="900.0" />
-      <Label fx:id="currentSeasonLabel" layoutX="755.0" layoutY="500.0" prefHeight="26.0" prefWidth="107.0" text="High" textAlignment="CENTER">
-         <font>
-            <Font size="17.0" />
-         </font>
-         <padding>
-            <Insets left="5.0" />
-         </padding>
-      </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#76c778" height="19.0" layoutX="481.0" layoutY="557.0" stroke="GREY" strokeType="INSIDE" style="-fx-fill: high;" width="17.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eaa471" height="19.0" layoutX="481.0" layoutY="589.0" stroke="GREY" strokeType="INSIDE" style="-fx-fill: medium;" width="17.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eae548" height="19.0" layoutX="481.0" layoutY="624.0" stroke="GREY" strokeType="INSIDE" style="-fx-fill: low;" width="17.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="19.0" layoutX="481.0" layoutY="657.0" stroke="GREY" strokeType="INSIDE" style="-fx-fill: unspecified;" width="17.0" />
-      <Text layoutX="506.0" layoutY="571.0" strokeType="OUTSIDE" strokeWidth="0.0" text="High season">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Text>
-      <Text layoutX="506.0" layoutY="603.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Medium season">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Text>
-      <Text layoutX="506.0" layoutY="638.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Low season">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Text>
-      <Text layoutX="506.0" layoutY="671.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No information">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Text>
-      <GridPane fx:id="seasonGridPane" alignment="CENTER" gridLinesVisible="true" layoutX="624.0" layoutY="544.0" prefHeight="142.0" prefWidth="262.0">
+<BorderPane prefHeight="690.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.DetailsProductOverviewController">
+   <center>
+      <GridPane prefHeight="650.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;" BorderPane.alignment="CENTER">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="1">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="2" GridPane.columnIndex="1">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="3" GridPane.columnIndex="2">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="4" GridPane.columnIndex="3">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="5" GridPane.rowIndex="1">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="7" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="8" GridPane.columnIndex="3" GridPane.rowIndex="1">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="9" GridPane.rowIndex="2">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="11" GridPane.columnIndex="2" GridPane.rowIndex="2">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="12" GridPane.columnIndex="3" GridPane.rowIndex="2">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;">
+               <top>
+                  <GridPane prefHeight="50.0" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <AnchorPane prefHeight="18.0" prefWidth="450.0">
+                           <children>
+                              <Text layoutX="148.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Administrative details">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Text>
+                              <ImageView fx:id="administrativeModifiedImage" fitHeight="26.0" fitWidth="21.0" layoutX="118.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/black-pen.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="administrativeModificationAnchorPane" prefHeight="5.0" prefWidth="450.0" visible="false" GridPane.rowIndex="1">
+                           <children>
+                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/validation.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/refresh.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/black-cross.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <BorderPane.margin>
+                        <Insets top="5.0" />
+                     </BorderPane.margin>
+                  </GridPane>
+               </top>
+               <center>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;" GridPane.columnIndex="1">
+               <top>
+                  <GridPane prefHeight="50.0" BorderPane.alignment="CENTER">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <AnchorPane prefHeight="18.0" prefWidth="450.0">
+                           <children>
+                              <Text layoutX="152.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Characteristic details">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Text>
+                              <ImageView fx:id="characteristicModifiedImage" fitHeight="26.0" fitWidth="21.0" layoutX="122.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/black-pen.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="characteristicModificationAnchorPane" prefHeight="5.0" prefWidth="450.0" visible="false" GridPane.rowIndex="1">
+                           <children>
+                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/validation.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/refresh.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/black-cross.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <BorderPane.margin>
+                        <Insets top="5.0" />
+                     </BorderPane.margin>
+                  </GridPane>
+               </top>
+               <center>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;" GridPane.rowIndex="1">
+               <top>
+                  <GridPane prefHeight="50.0" BorderPane.alignment="CENTER">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <AnchorPane prefHeight="18.0" prefWidth="450.0">
+                           <children>
+                              <Text layoutX="185.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sale details">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Text>
+                              <ImageView fx:id="saleModifiedImage" fitHeight="26.0" fitWidth="21.0" layoutX="155.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/black-pen.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="saleModificationAnchorPane" prefHeight="5.0" prefWidth="450.0" visible="false" GridPane.rowIndex="1">
+                           <children>
+                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/validation.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/refresh.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/black-cross.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <BorderPane.margin>
+                        <Insets top="5.0" />
+                     </BorderPane.margin>
+                  </GridPane>
+               </top>
+               <center>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <LineChart layoutX="14.0" layoutY="34.0" prefHeight="213.0" prefWidth="350.0" title="Actual price: 2.45£ ">
+                           <xAxis>
+                              <CategoryAxis side="BOTTOM" />
+                           </xAxis>
+                           <yAxis>
+                              <NumberAxis side="LEFT" />
+                           </yAxis>
+                        </LineChart>
+                     </children>
+                  </AnchorPane>
+               </center>
+            </BorderPane>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <top>
+                  <GridPane prefHeight="50.0" BorderPane.alignment="CENTER">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <AnchorPane prefHeight="18.0" prefWidth="450.0">
+                           <children>
+                              <Text layoutX="161.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Production details">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Text>
+                              <ImageView fx:id="productionModifiedImage" fitHeight="26.0" fitWidth="21.0" layoutX="131.0" layoutY="2.0" onMouseClicked="#changeStateModificationProductionView" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/black-pen.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="productionModificationAnchorPane" prefHeight="5.0" prefWidth="450.0" visible="false" GridPane.rowIndex="1">
+                           <children>
+                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" onMouseClicked="#changeStateModificationProductionView" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/validation.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/refresh.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../image/black-cross.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <BorderPane.margin>
+                        <Insets top="5.0" />
+                     </BorderPane.margin>
+                  </GridPane>
+               </top>
+               <center>
+                  <AnchorPane fx:id="productionAnchorPane" mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Text layoutX="198.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Actual season:" textAlignment="JUSTIFY" wrappingWidth="107.0">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Text>
+                        <Label fx:id="currentSeasonLabel" layoutX="305.0" layoutY="56.0" prefHeight="26.0" prefWidth="107.0" textAlignment="CENTER">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </Label>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#76c778" height="19.0" layoutX="31.0" layoutY="113.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: high;" width="17.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Rectangle>
+                        <Text layoutX="56.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="High season">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Text>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eaa471" height="19.0" layoutX="31.0" layoutY="145.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: medium;" width="17.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Rectangle>
+                        <Text layoutX="56.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Medium season">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Text>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eae548" height="19.0" layoutX="31.0" layoutY="180.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: low;" width="17.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Rectangle>
+                        <Text layoutX="56.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Low season">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Text>
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="19.0" layoutX="31.0" layoutY="213.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: unspecified;" width="17.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor></Rectangle>
+                        <Text layoutX="56.0" layoutY="227.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No information">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Text>
+                        <GridPane id="gridpane" fx:id="seasonGridPane" alignment="CENTER" gridLinesVisible="true" layoutX="174.0" layoutY="100.0" prefHeight="142.0" prefWidth="262.0" style="-fx-background-color: unspecified;">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="TEXT_ONLY" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="2" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="3" GridPane.columnIndex="2">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="4" GridPane.columnIndex="3">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="5" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="7" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="8" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="9" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="10" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="11" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                              <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="12" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Label>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </center>
+            </BorderPane>
          </children>
       </GridPane>
-      <Text layoutX="648.0" layoutY="520.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Actual season:" textAlignment="JUSTIFY" wrappingWidth="107.0">
-         <font>
-            <Font size="17.0" />
-         </font>
-      </Text>
-   </children>
-</AnchorPane>
+   </center>
+   <top>
+      <AnchorPane minHeight="-Infinity" prefHeight="67.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text layoutX="382.0" layoutY="28.0" stroke="BLACK" strokeMiterLimit="5.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Product:" textAlignment="CENTER" wrappingWidth="67.99999997019768" AnchorPane.bottomAnchor="54.7333984375" AnchorPane.leftAnchor="382.0" AnchorPane.rightAnchor="450.0000000298023" AnchorPane.topAnchor="9.6552734375">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+            </Text>
+            <Label fx:id="skuLabel" alignment="CENTER" layoutX="450.0" layoutY="10.0" text="FA41251" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </Label>
+            <Label fx:id="descriptionLabel" alignment="TOP_CENTER" layoutX="13.0" layoutY="36.0" prefHeight="26.0" prefWidth="874.0" text="Agrumes - Orange - Orange New Land - 3 - II" wrapText="true">
+               <font>
+                  <Font size="17.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
+            </Label>
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>

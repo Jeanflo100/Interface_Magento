@@ -5,10 +5,10 @@
 	high: #76C778;
 	medium: #EAA471;
 	low: #EAE548;
-	unspecified: white;
+	unspecified: transparent;
 }
 
-.table-row-cell:selected, .label:current{
+.table-row-cell:selected, .label:current {
 	-fx-text-background-color: #434A54;
 	-fx-font-weight: bold;
 	-fx-font-style: oblique;
@@ -24,4 +24,8 @@
 
 .table-row-cell:low, .label:low {
 	-fx-background-color: low;
+}
+
+Gridpane:hover + .label:hover {
+	-fx-opacity: 0.5;
 }
