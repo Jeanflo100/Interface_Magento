@@ -26,6 +26,6 @@
 	-fx-background-color: low;
 }
 
-Gridpane:hover + .label:hover {
-	-fx-opacity: 0.5;
+Rectangle:selected {
+	-fx-stroke: -fx-accent;
 }

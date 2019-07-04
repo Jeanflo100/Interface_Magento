@@ -6,17 +6,17 @@ package ecofish.interface_magento.model;
  */
 public class Product implements Comparable<Product>{
 	
-	private final Integer idProduct;
-	private final String category;
-	private final String family;
-	private final String name;
-	private final String size;
-	private final String quality;
+	protected final Integer idProduct;
+	protected final String category;
+	protected final String family;
+	protected final String name;
+	protected final String size;
+	protected final String quality;
 
-	private Double actualPrice;
-	private Double newPrice;
-	private Boolean active;
-	private Boolean changeActive;
+	protected Double actualPrice;
+	protected Double newPrice;
+	protected Boolean active;
+	protected Boolean changeActive;
 	
 	/**
 	 * Constructor of product
@@ -39,6 +39,19 @@ public class Product implements Comparable<Product>{
 		this.actualPrice = actualPrice;
 		this.newPrice = null;
 		this.active = active;
+		this.changeActive = false;
+	}
+	
+	protected Product(Product product) {
+		this.idProduct = product.idProduct;
+		this.category = product.category;
+		this.family = product.family;
+		this.name = product.name;
+		this.size = product.size;
+		this.quality = product.quality;
+		this.actualPrice = product.actualPrice;
+		this.newPrice = null;
+		this.active = product.active;
 		this.changeActive = false;
 	}
 	

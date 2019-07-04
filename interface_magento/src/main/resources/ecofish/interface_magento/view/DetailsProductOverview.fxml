@@ -268,7 +268,7 @@
                         </AnchorPane>
                         <AnchorPane fx:id="productionModificationAnchorPane" prefHeight="5.0" prefWidth="450.0" visible="false" GridPane.rowIndex="1">
                            <children>
-                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" onMouseClicked="#changeStateModificationProductionView" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" onMouseClicked="#saveModificationProductionView" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/validation.png" />
                                  </image>
@@ -276,7 +276,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" onMouseClicked="#cancelModificationProductionView" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/refresh.png" />
                                  </image>
@@ -284,7 +284,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" onMouseClicked="#stopModificationProductionView" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/black-cross.png" />
                                  </image>
@@ -303,12 +303,12 @@
                <center>
                   <AnchorPane fx:id="productionAnchorPane" mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Text layoutX="198.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Actual season:" textAlignment="JUSTIFY" wrappingWidth="107.0">
+                        <Text layoutX="198.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Actual season:" textAlignment="JUSTIFY" textOrigin="CENTER" wrappingWidth="107.0">
                            <font>
                               <Font size="17.0" />
                            </font>
                         </Text>
-                        <Label fx:id="currentSeasonLabel" layoutX="305.0" layoutY="56.0" prefHeight="26.0" prefWidth="107.0" textAlignment="CENTER">
+                        <Label fx:id="currentSeasonLabel" layoutX="305.0" layoutY="56.0" prefHeight="26.0" prefWidth="107.0" text="High" textAlignment="CENTER">
                            <font>
                               <Font size="17.0" />
                            </font>
