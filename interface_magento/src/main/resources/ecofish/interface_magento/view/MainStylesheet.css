@@ -29,3 +29,7 @@
 Rectangle:selected {
 	-fx-stroke: -fx-accent;
 }
+
+.tab:selected {
+	-fx-font-weight: bold;
+}

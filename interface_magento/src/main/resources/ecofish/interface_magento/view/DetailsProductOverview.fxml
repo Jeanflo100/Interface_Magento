@@ -5,7 +5,11 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -17,298 +21,63 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="690.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.DetailsProductOverviewController">
-   <center>
-      <GridPane prefHeight="650.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;" BorderPane.alignment="CENTER">
-         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-         </rowConstraints>
+<BorderPane prefHeight="707.0" prefWidth="745.0" stylesheets="@MainStylesheet.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ecofish.interface_magento.view.DetailsProductOverviewController">
+   <top>
+      <AnchorPane minHeight="-Infinity" prefHeight="67.0" BorderPane.alignment="CENTER">
          <children>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;">
-               <top>
-                  <GridPane prefHeight="50.0" BorderPane.alignment="CENTER">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+            <Label fx:id="skuLabel" alignment="CENTER" layoutX="326.0" layoutY="11.0" text="Product: ID" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="17.0" />
+               </font>
+               <padding>
+                  <Insets left="3.0" />
+               </padding>
+            </Label>
+            <Label fx:id="descriptionLabel" alignment="TOP_CENTER" layoutX="208.0" layoutY="31.0" text="Category - Family - Name - Size - Quality" wrapText="true">
+               <font>
+                  <Font size="17.0" />
+               </font>
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
+            </Label>
+            <ImageView fx:id="modificationProductImage" fitHeight="31.0" fitWidth="30.0" layoutX="701.0" layoutY="16.0" onMouseClicked="#modificationProduct" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../image/black-pen.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </top>
+   <center>
+      <TabPane fx:id="detailsProductTabPane" prefHeight="209.0" prefWidth="381.0" tabClosingPolicy="UNAVAILABLE" tabMinHeight="25.0" tabMinWidth="139.0" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab text="Administrative">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+            <Tab text="Characteristic">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <AnchorPane prefHeight="18.0" prefWidth="450.0">
-                           <children>
-                              <Text layoutX="148.0" layoutY="19.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Administrative details">
-                                 <font>
-                                    <Font name="System Bold" size="15.0" />
-                                 </font>
-                              </Text>
-                              <ImageView fx:id="administrativeModifiedImage" fitHeight="26.0" fitWidth="21.0" layoutX="118.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/black-pen.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="administrativeModificationAnchorPane" prefHeight="5.0" prefWidth="450.0" visible="false" GridPane.rowIndex="1">
-                           <children>
-                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/validation.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/refresh.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/black-cross.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                     <BorderPane.margin>
-                        <Insets top="5.0" />
-                     </BorderPane.margin>
-                  </GridPane>
-               </top>
-               <center>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-               </center>
-            </BorderPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;" GridPane.columnIndex="1">
-               <top>
-                  <GridPane prefHeight="50.0" BorderPane.alignment="CENTER">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                        <Label layoutX="128.0" layoutY="14.0" prefWidth="401.0" text="loin de moi l'idée de graver dans le marbre de tailler dans une écorce d'arbre loin de moi l'idée de suggérer que je m'en moque que je n'en ai rien à faire que guère je ne m'en soucie loin de moi ces folies mais je m'échine depuis octobre et pourquoi donc depuis début octobre même et qui m'aime me suive depuis octobre depuis ce même dernier octobre le trois du mois je crois depuis ce temps-là depuis trois mois depuis trois mois et une semaine je m'échine ailleurs et le très long texte n'a pas avancé d'un poil pas beaucoup sans doute est-ce mon côté velléitaire qui ne cesse de me jouer des tours et les méandres du très long texte se sont figés comme une gelée le long des parois d'un bocal de verre et je vitupère contre mes essais éphémères mon tempérament affreusement velléitaire et ce teint d'albâtre qui n'est pas le mien comme je voudrais qu'il fût d'albâtre ou d'ébène ou autrement même sans métaphore mais au moins qu'il ait quelque tenue que mon visage sans retenue puisse soudain passer pour un tissu une pierre un songe soit en quelque sorte un tableau fasse tableau mais ce n'est pas le cas même ce mot albâtre jeté au visage jeté tout à trac sur la page en haut de page ce mot me défigure ne me figure pas ne me représente pas ne figure rien de ce que je suis de ce que je pense être et je suis encore et toujours circonspect dans le doute et ce mot n'apporte rien aucune réponse et donc toujours je me jette à la figure ces accusations comme des bouteilles non pas à la mer mais bien dans la gueule oui je me donne des coups de bouteille tessons épars sur le parquet et mes joues ensanglantées enfin que ce soit ou non métaphore que le mot d'albâtre me figure ou non je prends ces coups ces reproches en plein visage et je m'accuse d'être velléitaire aussi bien sûr pour trop entreprendre je lance cent feux il est normal qu'un certain nombre des foyers meure et même ne démarre qu'à peine avant de s'achever dans un bruit de feuilles mouillées de bois mort de bois trop vert encore pour prendre tout cela encore métaphore et toujours métaphore peut-être est-ce le mot albâtre qui appelle autant de métaphores ou bien les conditions d'écriture du très long texte que par facétie ou encore autodérision je pourrais être tenté de rebapti" wrapText="true" />
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+          <Tab text="Production">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <AnchorPane prefHeight="18.0" prefWidth="450.0">
-                           <children>
-                              <Text layoutX="152.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Characteristic details">
-                                 <font>
-                                    <Font name="System Bold" size="15.0" />
-                                 </font>
-                              </Text>
-                              <ImageView fx:id="characteristicModifiedImage" fitHeight="26.0" fitWidth="21.0" layoutX="122.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/black-pen.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="characteristicModificationAnchorPane" prefHeight="5.0" prefWidth="450.0" visible="false" GridPane.rowIndex="1">
-                           <children>
-                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/validation.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/refresh.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/black-cross.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                     <BorderPane.margin>
-                        <Insets top="5.0" />
-                     </BorderPane.margin>
-                  </GridPane>
-               </top>
-               <center>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-               </center>
-            </BorderPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;" GridPane.rowIndex="1">
-               <top>
-                  <GridPane prefHeight="50.0" BorderPane.alignment="CENTER">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <AnchorPane prefHeight="18.0" prefWidth="450.0">
-                           <children>
-                              <Text layoutX="185.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sale details">
-                                 <font>
-                                    <Font name="System Bold" size="15.0" />
-                                 </font>
-                              </Text>
-                              <ImageView fx:id="saleModifiedImage" fitHeight="26.0" fitWidth="21.0" layoutX="155.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/black-pen.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="saleModificationAnchorPane" prefHeight="5.0" prefWidth="450.0" visible="false" GridPane.rowIndex="1">
-                           <children>
-                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/validation.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/refresh.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/black-cross.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                     <BorderPane.margin>
-                        <Insets top="5.0" />
-                     </BorderPane.margin>
-                  </GridPane>
-               </top>
-               <center>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <LineChart layoutX="14.0" layoutY="34.0" prefHeight="213.0" prefWidth="350.0" title="Actual price: 2.45£ ">
-                           <xAxis>
-                              <CategoryAxis side="BOTTOM" />
-                           </xAxis>
-                           <yAxis>
-                              <NumberAxis side="LEFT" />
-                           </yAxis>
-                        </LineChart>
-                     </children>
-                  </AnchorPane>
-               </center>
-            </BorderPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #AAADB3; -fx-border-width: 0.2;" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <top>
-                  <GridPane prefHeight="50.0" BorderPane.alignment="CENTER">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <AnchorPane prefHeight="18.0" prefWidth="450.0">
-                           <children>
-                              <Text layoutX="161.0" layoutY="18.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Production details">
-                                 <font>
-                                    <Font name="System Bold" size="15.0" />
-                                 </font>
-                              </Text>
-                              <ImageView fx:id="productionModifiedImage" fitHeight="26.0" fitWidth="21.0" layoutX="131.0" layoutY="2.0" onMouseClicked="#changeStateModificationProductionView" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/black-pen.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                        <AnchorPane fx:id="productionModificationAnchorPane" prefHeight="5.0" prefWidth="450.0" visible="false" GridPane.rowIndex="1">
-                           <children>
-                              <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="135.0" layoutY="3.0" onMouseClicked="#saveModificationProductionView" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/validation.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="211.0" layoutY="-1.0" onMouseClicked="#cancelModificationProductionView" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/refresh.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                              <ImageView fitHeight="30.0" fitWidth="30.0" layoutX="286.0" layoutY="-1.0" onMouseClicked="#stopModificationProductionView" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../image/black-cross.png" />
-                                 </image>
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </ImageView>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                     <BorderPane.margin>
-                        <Insets top="5.0" />
-                     </BorderPane.margin>
-                  </GridPane>
-               </top>
-               <center>
-                  <AnchorPane fx:id="productionAnchorPane" mouseTransparent="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <Text layoutX="198.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Actual season:" textAlignment="JUSTIFY" textOrigin="CENTER" wrappingWidth="107.0">
+                        <Text layoutX="337.0" layoutY="420.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-text-decoration: underline;" text="Actual season:" textAlignment="JUSTIFY" textOrigin="CENTER" wrappingWidth="107.0">
                            <font>
                               <Font size="17.0" />
                            </font>
                         </Text>
-                        <Label fx:id="currentSeasonLabel" layoutX="305.0" layoutY="56.0" prefHeight="26.0" prefWidth="107.0" text="High" textAlignment="CENTER">
+                        <Label fx:id="currentSeasonLabel" layoutX="444.0" layoutY="408.0" prefHeight="26.0" prefWidth="107.0" text="Season" textAlignment="CENTER">
                            <font>
                               <Font size="17.0" />
                            </font>
@@ -316,43 +85,47 @@
                               <Insets left="5.0" />
                            </padding>
                         </Label>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#76c778" height="19.0" layoutX="31.0" layoutY="113.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: high;" width="17.0">
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#76c778" height="19.0" layoutX="170.0" layoutY="465.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: high;" width="17.0">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Rectangle>
-                        <Text layoutX="56.0" layoutY="127.0" strokeType="OUTSIDE" strokeWidth="0.0" text="High season">
+                           </cursor>
+                        </Rectangle>
+                        <Text layoutX="195.0" layoutY="479.0" strokeType="OUTSIDE" strokeWidth="0.0" text="High season">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Text>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eaa471" height="19.0" layoutX="31.0" layoutY="145.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: medium;" width="17.0">
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eaa471" height="19.0" layoutX="170.0" layoutY="497.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: medium;" width="17.0">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Rectangle>
-                        <Text layoutX="56.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Medium season">
+                           </cursor>
+                        </Rectangle>
+                        <Text layoutX="195.0" layoutY="511.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Medium season">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Text>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eae548" height="19.0" layoutX="31.0" layoutY="180.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: low;" width="17.0">
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#eae548" height="19.0" layoutX="170.0" layoutY="532.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: low;" width="17.0">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Rectangle>
-                        <Text layoutX="56.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Low season">
+                           </cursor>
+                        </Rectangle>
+                        <Text layoutX="195.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Low season">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Text>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="19.0" layoutX="31.0" layoutY="213.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: unspecified;" width="17.0">
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffffff00" height="19.0" layoutX="170.0" layoutY="565.0" onMouseClicked="#selectSeason" stroke="GREY" strokeType="INSIDE" style="-fx-fill: unspecified;" width="17.0">
                            <cursor>
                               <Cursor fx:constant="HAND" />
-                           </cursor></Rectangle>
-                        <Text layoutX="56.0" layoutY="227.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No information">
+                           </cursor>
+                        </Rectangle>
+                        <Text layoutX="195.0" layoutY="579.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No information">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Text>
-                        <GridPane id="gridpane" fx:id="seasonGridPane" alignment="CENTER" gridLinesVisible="true" layoutX="174.0" layoutY="100.0" prefHeight="142.0" prefWidth="262.0" style="-fx-background-color: unspecified;">
+                        <GridPane id="gridpane" fx:id="seasonGridPane" alignment="CENTER" gridLinesVisible="true" layoutX="313.0" layoutY="452.0" prefHeight="142.0" prefWidth="262.0" style="-fx-background-color: unspecified;">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -463,38 +236,59 @@
                               </Label>
                            </children>
                         </GridPane>
+                        <Text layoutX="137.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-text-decoration: underline;" text="Production type:" textAlignment="JUSTIFY" wrappingWidth="124.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Text>
+                        <TextArea layoutX="266.0" layoutY="142.0" minHeight="-Infinity" prefHeight="30.0" prefWidth="299.0" text="France, Angleterre, Espagne, Italie" wrapText="true">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </TextArea>
+                        <Label fx:id="productionTypeLabel" layoutX="261.0" layoutY="234.0" prefHeight="25.0" prefWidth="240.0" text="Label">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="productionTypeComboBox" editable="true" layoutX="108.0" layoutY="325.0" prefHeight="30.0" prefWidth="240.0" promptText="Add or modify an item" />
+                        <ImageView fx:id="addProductionTypeImage" fitHeight="18.0" fitWidth="21.0" layoutX="504.0" layoutY="238.0" onMouseClicked="#addProductionType" pickOnBounds="true" preserveRatio="true" visible="false">
+                           <image>
+                              <Image url="@../image/plus.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                        <ImageView fitHeight="21.0" fitWidth="25.0" layoutX="666.0" layoutY="366.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../image/trash.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
                      </children>
                   </AnchorPane>
-               </center>
-            </BorderPane>
-         </children>
-      </GridPane>
+            </content>
+          </Tab>
+            <Tab text="Sale">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <LineChart layoutX="216.0" layoutY="179.0" prefHeight="213.0" prefWidth="350.0" title="Actual price: 2.45£ ">
+                           <xAxis>
+                              <CategoryAxis side="BOTTOM" />
+                           </xAxis>
+                           <yAxis>
+                              <NumberAxis side="LEFT" />
+                           </yAxis>
+                        </LineChart>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
    </center>
-   <top>
-      <AnchorPane minHeight="-Infinity" prefHeight="67.0" BorderPane.alignment="CENTER">
-         <children>
-            <Text layoutX="382.0" layoutY="28.0" stroke="BLACK" strokeMiterLimit="5.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Product:" textAlignment="CENTER" wrappingWidth="67.99999997019768" AnchorPane.bottomAnchor="54.7333984375" AnchorPane.leftAnchor="382.0" AnchorPane.rightAnchor="450.0000000298023" AnchorPane.topAnchor="9.6552734375">
-               <font>
-                  <Font name="System Bold" size="17.0" />
-               </font>
-            </Text>
-            <Label fx:id="skuLabel" alignment="CENTER" layoutX="450.0" layoutY="10.0" text="FA41251" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="17.0" />
-               </font>
-               <padding>
-                  <Insets left="3.0" />
-               </padding>
-            </Label>
-            <Label fx:id="descriptionLabel" alignment="TOP_CENTER" layoutX="13.0" layoutY="36.0" prefHeight="26.0" prefWidth="874.0" text="Agrumes - Orange - Orange New Land - 3 - II" wrapText="true">
-               <font>
-                  <Font size="17.0" />
-               </font>
-               <padding>
-                  <Insets left="10.0" right="10.0" />
-               </padding>
-            </Label>
-         </children>
-      </AnchorPane>
-   </top>
 </BorderPane>

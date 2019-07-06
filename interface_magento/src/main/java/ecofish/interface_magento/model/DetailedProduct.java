@@ -18,26 +18,27 @@ public class DetailedProduct extends Product {
 	private ArrayList<String> label;
 	private season[] seasons;
 	
-	private void initSeasons() {
+	private void initDetails() {
 		seasons = new season[12];
 		seasons[0] = seasons[1] = seasons[2] = seasons[10] = seasons[11] = season.low;
 		seasons[3] = seasons[4] = seasons[9] = season.medium;
 		seasons[5] = seasons[6] = seasons[7] = seasons[8] = season.high;
+		
+		production_type = "Sauvage";
 	}
 	
 	private DetailedProduct(Product product , String short_description) {
 		super(product);
 		this.short_description = short_description;
-		this.
 		
-		initSeasons();
+		initDetails();
 	}
 	
 	public void setLabel(String short_description) {
 		DetailedProductHolder.INSTANCE.short_description = short_description;
 	}
 	
-	public static void setSeasons(season[] seasons) {
+	public void setSeasons(season[] seasons) {
 		System.arraycopy(seasons, 0, DetailedProductHolder.INSTANCE.seasons, 0, DetailedProductHolder.INSTANCE.seasons.length);
 	}
 	
@@ -45,18 +46,22 @@ public class DetailedProduct extends Product {
 		return DetailedProductHolder.INSTANCE.short_description;
 	}
 	
-	public static season[] getSeasons() {
+	public String getProductionType() {
+		return production_type;
+	}
+	
+	public season[] getSeasons() {
 		season[] seasons = new season[12];
 		System.arraycopy(DetailedProductHolder.INSTANCE.seasons, 0, seasons, 0, DetailedProductHolder.INSTANCE.seasons.length);
 		return seasons;
 	}
 	
-	public static season[] getSeasons(season[] seasons) {
+	public season[] getSeasons(season[] seasons) {
 		System.arraycopy(DetailedProductHolder.INSTANCE.seasons, 0, seasons, 0, DetailedProductHolder.INSTANCE.seasons.length);
 		return seasons;
 	}
 	
-	public static String getSeason(Integer month) {
+	public String getSeason(Integer month) {
 		return DetailedProductHolder.INSTANCE.seasons[month].name();
 	}
 	
