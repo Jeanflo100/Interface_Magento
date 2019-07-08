@@ -189,7 +189,6 @@ public class DetailsProductOverviewController {
 	}
 	
 	private void modificationSaleProduct() {
-		
 	}
 	
 	@FXML
