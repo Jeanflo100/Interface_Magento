@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="189.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="60.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter the choice to add:">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <TextField layoutX="242.0" layoutY="57.0" prefHeight="25.0" prefWidth="284.0" />
+      <ImageView fitHeight="150.0" fitWidth="21.0" layoutX="530.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/plus.png" />
+         </image>
+      </ImageView>
+      <Text layoutX="49.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select the choice to delete:">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <ComboBox layoutX="242.0" layoutY="105.0" prefHeight="25.0" prefWidth="284.0" />
+      <ImageView fitHeight="48.0" fitWidth="21.0" layoutX="530.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../image/trash.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
