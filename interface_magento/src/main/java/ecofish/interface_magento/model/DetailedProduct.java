@@ -2,9 +2,9 @@ package ecofish.interface_magento.model;
 
 import java.util.ArrayList;
 
-import ecofish.interface_magento.view.DetailsProductOverviewController.season;
-
 public class DetailedProduct extends Product {
+	
+	public enum season{high, medium, low, unspecified, current;};
 	
 	private ArrayList<String> country_of_manufacture;
 	private String description;
@@ -50,19 +50,18 @@ public class DetailedProduct extends Product {
 		return production_type;
 	}
 	
+	public String getSeason(Integer month) {
+		return DetailedProductHolder.INSTANCE.seasons[month].name();
+	}
+	
 	public season[] getSeasons() {
 		season[] seasons = new season[12];
-		System.arraycopy(DetailedProductHolder.INSTANCE.seasons, 0, seasons, 0, DetailedProductHolder.INSTANCE.seasons.length);
-		return seasons;
+		return getSeasons(seasons);
 	}
 	
 	public season[] getSeasons(season[] seasons) {
 		System.arraycopy(DetailedProductHolder.INSTANCE.seasons, 0, seasons, 0, DetailedProductHolder.INSTANCE.seasons.length);
 		return seasons;
-	}
-	
-	public String getSeason(Integer month) {
-		return DetailedProductHolder.INSTANCE.seasons[month].name();
 	}
 	
 	public static void change(Product product, String short_description) {
