@@ -54,14 +54,23 @@ public class DetailsProductOverviewController {
 	
 	private enum section{Administrative, Description, Production, Sale;};
 	
-	private ProductionDetailsProduct productionDetails;
+	private DetailsProductAdministrative administrativeDetails;
+	
+	private DetailsProductDescription descriptionDetails;
+	
+	private DetailsProductProduction productionDetails;
+	
+	private DetailsProductSale saleDetails;
 	
 	private Boolean isModified;
 	
 	@FXML
 	private void initialize() {
 		detailedProduct = DetailedProduct.getProduct();
-		productionDetails = new ProductionDetailsProduct(detailedProduct, seasonGridPane, currentSeasonLabel);
+		productionDetails = new DetailsProductProduction(detailedProduct, seasonGridPane, currentSeasonLabel);
+		administrativeDetails = new DetailsProductAdministrative();
+		descriptionDetails = new DetailsProductDescription();
+		saleDetails = new DetailsProductSale();
 		isModified = false;
 		
 		initTitleView();
@@ -81,10 +90,10 @@ public class DetailsProductOverviewController {
 	
 	private void initListenerTab() {
 		this.detailsProductTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue.getText().equals(section.Administrative.name())) actualView = null;
-			else if (newValue.getText().equals(section.Description.name())) actualView = null;
+			if (newValue.getText().equals(section.Administrative.name())) actualView = this.administrativeDetails;
+			else if (newValue.getText().equals(section.Description.name())) actualView = this.descriptionDetails;
 			else if (newValue.getText().equals(section.Production.name())) actualView = this.productionDetails;
-			else if (newValue.getText().equals(section.Sale.name())) actualView = null;
+			else if (newValue.getText().equals(section.Sale.name())) actualView = this.saleDetails;
 		});
 	}
 	
@@ -102,18 +111,18 @@ public class DetailsProductOverviewController {
 		}
 
 		this.isModified = !this.isModified;
-		if (actualView != null && this.isModified) actualView.modificationDetails(true, null);
+		if (this.isModified) actualView.modificationDetails(true, null);
 	}
 	
 	@FXML
 	private void validationDetails() {
-		if (actualView != null) actualView.modificationDetails(false, true);
+		actualView.modificationDetails(false, true);
 		modificationDetails();
 	}
 	
 	@FXML
 	private void cancelDetails() {
-		if (actualView != null) actualView.modificationDetails(false, false);
+		actualView.modificationDetails(false, false);
 		modificationDetails();
 	}
 	

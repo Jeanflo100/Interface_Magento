@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
-public class ProductionDetailsProduct implements DetailsProductInterface {
+public class DetailsProductProduction implements DetailsProductInterface {
 	
 	private final DetailedProduct detailedProduct;
 
@@ -24,7 +24,7 @@ public class ProductionDetailsProduct implements DetailsProductInterface {
     
 
 	
-	public ProductionDetailsProduct(DetailedProduct detailedProduct, GridPane seasonsGridPane, Label currentSeasonLabel) {
+	public DetailsProductProduction(DetailedProduct detailedProduct, GridPane seasonsGridPane, Label currentSeasonLabel) {
 		this.detailedProduct = detailedProduct;
 		this.seasonsGridPane = seasonsGridPane;
 		this.currentSeasonLabel = currentSeasonLabel;
