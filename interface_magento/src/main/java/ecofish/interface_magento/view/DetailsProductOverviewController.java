@@ -102,18 +102,18 @@ public class DetailsProductOverviewController {
 		}
 
 		this.isModified = !this.isModified;
-		if (this.isModified) actualView.modificationDetails(true, null);
+		if (actualView != null && this.isModified) actualView.modificationDetails(true, null);
 	}
 	
 	@FXML
 	private void validationDetails() {
-		actualView.modificationDetails(false, true);
+		if (actualView != null) actualView.modificationDetails(false, true);
 		modificationDetails();
 	}
 	
 	@FXML
 	private void cancelDetails() {
-		actualView.modificationDetails(false, false);
+		if (actualView != null) actualView.modificationDetails(false, false);
 		modificationDetails();
 	}
 	

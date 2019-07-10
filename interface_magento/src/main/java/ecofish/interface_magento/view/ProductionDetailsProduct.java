@@ -108,7 +108,7 @@ public class ProductionDetailsProduct implements DetailsProductInterface {
 			if (isSave) {
 				detailedProduct.setSeasons(seasons_tmp);
 			}
-			else {
+			else if (!isSave) {
 				cancelModificationProductionView();
 			}
 		}
