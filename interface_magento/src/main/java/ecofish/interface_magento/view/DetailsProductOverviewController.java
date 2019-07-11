@@ -1,22 +1,32 @@
 package ecofish.interface_magento.view;
 
+import java.net.MalformedURLException;
+
 import ecofish.interface_magento.model.DetailedProduct;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 public class DetailsProductOverviewController {
+	
+	////////////////// General Components //////////////////
 	
 	@FXML
 	Label skuLabel;
 	
 	@FXML
-	Label descriptionLabel;
+	Label characteristicLabel;
 	
 	@FXML
 	ImageView modificationDetailsImage;
@@ -28,25 +38,101 @@ public class DetailsProductOverviewController {
 	ImageView cancelDetailsImage;
 	
 	@FXML
+	Button saveAndQuitButton;
+	
+	@FXML
 	TabPane detailsProductTabPane;
+	
+	////////////////// Administrative Components //////////////////
 	
 	@FXML
 	AnchorPane administrativeModificationAnchorPane;
-
+	
+	@FXML
+	TextField eanCodeTextField;
+	
+	@FXML
+	TextField ecSalesCodeTextField;
+	
+	@FXML
+	VBox alergenVBox;
+	
+	@FXML
+	VBox brandVBox;
+	
+	@FXML
+	VBox labelVBox;
+	
+	////////////////// Description Components //////////////////
+	
 	@FXML
 	AnchorPane descriptionModificationAnchorPane;
-
+	
+	@FXML
+	TextArea shortDescriptionTextArea;
+	
+	@FXML
+	ImageView imageImage;
+	
+	@FXML
+	TextArea descriptionTextArea;
+	
+	@FXML
+	TextField latinNameTextField;
+	
+	////////////////// Production Components //////////////////
+	
 	@FXML
 	AnchorPane productionModificationAnchorPane;
-
+	
 	@FXML
-	AnchorPane saleModificationAnchorPane;
+	TextField productionTypeTextField;
+	
+	@FXML
+	CheckBox statusCheckBox;
+	
+	@FXML
+	AnchorPane seasonAnchorPane;
+	
+	@FXML
+	Label actualSeasonLabel;
 	
 	@FXML
 	GridPane seasonGridPane;
 	
 	@FXML
-	Label currentSeasonLabel;
+	VBox countryOfManufactureVBox;
+	
+	////////////////// Sale Components //////////////////
+	
+	@FXML
+	TextField basicPackTextField;
+	
+	@FXML
+	TextField actualPriceTextField;
+	
+	@FXML
+	LineChart<String, Double> priceLineChart;
+	
+	@FXML
+	TextField pack2TextField;
+	
+	@FXML
+	TextField pricePack2TextField;
+	
+	@FXML
+	TextField pack3TextField;
+	
+	@FXML
+	TextField pricePack3TextField;
+	
+	@FXML
+	TextField pack4TextField;
+	
+	@FXML
+	TextField pricePack4TextField;
+	
+	////////////////// Variables //////////////////
 	
 	private DetailedProduct detailedProduct;
 	
@@ -67,19 +153,19 @@ public class DetailsProductOverviewController {
 	@FXML
 	private void initialize() {
 		detailedProduct = DetailedProduct.getProduct();
-		productionDetails = new DetailsProductProduction(detailedProduct, seasonGridPane, currentSeasonLabel);
-		administrativeDetails = new DetailsProductAdministrative();
-		descriptionDetails = new DetailsProductDescription();
-		saleDetails = new DetailsProductSale();
+		administrativeDetails = new DetailsProductAdministrative(detailedProduct, administrativeModificationAnchorPane, eanCodeTextField, ecSalesCodeTextField, alergenVBox, brandVBox, labelVBox);
+		descriptionDetails = new DetailsProductDescription(detailedProduct, descriptionModificationAnchorPane, shortDescriptionTextArea, imageImage, descriptionTextArea, latinNameTextField);
+		productionDetails = new DetailsProductProduction(detailedProduct, productionModificationAnchorPane, productionTypeTextField, statusCheckBox, seasonAnchorPane, actualSeasonLabel, seasonGridPane, countryOfManufactureVBox);
+		saleDetails = new DetailsProductSale(detailedProduct, basicPackTextField, actualPriceTextField, priceLineChart, pack2TextField, pricePack2TextField, pack3TextField, pricePack3TextField, pack4TextField, pricePack4TextField);
 		isModified = false;
 		
 		initTitleView();
-		initListenerTab();
+		initActualView();
 	}
 	
 	private void initTitleView() {
 		this.skuLabel.setText("Product: " + detailedProduct.getIdProduct().toString());
-		this.descriptionLabel.setText(
+		this.characteristicLabel.setText(
 				detailedProduct.getCategory()
 				+ (detailedProduct.getFamily() != null ? " - " + detailedProduct.getFamily() : "")
 				+ " - " + detailedProduct.getName()
@@ -88,7 +174,12 @@ public class DetailsProductOverviewController {
 				);
 	}
 	
-	private void initListenerTab() {
+	private void initActualView() {
+		if (detailsProductTabPane.getSelectionModel().getSelectedItem().getText().equals(section.Administrative.name())) actualView = this.administrativeDetails;
+		else if (detailsProductTabPane.getSelectionModel().getSelectedItem().getText().equals(section.Description.name())) actualView = this.descriptionDetails;
+		else if (detailsProductTabPane.getSelectionModel().getSelectedItem().getText().equals(section.Production.name())) actualView = this.productionDetails;
+		else if (detailsProductTabPane.getSelectionModel().getSelectedItem().getText().equals(section.Sale.name())) actualView = this.saleDetails;
+		
 		this.detailsProductTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue.getText().equals(section.Administrative.name())) actualView = this.administrativeDetails;
 			else if (newValue.getText().equals(section.Description.name())) actualView = this.descriptionDetails;
@@ -124,6 +215,11 @@ public class DetailsProductOverviewController {
 	private void cancelDetails() {
 		actualView.modificationDetails(false, false);
 		modificationDetails();
+	}
+	
+	@FXML
+	private void changeImage() throws MalformedURLException {
+		this.descriptionDetails.changeImage();
 	}
 	
 	/*addProductionTypeImage.setVisible(!addProductionTypeImage.isVisible());

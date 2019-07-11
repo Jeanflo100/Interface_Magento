@@ -4,18 +4,28 @@ import java.util.Calendar;
 
 import ecofish.interface_magento.model.DetailedProduct;
 import ecofish.interface_magento.model.DetailedProduct.season;
+
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 public class DetailsProductProduction implements DetailsProductInterface {
 	
 	private final DetailedProduct detailedProduct;
-
+	
+	private final AnchorPane productionModificationAnchorPane;
+	private final TextField productionTypeLabel;
+	private final CheckBox statusCheckBox;
+	private final AnchorPane seasonAnchorPane;
+	private final Label actualSeasonLabel;
 	private final GridPane seasonsGridPane;
-	private final Label currentSeasonLabel;
+	private final VBox countryOfManufactureVBox;
 	
 	private season selectedSeason;
     private Node selectedLegend;
@@ -24,14 +34,19 @@ public class DetailsProductProduction implements DetailsProductInterface {
     
 
 	
-	public DetailsProductProduction(DetailedProduct detailedProduct, GridPane seasonsGridPane, Label currentSeasonLabel) {
+	public DetailsProductProduction(DetailedProduct detailedProduct, AnchorPane productionModificationAnchorPane, TextField productionTypeTextField, CheckBox statusCheckBox, AnchorPane seasonAnchorPane, Label actualSeasonLabel, GridPane seasonsGridPane, VBox countryOfManufactureVBox) {
 		this.detailedProduct = detailedProduct;
+		this.productionModificationAnchorPane = productionModificationAnchorPane;
+		this.productionTypeLabel = productionTypeTextField;
+		this.statusCheckBox = statusCheckBox;
+		this.seasonAnchorPane = seasonAnchorPane;
+		this.actualSeasonLabel = actualSeasonLabel;
 		this.seasonsGridPane = seasonsGridPane;
-		this.currentSeasonLabel = currentSeasonLabel;
+		this.countryOfManufactureVBox = countryOfManufactureVBox;
 		
 		initSeasons();
 	}
-	
+
 	private void initSeasons() {
 		seasons_tmp = detailedProduct.getSeasons();
 		selectedSeason = null;
@@ -44,7 +59,7 @@ public class DetailsProductProduction implements DetailsProductInterface {
 				node.pseudoClassStateChanged(PseudoClass.getPseudoClass(detailedProduct.getSeason(month)), true);
 				if (month == currentMonth) {
 					node.pseudoClassStateChanged(PseudoClass.getPseudoClass(season.current.name()), true);
-					currentSeasonLabel.setText(detailedProduct.getSeason(month).replaceFirst(".",(detailedProduct.getSeason(month).charAt(0)+"").toUpperCase()));
+					actualSeasonLabel.setText(detailedProduct.getSeason(month).replaceFirst(".",(detailedProduct.getSeason(month).charAt(0)+"").toUpperCase()));
 				}
 				node.setOnMouseClicked(click -> {
 					if (selectedSeason != null) {
@@ -62,7 +77,7 @@ public class DetailsProductProduction implements DetailsProductInterface {
 	private void changeSeason(Node node, String toSeason) {
 		for (PseudoClass pseudoClass : node.getPseudoClassStates()) {
 			if (pseudoClass.getPseudoClassName().equals(season.current.name())) {
-				currentSeasonLabel.setText(toSeason.replaceFirst(".",(toSeason.charAt(0)+"").toUpperCase()));						
+				actualSeasonLabel.setText(toSeason.replaceFirst(".",(toSeason.charAt(0)+"").toUpperCase()));						
 			}
 			else if (!pseudoClass.getPseudoClassName().equals("hover") && !pseudoClass.getPseudoClassName().equals(toSeason)) {
 				node.pseudoClassStateChanged(pseudoClass, false);

@@ -33,3 +33,7 @@ Rectangle:selected {
 .tab:selected {
 	-fx-font-weight: bold;
 }
+
+.text-field:unmodifiable, .text-area:unmodifiable {
+	-fx-background-color: transparent;
+}
