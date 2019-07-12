@@ -222,6 +222,11 @@ public class DetailsProductOverviewController {
 		this.descriptionDetails.changeImage();
 	}
 	
+	@FXML
+	private void changeChoices(MouseEvent click) {
+		System.out.println(click.getPickResult().getIntersectedNode().getId());
+	}
+	
 	/*addProductionTypeImage.setVisible(!addProductionTypeImage.isVisible());
 	ComboBox<String> productionTypeComboBox = new ComboBox<String>();
 	productionTypeComboBox.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);

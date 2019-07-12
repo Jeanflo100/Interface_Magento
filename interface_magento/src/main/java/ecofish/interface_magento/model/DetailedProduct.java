@@ -3,6 +3,7 @@ package ecofish.interface_magento.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javafx.scene.image.Image;
@@ -10,19 +11,20 @@ import javafx.scene.image.Image;
 public class DetailedProduct extends Product {
 	
 	public enum season{high, medium, low, unspecified, current;};
-	
-	private ArrayList<String> country_of_manufacture;
-	private String url_image;
-	private String description;
-	private String short_description;
+
 	private String ean_code;
 	private String ec_sales_code;
-	private String latin_name;
-	private String production_type;
 	private ArrayList<String> alergens;
 	private ArrayList<String> brands;
 	private ArrayList<String> labels;
+	private String short_description;
+	private String url_image;
+	private String description;
+	private String latin_name;
+	private String production_type;
 	private season[] seasons;
+	private ArrayList<String> countries_of_manufacture;
+	// tableau historique de prix
 	
 	private void initDetails() {
 		seasons = new season[12];
@@ -52,12 +54,20 @@ public class DetailedProduct extends Product {
 				"Pour une conservation optimale…: L’orange se conserve très facilement et assez longtemps. Vous pouvez la garder à l’air ambiant pendant une semaine. Dans le bac à légumes du réfrigérateur, vous stocker pendant 10 jours, tout en préservant son délicieux jus !\r\n";
 		latin_name = "Muriculous suvitius";
 		url_image = null;
-		/*ean_code = "41225659535";
+		ean_code = "41225659535";
 		ec_sales_code = "FR5F5FGG4HH2245D";
-		alergens.addAll(Arrays.asList("alergen1", "alergen4", "alergen5"));
-		brands.addAll(Arrays.asList("brand1", "brand4", "brand5"));
-		labels.addAll(Arrays.asList("label1", "label4", "label5"));*/
-		//setAlergens(null);
+		alergens = new ArrayList<String>();
+		alergens.add("alergen1");
+		alergens.add("alergen4");
+		alergens.add("alergen5");
+		brands = new ArrayList<String>();
+		brands.add("brand1");
+		brands.add("brand4");
+		brands.add("brand5");
+		labels = new ArrayList<String>();
+		labels.add("label1");
+		labels.add("label4");
+		labels.add("label5");
 	}
 	
 	private DetailedProduct(Product product , String short_description) {
@@ -75,11 +85,20 @@ public class DetailedProduct extends Product {
 		DetailedProductHolder.INSTANCE.ec_sales_code = ec_sales_code;
 	}
 	
-	public void setAlergens (Collection<String> alergens) {
-		DetailedProductHolder.INSTANCE.alergens.replaceAll(operator -> {
-			System.out.println(operator);
-			return "";
-		});
+	public void setAlergens (ArrayList<String> alergens) {
+		DetailedProductHolder.INSTANCE.alergens = alergens;
+	}
+	
+	public void setBrands (ArrayList<String> brands) {
+		DetailedProductHolder.INSTANCE.brands = brands;
+	}
+	
+	public void setLabels (ArrayList<String> labels) {
+		DetailedProductHolder.INSTANCE.labels = labels;
+	}
+	
+	public void setShortDescription(String short_description) {
+		DetailedProductHolder.INSTANCE.short_description = short_description;
 	}
 	
 	public void setUrlImage(String url_image) {
@@ -90,16 +109,40 @@ public class DetailedProduct extends Product {
 		DetailedProductHolder.INSTANCE.description = description;
 	}
 	
-	public void setShortDescription(String short_description) {
-		DetailedProductHolder.INSTANCE.short_description = short_description;
-	}
-	
 	public void setLatinName(String latin_name) {
 		DetailedProductHolder.INSTANCE.latin_name = latin_name;
 	}
 	
+	public void setProductionType(String production_type) {
+		DetailedProductHolder.INSTANCE.production_type = production_type;
+	}
+	
 	public void setSeasons(season[] seasons) {
 		System.arraycopy(seasons, 0, DetailedProductHolder.INSTANCE.seasons, 0, DetailedProductHolder.INSTANCE.seasons.length);
+	}
+	
+	public String getEanCode() {
+		return DetailedProductHolder.INSTANCE.ean_code;
+	}
+	
+	public String getEcSalesCode() {
+		return DetailedProductHolder.INSTANCE.ec_sales_code;
+	}
+	
+	public ArrayList<String> getAlergens() {
+		return DetailedProductHolder.INSTANCE.alergens;
+	}
+	
+	public ArrayList<String> getBrands() {
+		return DetailedProductHolder.INSTANCE.brands;
+	}
+	
+	public ArrayList<String> getLabels() {
+		return DetailedProductHolder.INSTANCE.labels;
+	}
+	
+	public String getShortDescription() {
+		return DetailedProductHolder.INSTANCE.short_description;
 	}
 	
 	public String getUrlImage() {
@@ -110,16 +153,12 @@ public class DetailedProduct extends Product {
 		return DetailedProductHolder.INSTANCE.description;
 	}
 	
-	public String getShortDescription() {
-		return DetailedProductHolder.INSTANCE.short_description;
-	}
-	
 	public String getLatinName() {
 		return DetailedProductHolder.INSTANCE.latin_name;
 	}
 	
 	public String getProductionType() {
-		return production_type;
+		return DetailedProductHolder.INSTANCE.production_type;
 	}
 	
 	public String getSeason(Integer month) {

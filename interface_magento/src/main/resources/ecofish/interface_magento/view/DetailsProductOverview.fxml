@@ -84,9 +84,9 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="433.0" prefWidth="620.0">
                      <children>
-                        <AnchorPane fx:id="administrativeModificationAnchorPane" mouseTransparent="true" prefHeight="521.0" prefWidth="620.0" visible="false">
+                        <AnchorPane fx:id="administrativeModificationAnchorPane" prefHeight="521.0" prefWidth="620.0" visible="false">
                            <children>
-                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="416.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="alergen" fitHeight="48.0" fitWidth="16.0" layoutX="416.0" layoutY="28.0" onMouseClicked="#changeChoices" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/black-pen.png" />
                                  </image>
@@ -94,7 +94,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ImageView>
-                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="154.0" layoutY="267.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="154.0" layoutY="267.0" onMouseClicked="#changeChoices" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/black-pen.png" />
                                  </image>
@@ -102,7 +102,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ImageView>
-                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="419.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="419.0" layoutY="264.0" onMouseClicked="#changeChoices" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/black-pen.png" />
                                  </image>
@@ -112,18 +112,24 @@
                               </ImageView>
                            </children>
                         </AnchorPane>
-                        <Text layoutX="73.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EAN Code:">
+                        <Text layoutX="93.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EAN Code:">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="eanCodeTextField" editable="false" layoutX="171.0" layoutY="94.0" />
+                        <TextField fx:id="eanCodeTextField" editable="false" layoutX="171.0" layoutY="92.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font></TextField>
                         <Text layoutX="66.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EC Sales Code:">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="ecSalesCodeTextField" editable="false" layoutX="172.0" layoutY="145.0" />
+                        <TextField fx:id="ecSalesCodeTextField" editable="false" layoutX="171.0" layoutY="143.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font></TextField>
                         <Text layoutX="437.0" layoutY="42.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alergen:">
                            <font>
                               <Font size="16.0" />
@@ -204,9 +210,9 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="latinNameTextField" editable="false" layoutX="117.0" layoutY="454.0" prefHeight="25.0" prefWidth="472.0">
+                        <TextField fx:id="latinNameTextField" editable="false" layoutX="118.0" layoutY="453.0" prefHeight="30.0" prefWidth="471.0">
                            <font>
-                              <Font name="System Italic" size="13.0" />
+                              <Font name="System Italic" size="14.0" />
                            </font></TextField>
                      </children></AnchorPane>
               </content>

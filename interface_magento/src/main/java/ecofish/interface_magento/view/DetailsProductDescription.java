@@ -35,28 +35,16 @@ public class DetailsProductDescription implements DetailsProductInterface {
 		this.descriptionTextArea = descriptionTextArea;
 		this.latinNameTextField = latinNameTextField;
 		
-		initContentComponents();
-		initStateComponents();
+		modificationDetails(false, false);
 	}
 
-	public void initContentComponents() {
+	public void setContentComponents() {
 		this.shortDescriptionTextArea.setText(detailedProduct.getShortDescription());
 		this.url_image = this.detailedProduct.getUrlImage();
 		if (this.url_image == null) this.imageImage.setImage(null);
 		else this.imageImage.setImage(new Image(url_image));
 		this.descriptionTextArea.setText(detailedProduct.getDescription());
 		this.latinNameTextField.setText(detailedProduct.getLatinName());
-	}
-
-	private void initStateComponents() {
-		this.descriptionModificationAnchorPane.setVisible(false);
-		this.shortDescriptionTextArea.pseudoClassStateChanged(unmodifiable, true);
-		this.descriptionTextArea.pseudoClassStateChanged(unmodifiable, true);
-		this.latinNameTextField.pseudoClassStateChanged(unmodifiable, true);
-		this.shortDescriptionTextArea.setEditable(false);
-		this.descriptionTextArea.setEditable(false);
-		this.latinNameTextField.setEditable(false);
-		this.imageImage.setDisable(true);
 	}
 
 	protected void changeImage() {
@@ -101,8 +89,10 @@ public class DetailsProductDescription implements DetailsProductInterface {
 		this.descriptionTextArea.setEditable(isModification);
 		this.latinNameTextField.setEditable(isModification);
 		this.imageImage.setDisable(!isModification);
-		if (isSave) saveModification();
-		else if (!isSave) initContentComponents();
+		if (isSave != null) {
+			if (isSave) saveModification();
+			else if (!isSave) setContentComponents();
+		}
 	}
 	
 }
