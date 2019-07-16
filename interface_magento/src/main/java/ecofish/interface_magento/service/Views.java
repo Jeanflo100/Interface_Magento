@@ -12,7 +12,7 @@ import javafx.fxml.FXMLLoader;
 public class Views {
 	
 	public static enum viewsPrimaryStage{MainLayout, StatusProductOverview, PriceProductOverview, DetailsProductOverview, test;};
-	public static enum viewsSecondaryStage{LoginScreen, LoadingProduct;};
+	public static enum viewsSecondaryStage{LoginScreen, LoadingProduct, ModificationChoicesDetailsProduct;};
 
 	/**
 	 * Load an instance of the view for primary stage

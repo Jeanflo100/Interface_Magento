@@ -194,11 +194,11 @@ public class DetailsProductOverviewController {
 		this.validationDetailsImage.setVisible(!this.validationDetailsImage.isVisible());
 		this.cancelDetailsImage.setVisible(!this.cancelDetailsImage.isVisible());
 		
+		this.detailsProductTabPane.requestFocus();
+		
 		Tab selectedTab = this.detailsProductTabPane.getSelectionModel().getSelectedItem();
 		for (Tab tab : this.detailsProductTabPane.getTabs()) {
-			if (tab != selectedTab) {
-				tab.setDisable(!tab.isDisable());
-			}
+			if (tab != selectedTab) tab.setDisable(!tab.isDisable());
 		}
 
 		this.isModified = !this.isModified;
@@ -225,6 +225,21 @@ public class DetailsProductOverviewController {
 	@FXML
 	private void changeChoices(MouseEvent click) {
 		System.out.println(click.getPickResult().getIntersectedNode().getId());
+	}
+	
+	@FXML
+	private void changeChoicesAlergen() {
+		this.administrativeDetails.changeChoicesAlergen();
+	}
+	
+	@FXML
+	private void changeChoicesBrand() {
+		this.administrativeDetails.changeChoicesBrand();
+	}
+	
+	@FXML
+	private void changeChoicesLabel() {
+		this.administrativeDetails.changeChoicesLabel();
 	}
 	
 	/*addProductionTypeImage.setVisible(!addProductionTypeImage.isVisible());

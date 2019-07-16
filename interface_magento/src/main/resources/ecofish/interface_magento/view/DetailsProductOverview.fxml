@@ -86,7 +86,7 @@
                      <children>
                         <AnchorPane fx:id="administrativeModificationAnchorPane" prefHeight="521.0" prefWidth="620.0" visible="false">
                            <children>
-                              <ImageView fx:id="alergen" fitHeight="48.0" fitWidth="16.0" layoutX="416.0" layoutY="28.0" onMouseClicked="#changeChoices" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="416.0" layoutY="28.0" onMouseClicked="#changeChoicesAlergen" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/black-pen.png" />
                                  </image>
@@ -94,7 +94,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ImageView>
-                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="154.0" layoutY="267.0" onMouseClicked="#changeChoices" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="154.0" layoutY="267.0" onMouseClicked="#changeChoicesBrand" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/black-pen.png" />
                                  </image>
@@ -102,7 +102,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ImageView>
-                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="419.0" layoutY="264.0" onMouseClicked="#changeChoices" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="48.0" fitWidth="16.0" layoutX="419.0" layoutY="264.0" onMouseClicked="#changeChoicesLabel" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/black-pen.png" />
                                  </image>
@@ -135,9 +135,9 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <ScrollPane layoutX="376.0" layoutY="48.0" prefWidth="185.0" style="-fx-background-color: none;">
+                        <ScrollPane layoutX="395.0" layoutY="45.0" prefWidth="160.0" style="-fx-background-color: none;">
                            <content>
-                              <VBox fx:id="alergenVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="170.0" spacing="5.0" />
+                              <VBox fx:id="alergenVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="140.0" spacing="5.0" />
                            </content>
                         </ScrollPane>
                         <Text layoutX="175.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brand:">
@@ -145,9 +145,9 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <ScrollPane layoutX="107.0" layoutY="287.0" prefWidth="185.0" style="-fx-background-color: none;">
+                        <ScrollPane layoutX="131.0" layoutY="287.0" prefWidth="155.0" style="-fx-background-color: none;">
                            <content>
-                              <VBox fx:id="brandVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="170.0" spacing="5.0" />
+                              <VBox fx:id="brandVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="140.0" spacing="5.0" />
                            </content>
                         </ScrollPane>
                         <Text layoutX="440.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Label:">
@@ -155,9 +155,9 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <ScrollPane layoutX="370.0" layoutY="284.0" prefWidth="185.0" style="-fx-background-color: none;">
+                        <ScrollPane layoutX="389.0" layoutY="287.0" prefWidth="155.0" style="-fx-background-color: none;">
                            <content>
-                              <VBox fx:id="labelVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="170.0" spacing="5.0" />
+                              <VBox fx:id="labelVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="140.0" spacing="5.0" />
                            </content>
                         </ScrollPane>
                      </children></AnchorPane>
@@ -433,9 +433,9 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <ScrollPane layoutX="220.0" layoutY="311.0" prefWidth="185.0" style="-fx-background-color: none;">
+                        <ScrollPane layoutX="240.0" layoutY="309.0" prefWidth="155.0" style="-fx-background-color: none;">
                            <content>
-                              <VBox fx:id="countryOfManufactureVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="170.0" spacing="5.0" />
+                              <VBox fx:id="countryOfManufactureVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="140.0" spacing="5.0" />
                            </content>
                         </ScrollPane>
                      </children>

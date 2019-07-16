@@ -61,13 +61,13 @@ public class DetailedProduct extends Product {
 		alergens.add("alergen4");
 		alergens.add("alergen5");
 		brands = new ArrayList<String>();
-		brands.add("brand1");
-		brands.add("brand4");
-		brands.add("brand5");
+		brands.add("brand3");
+		brands.add("brand7");
+		brands.add("brand9");
 		labels = new ArrayList<String>();
-		labels.add("label1");
 		labels.add("label4");
 		labels.add("label5");
+		labels.add("label7");
 	}
 	
 	private DetailedProduct(Product product , String short_description) {
@@ -119,6 +119,10 @@ public class DetailedProduct extends Product {
 	
 	public void setSeasons(season[] seasons) {
 		System.arraycopy(seasons, 0, DetailedProductHolder.INSTANCE.seasons, 0, DetailedProductHolder.INSTANCE.seasons.length);
+	}
+	
+	public void setCountriesOfManufacture(ArrayList<String> countries_of_manufacture) {
+		DetailedProductHolder.INSTANCE.countries_of_manufacture = countries_of_manufacture;
 	}
 	
 	public String getEanCode() {
@@ -173,6 +177,10 @@ public class DetailedProduct extends Product {
 	public season[] getSeasons(season[] seasons) {
 		System.arraycopy(DetailedProductHolder.INSTANCE.seasons, 0, seasons, 0, DetailedProductHolder.INSTANCE.seasons.length);
 		return seasons;
+	}
+	
+	public ArrayList<String> getCountriesOfManufacture() {
+		return DetailedProductHolder.INSTANCE.countries_of_manufacture;
 	}
 	
 	public static void change(Product product, String short_description) {
