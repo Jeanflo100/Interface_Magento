@@ -13,7 +13,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -45,7 +44,6 @@ public class DetailsProductProduction implements DetailsProductInterface {
 		this.countryOfManufactureVBox = countryOfManufactureVBox;
 
 		initComponents();
-		
 		modificationDetails(false, false);
 	}
 	

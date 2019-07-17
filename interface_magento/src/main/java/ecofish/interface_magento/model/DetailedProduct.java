@@ -1,18 +1,13 @@
 package ecofish.interface_magento.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import javafx.scene.image.Image;
+import java.util.Hashtable;
 
 public class DetailedProduct extends Product {
 	
 	public enum season{high, medium, low, unspecified, current;};
 	
-	public static final Integer nb_month = 12;		// 13th is the background of the grid
+	public static final Integer nb_month = 12;
 
 	private String ean_code;
 	private String ec_sales_code;
@@ -26,6 +21,10 @@ public class DetailedProduct extends Product {
 	private String production_type;
 	private season[] seasons;
 	private ArrayList<String> countries_of_manufacture;
+	private String basicPack;
+	private Hashtable<String, Double> secondPack;
+	private Hashtable<String, Double> thirdPack;
+	private Hashtable<String, Double> fourthPack;
 	// tableau historique de prix
 	
 	private void initDetails() {
@@ -74,6 +73,13 @@ public class DetailedProduct extends Product {
 		countries_of_manufacture.add("country_of_manufacture_4");
 		countries_of_manufacture.add("country_of_manufacture_5");
 		countries_of_manufacture.add("country_of_manufacture_7");
+		basicPack = "Cageot - 10kg";
+		secondPack = new Hashtable<String, Double>(1);
+		secondPack.put("Cageot - 5kg", 0.1);
+		thirdPack = new Hashtable<String, Double>(1);
+		thirdPack.put("1kg", 0.35);
+		fourthPack = new Hashtable<String, Double>(1);
+		fourthPack.put("Pièce", 0.5);
 	}
 	
 	private DetailedProduct(Product product , String short_description) {
@@ -131,6 +137,25 @@ public class DetailedProduct extends Product {
 		DetailedProductHolder.INSTANCE.countries_of_manufacture = countries_of_manufacture;
 	}
 	
+	public void setBasicPack(String basicPack) {
+		DetailedProductHolder.INSTANCE.basicPack = basicPack;
+	}
+	
+	public void setSecondPack(String nameSecondPack, Double priceSecondPack) {
+		DetailedProductHolder.INSTANCE.secondPack.clear();
+		DetailedProductHolder.INSTANCE.secondPack.put(nameSecondPack, priceSecondPack);
+	}
+	
+	public void setThirdPack(String nameThirdPack, Double priceThirdPack) {
+		DetailedProductHolder.INSTANCE.thirdPack.clear();
+		DetailedProductHolder.INSTANCE.thirdPack.put(nameThirdPack, priceThirdPack);
+	}
+	
+	public void setFourthPack(String nameFourthPack, Double priceFourthPack) {
+		DetailedProductHolder.INSTANCE.fourthPack.clear();
+		DetailedProductHolder.INSTANCE.fourthPack.put(nameFourthPack, priceFourthPack);
+	}
+	
 	public String getEanCode() {
 		return DetailedProductHolder.INSTANCE.ean_code;
 	}
@@ -177,6 +202,34 @@ public class DetailedProduct extends Product {
 	
 	public ArrayList<String> getCountriesOfManufacture() {
 		return DetailedProductHolder.INSTANCE.countries_of_manufacture;
+	}
+	
+	public String getBasicPack() {
+		return DetailedProductHolder.INSTANCE.basicPack;
+	}
+	
+	public String getNameSecondPack() {
+		return DetailedProductHolder.INSTANCE.secondPack.keys().nextElement();
+	}
+	
+	public Double getPriceSecondPack() {
+		return DetailedProductHolder.INSTANCE.secondPack.get(DetailedProductHolder.INSTANCE.secondPack.keys().nextElement());
+	}
+	
+	public String getNameThirdPack() {
+		return DetailedProductHolder.INSTANCE.thirdPack.keys().nextElement();
+	}
+	
+	public Double getPriceThirdPack() {
+		return DetailedProductHolder.INSTANCE.thirdPack.get(DetailedProductHolder.INSTANCE.thirdPack.keys().nextElement());
+	}
+	
+	public String getNameFourthPack() {
+		return DetailedProductHolder.INSTANCE.fourthPack.keys().nextElement();
+	}
+	
+	public Double getPriceFourthPack() {
+		return DetailedProductHolder.INSTANCE.fourthPack.get(DetailedProductHolder.INSTANCE.fourthPack.keys().nextElement());
 	}
 	
 	public static void change(Product product, String short_description) {

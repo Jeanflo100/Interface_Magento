@@ -80,7 +80,7 @@ public class ModificationChoicesDetailsProductController {
 	
 	@FXML
 	private void deleteChoice() {
-		if (!this.deleteChoiceComboBox.getSelectionModel().getSelectedItem().isEmpty()) {
+		if (this.deleteChoiceComboBox.getSelectionModel().getSelectedItem() != null) {
 			Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 			alert.initOwner(StageService.getPrimaryStage());
 			alert.setHeaderText("Are you sure you want to delete '" + this.addChoiceTextField.getText() + "'from the choices for the '" + characteristic.getValue() + "' feature?");
