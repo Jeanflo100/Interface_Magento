@@ -135,9 +135,9 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <ScrollPane layoutX="395.0" layoutY="45.0" prefWidth="160.0" style="-fx-background-color: none;">
+                        <ScrollPane layoutX="395.0" layoutY="45.0" prefHeight="200.0" prefWidth="155.0" style="-fx-background-color: none;">
                            <content>
-                              <VBox fx:id="alergenVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="140.0" spacing="5.0" />
+                              <VBox fx:id="alergenVBox" minHeight="185.0" minWidth="140.0" mouseTransparent="true" spacing="5.0" />
                            </content>
                         </ScrollPane>
                         <Text layoutX="175.0" layoutY="281.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Brand:">
@@ -145,9 +145,9 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <ScrollPane layoutX="131.0" layoutY="287.0" prefWidth="155.0" style="-fx-background-color: none;">
+                        <ScrollPane layoutX="131.0" layoutY="287.0" prefHeight="200.0" prefWidth="155.0" style="-fx-background-color: none;">
                            <content>
-                              <VBox fx:id="brandVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="140.0" spacing="5.0" />
+                              <VBox fx:id="brandVBox" minHeight="185.0" minWidth="140.0" mouseTransparent="true" spacing="5.0" />
                            </content>
                         </ScrollPane>
                         <Text layoutX="440.0" layoutY="278.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Label:">
@@ -155,9 +155,9 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <ScrollPane layoutX="389.0" layoutY="287.0" prefWidth="155.0" style="-fx-background-color: none;">
+                        <ScrollPane layoutX="389.0" layoutY="287.0" prefHeight="200.0" prefWidth="155.0" style="-fx-background-color: none;">
                            <content>
-                              <VBox fx:id="labelVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="140.0" spacing="5.0" />
+                              <VBox fx:id="labelVBox" minHeight="185.0" minWidth="140.0" mouseTransparent="true" spacing="5.0" />
                            </content>
                         </ScrollPane>
                      </children></AnchorPane>
@@ -223,7 +223,7 @@
                      <children>
                         <AnchorPane fx:id="productionModificationAnchorPane" prefHeight="521.0" prefWidth="620.0" visible="false">
                            <children>
-                              <ImageView fitHeight="150.0" fitWidth="19.0" layoutX="69.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="150.0" fitWidth="19.0" layoutX="69.0" layoutY="39.0" onMouseClicked="#changeChoicesProductionType" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/black-pen.png" />
                                  </image>
@@ -231,7 +231,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ImageView>
-                              <ImageView fitHeight="150.0" fitWidth="16.0" layoutX="214.0" layoutY="291.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="150.0" fitWidth="16.0" layoutX="214.0" layoutY="291.0" onMouseClicked="#changeChoicesCountryOfManufacture" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../image/black-pen.png" />
                                  </image>
@@ -246,19 +246,21 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="productionTypeTextField" editable="false" layoutX="211.0" layoutY="36.0" prefHeight="25.0" prefWidth="157.0" />
                         <Text layoutX="402.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-text-decoration: underline;" text="Status:" textAlignment="JUSTIFY" wrappingWidth="48.0">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <CheckBox fx:id="statusCheckBox" layoutX="451.0" layoutY="39.0" mnemonicParsing="false" mouseTransparent="true" nodeOrientation="RIGHT_TO_LEFT" text="Inactive">
+                        <CheckBox fx:id="statusCheckBox" alignment="CENTER" layoutX="447.0" layoutY="39.0" mnemonicParsing="false" mouseTransparent="true" nodeOrientation="RIGHT_TO_LEFT" prefHeight="21.0" prefWidth="89.0" text="Inactive">
                            <font>
                               <Font size="15.0" />
                            </font>
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding>
                         </CheckBox>
                         <AnchorPane fx:id="seasonAnchorPane" layoutX="107.0" layoutY="87.0" mouseTransparent="true">
                            <children>
@@ -433,11 +435,16 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <ScrollPane layoutX="240.0" layoutY="309.0" prefWidth="155.0" style="-fx-background-color: none;">
+                        <ScrollPane layoutX="240.0" layoutY="309.0" prefHeight="200.0" prefWidth="155.0" style="-fx-background-color: none;">
                            <content>
-                              <VBox fx:id="countryOfManufactureVBox" mouseTransparent="true" prefHeight="200.0" prefWidth="140.0" spacing="5.0" />
+                              <VBox fx:id="countryOfManufactureVBox" minHeight="185.0" minWidth="140.0" mouseTransparent="true" spacing="5.0" />
                            </content>
                         </ScrollPane>
+                        <Label fx:id="productionTypeLabel" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" layoutX="215.0" layoutY="37.0" prefHeight="6.0" prefWidth="157.0">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
             </content>

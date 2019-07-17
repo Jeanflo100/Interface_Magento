@@ -86,7 +86,7 @@ public class DetailsProductOverviewController {
 	AnchorPane productionModificationAnchorPane;
 	
 	@FXML
-	TextField productionTypeTextField;
+	Label productionTypeLabel;
 	
 	@FXML
 	CheckBox statusCheckBox;
@@ -155,7 +155,7 @@ public class DetailsProductOverviewController {
 		detailedProduct = DetailedProduct.getProduct();
 		administrativeDetails = new DetailsProductAdministrative(detailedProduct, administrativeModificationAnchorPane, eanCodeTextField, ecSalesCodeTextField, alergenVBox, brandVBox, labelVBox);
 		descriptionDetails = new DetailsProductDescription(detailedProduct, descriptionModificationAnchorPane, shortDescriptionTextArea, imageImage, descriptionTextArea, latinNameTextField);
-		productionDetails = new DetailsProductProduction(detailedProduct, productionModificationAnchorPane, productionTypeTextField, statusCheckBox, seasonAnchorPane, actualSeasonLabel, seasonGridPane, countryOfManufactureVBox);
+		productionDetails = new DetailsProductProduction(detailedProduct, productionModificationAnchorPane, productionTypeLabel, statusCheckBox, seasonAnchorPane, actualSeasonLabel, seasonGridPane, countryOfManufactureVBox);
 		saleDetails = new DetailsProductSale(detailedProduct, basicPackTextField, actualPriceTextField, priceLineChart, pack2TextField, pricePack2TextField, pack3TextField, pricePack3TextField, pack4TextField, pricePack4TextField);
 		isModified = false;
 		
@@ -242,13 +242,15 @@ public class DetailsProductOverviewController {
 		this.administrativeDetails.changeChoicesLabel();
 	}
 	
-	/*addProductionTypeImage.setVisible(!addProductionTypeImage.isVisible());
-	ComboBox<String> productionTypeComboBox = new ComboBox<String>();
-	productionTypeComboBox.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-	productionTypeComboBox.setItems(GlobalDetails.getProductionTypes());
-	productionTypeComboBox.getSelectionModel().select(productionTypeLabel.getText());
-	productionTypeLabel.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-	productionTypeLabel.setGraphic(productionTypeComboBox);*/
+	@FXML
+	private void changeChoicesProductionType() {
+		this.productionDetails.changeChoicesProductionType();
+	}
+	
+	@FXML
+	private void changeChoicesCountryOfManufacture() {
+		this.productionDetails.changeChoicesCountryOfManufacture();
+	}
 	
 	@FXML
 	private void selectSeason(MouseEvent click) {

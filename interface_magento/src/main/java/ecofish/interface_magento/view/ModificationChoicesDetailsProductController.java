@@ -2,11 +2,9 @@ package ecofish.interface_magento.view;
 
 import java.util.Optional;
 
-import ecofish.interface_magento.service.GlobalDetails;
 import ecofish.interface_magento.service.StageService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

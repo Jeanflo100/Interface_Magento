@@ -4,10 +4,14 @@ import java.util.Calendar;
 
 import ecofish.interface_magento.model.DetailedProduct;
 import ecofish.interface_magento.model.DetailedProduct.season;
-
+import ecofish.interface_magento.service.GlobalDetails;
+import ecofish.interface_magento.service.StageService;
+import ecofish.interface_magento.service.Views;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -20,7 +24,7 @@ public class DetailsProductProduction implements DetailsProductInterface {
 	private final DetailedProduct detailedProduct;
 	
 	private final AnchorPane productionModificationAnchorPane;
-	private final TextField productionTypeLabel;
+	private final Label productionTypeLabel;
 	private final CheckBox statusCheckBox;
 	private final AnchorPane seasonAnchorPane;
 	private final Label actualSeasonLabel;
@@ -29,72 +33,104 @@ public class DetailsProductProduction implements DetailsProductInterface {
 	
 	private season selectedSeason;
     private Node selectedLegend;
-
-    private season[] seasons_tmp;
-    
-
 	
-	public DetailsProductProduction(DetailedProduct detailedProduct, AnchorPane productionModificationAnchorPane, TextField productionTypeTextField, CheckBox statusCheckBox, AnchorPane seasonAnchorPane, Label actualSeasonLabel, GridPane seasonsGridPane, VBox countryOfManufactureVBox) {
+	public DetailsProductProduction(DetailedProduct detailedProduct, AnchorPane productionModificationAnchorPane, Label productionTypeLabel, CheckBox statusCheckBox, AnchorPane seasonAnchorPane, Label actualSeasonLabel, GridPane seasonsGridPane, VBox countryOfManufactureVBox) {
 		this.detailedProduct = detailedProduct;
 		this.productionModificationAnchorPane = productionModificationAnchorPane;
-		this.productionTypeLabel = productionTypeTextField;
+		this.productionTypeLabel = productionTypeLabel;
 		this.statusCheckBox = statusCheckBox;
 		this.seasonAnchorPane = seasonAnchorPane;
 		this.actualSeasonLabel = actualSeasonLabel;
 		this.seasonsGridPane = seasonsGridPane;
 		this.countryOfManufactureVBox = countryOfManufactureVBox;
+
+		initComponents();
 		
-		initSeasons();
+		modificationDetails(false, false);
+	}
+	
+	private void initComponents() {
+		ComboBox<String> productionTypeComboBox = new ComboBox<String>();
+		productionTypeComboBox.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		productionTypeComboBox.setItems(GlobalDetails.getProductionTypes());
+		productionTypeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (oldValue != null && !GlobalDetails.getProductionTypes().contains(oldValue)) productionTypeComboBox.getSelectionModel().select(null);
+			else this.productionTypeLabel.setText(newValue);
+		});
+		this.productionTypeLabel.textProperty().addListener((obersavable, oldValue, newValue) -> {
+			productionTypeComboBox.getSelectionModel().select(newValue);
+		});
+		this.productionTypeLabel.setGraphic(productionTypeComboBox);
+		
+		this.statusCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue) this.statusCheckBox.setText("Active");
+			else this.statusCheckBox.setText("Inactive");
+		});
+		
+		Integer month = 0;
+		for (Node node : seasonsGridPane.getChildren().subList(0, DetailedProduct.nb_month)) {
+			node.setOnMouseClicked(click -> {
+				if (selectedSeason != null) {
+					Node clickedNode = click.getPickResult().getIntersectedNode().getClass() != Label.class ? click.getPickResult().getIntersectedNode().getParent() : click.getPickResult().getIntersectedNode();
+					changeSeason(clickedNode, selectedSeason);
+				}
+			});
+			month++;
+		}
 	}
 
-	private void initSeasons() {
-		seasons_tmp = detailedProduct.getSeasons();
-		selectedSeason = null;
-		
+	private void setContentComponents() {
+		this.productionTypeLabel.setText(this.detailedProduct.getProductionType());
+		this.statusCheckBox.setSelected(this.detailedProduct.getActive());
 		Integer currentMonth = Calendar.getInstance().get(Calendar.MONTH);
 		Integer month = 0;
-		for (Node node : seasonsGridPane.getChildren()) {
-			if (month < 12) {
-				node.setId(month.toString());
-				node.pseudoClassStateChanged(PseudoClass.getPseudoClass(detailedProduct.getSeason(month)), true);
-				if (month == currentMonth) {
-					node.pseudoClassStateChanged(PseudoClass.getPseudoClass(season.current.name()), true);
-					actualSeasonLabel.setText(detailedProduct.getSeason(month).replaceFirst(".",(detailedProduct.getSeason(month).charAt(0)+"").toUpperCase()));
-				}
-				node.setOnMouseClicked(click -> {
-					if (selectedSeason != null) {
-						Node clickedNode = click.getPickResult().getIntersectedNode().getClass() != Label.class ? click.getPickResult().getIntersectedNode().getParent() : click.getPickResult().getIntersectedNode();
-						clickedNode.pseudoClassStateChanged(PseudoClass.getPseudoClass(selectedSeason.name()), true);
-						changeSeason(clickedNode, selectedSeason.name());
-						seasons_tmp[Integer.parseInt(clickedNode.getId())] = selectedSeason;
-					}
-				});
-				month++;
+		for (Node node : seasonsGridPane.getChildren().subList(0, DetailedProduct.nb_month)) {
+			changeSeason(node, this.detailedProduct.getSeason(month));
+			if (month == currentMonth) {
+				node.pseudoClassStateChanged(PseudoClass.getPseudoClass(season.current.name()), true);
+				actualSeasonLabel.setText(this.detailedProduct.getSeason(month).name().replaceFirst(".",(this.detailedProduct.getSeason(month).name().charAt(0)+"").toUpperCase()));
 			}
+			else node.pseudoClassStateChanged(PseudoClass.getPseudoClass(season.current.name()), false);
+			month++;
 		}
+		GlobalDetails.setSelectedCountriesOfManufacture(detailedProduct.getCountriesOfManufacture());
+		resetList();
 	}
 	
-	private void changeSeason(Node node, String toSeason) {
+	private void resetList() {
+		this.countryOfManufactureVBox.getChildren().clear();
+		this.countryOfManufactureVBox.getChildren().addAll(GlobalDetails.getCountryOfManufacture());
+	}
+	
+	private void saveModification() {
+		this.detailedProduct.setProductionType(this.productionTypeLabel.getText());
+		this.detailedProduct.setActive(this.statusCheckBox.isSelected());
+		season[] seasons = new season[DetailedProduct.nb_month];
+		Integer month = 0;
+		for (Node node : seasonsGridPane.getChildren().subList(0, DetailedProduct.nb_month)) {
+			for (PseudoClass pseudoClass : node.getPseudoClassStates()) {
+				for (season element : season.values()) {
+					if (!element.equals(season.current) && element.name().equals(pseudoClass.getPseudoClassName())) seasons[month] = season.valueOf(pseudoClass.getPseudoClassName());
+				}
+			}
+			month++;
+		}
+		this.detailedProduct.setSeasons(seasons);
+		this.detailedProduct.setCountriesOfManufacture(GlobalDetails.getSelectedCountriesOfManufacture());
+	}
+	
+	private void changeSeason(Node node, season toSeason) {
+		node.pseudoClassStateChanged(PseudoClass.getPseudoClass(toSeason.name()), true);
 		for (PseudoClass pseudoClass : node.getPseudoClassStates()) {
 			if (pseudoClass.getPseudoClassName().equals(season.current.name())) {
-				actualSeasonLabel.setText(toSeason.replaceFirst(".",(toSeason.charAt(0)+"").toUpperCase()));						
+				this.actualSeasonLabel.setText(toSeason.name().replaceFirst(".",(toSeason.name().charAt(0)+"").toUpperCase()));						
 			}
-			else if (!pseudoClass.getPseudoClassName().equals("hover") && !pseudoClass.getPseudoClassName().equals(toSeason)) {
-				node.pseudoClassStateChanged(pseudoClass, false);
-			}
-		}
-	}
-	
-	private void cancelModificationProductionView() {
-		Integer month = 0;
-		for (Node node : seasonsGridPane.getChildren()) {
-			if (month < 12) {
-				node.pseudoClassStateChanged(PseudoClass.getPseudoClass(detailedProduct.getSeason(month)), true);
-				changeSeason(node, detailedProduct.getSeason(month));
-				month++;
+			else {
+				for (season element : season.values()) {
+					if (!element.equals(toSeason) && element.name().equals(pseudoClass.getPseudoClassName())) node.pseudoClassStateChanged(pseudoClass, false);
+				}
 			}
 		}
-		detailedProduct.getSeasons(seasons_tmp);
 	}
 	
 	protected void selectSeason(MouseEvent click) {
@@ -115,18 +151,37 @@ public class DetailsProductProduction implements DetailsProductInterface {
 	
 	@Override
 	public void modificationDetails(Boolean isModification, Boolean isSave) {
-		if (isModification) {
-			
-		}
-		else {
-			selectSeason(null);
+		this.productionModificationAnchorPane.setVisible(isModification);
+		if (isModification) this.productionTypeLabel.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		else this.productionTypeLabel.setContentDisplay(ContentDisplay.TEXT_ONLY);
+		this.statusCheckBox.setMouseTransparent(!isModification);
+		this.seasonAnchorPane.setMouseTransparent(!isModification);
+		if (!isModification) selectSeason(null);
+		this.countryOfManufactureVBox.setMouseTransparent(!isModification);
+		if (isSave != null) {
 			if (isSave) {
-				detailedProduct.setSeasons(seasons_tmp);
+				saveModification();
 			}
 			else if (!isSave) {
-				cancelModificationProductionView();
+				setContentComponents();
 			}
 		}
+		GlobalDetails.onlySelectedCountryOfManufacture(!isModification);
+		resetList();
+	}
+	
+	protected void changeChoicesProductionType() {
+		ModificationChoicesDetailsProductController.setCharacteristic("Production type");
+		ModificationChoicesDetailsProductController.setChoices(GlobalDetails.getProductionTypesSource());
+		StageService.showView(Views.viewsSecondaryStage.ModificationChoicesDetailsProduct, true);
+	}
+	
+	protected void changeChoicesCountryOfManufacture() {
+		ModificationChoicesDetailsProductController.setCharacteristic("Country of manufacture");
+		ModificationChoicesDetailsProductController.setChoices(GlobalDetails.getCountriesOfManufactureSource());
+		StageService.showView(Views.viewsSecondaryStage.ModificationChoicesDetailsProduct, true);
+		this.countryOfManufactureVBox.getChildren().clear();
+		this.countryOfManufactureVBox.getChildren().addAll(GlobalDetails.getCountryOfManufacture());
 	}
 	
 }

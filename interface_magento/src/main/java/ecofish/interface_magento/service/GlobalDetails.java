@@ -1,22 +1,19 @@
 package ecofish.interface_magento.service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import ecofish.interface_magento.daos.GettingGlobalDetailsThread;
-import ecofish.interface_magento.model.DetailedProduct;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.text.Font;
 
 public class GlobalDetails {
-	
-	private final DetailedProduct detailedProduct;
 	
 	private final ObservableList<String> alergensSource;
 	private final ObservableList<String> brandsSource;
@@ -36,9 +33,7 @@ public class GlobalDetails {
 	private final FilteredList<CheckBox> filtered_countries_of_manufacture;
 	
 	
-	private GlobalDetails() {
-		detailedProduct = DetailedProduct.getProduct();
-		
+	private GlobalDetails() {		
 		alergensSource = FXCollections.observableArrayList();
 		brandsSource = FXCollections.observableArrayList();
 		labelsSource = FXCollections.observableArrayList();
@@ -114,22 +109,29 @@ public class GlobalDetails {
 		test_labels.add("label9");
 		setLabels(test_labels);
 		
+		ArrayList<String> test_production_types = new ArrayList<String>();
+		test_production_types.add("Sauvage");
+		test_production_types.add("Elevage");
+		test_production_types.add("Pêche");
+		setProductionTypes(test_production_types);
+		
 		ArrayList<String> test_countries_of_manufacture = new ArrayList<String>();
-		test_countries_of_manufacture.add("countru_of_manufacture_1");
-		test_countries_of_manufacture.add("countru_of_manufacture_2");
-		test_countries_of_manufacture.add("countru_of_manufacture_3");
-		test_countries_of_manufacture.add("countru_of_manufacture_4");
-		test_countries_of_manufacture.add("countru_of_manufacture_5");
-		test_countries_of_manufacture.add("countru_of_manufacture_6");
-		test_countries_of_manufacture.add("countru_of_manufacture_7");
-		test_countries_of_manufacture.add("countru_of_manufacture_8");
-		test_countries_of_manufacture.add("countru_of_manufacture_9");
+		test_countries_of_manufacture.add("country_of_manufacture_1");
+		test_countries_of_manufacture.add("country_of_manufacture_2");
+		test_countries_of_manufacture.add("country_of_manufacture_3");
+		test_countries_of_manufacture.add("country_of_manufacture_4");
+		test_countries_of_manufacture.add("country_of_manufacture_5");
+		test_countries_of_manufacture.add("country_of_manufacture_6");
+		test_countries_of_manufacture.add("country_of_manufacture_7");
+		test_countries_of_manufacture.add("country_of_manufacture_8");
+		test_countries_of_manufacture.add("country_of_manufacture_9");
 		setCountriesOfManufacture(test_countries_of_manufacture);
 	}
 	
 	private static CheckBox createCheckBox(String text) {
 		CheckBox checkBox = new CheckBox(text);
 		checkBox.setFont(new Font(13));
+		checkBox.setCursor(Cursor.HAND);
 		return checkBox;
 	}
 	

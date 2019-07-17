@@ -11,6 +11,8 @@ import javafx.scene.image.Image;
 public class DetailedProduct extends Product {
 	
 	public enum season{high, medium, low, unspecified, current;};
+	
+	public static final Integer nb_month = 12;		// 13th is the background of the grid
 
 	private String ean_code;
 	private String ec_sales_code;
@@ -27,7 +29,7 @@ public class DetailedProduct extends Product {
 	// tableau historique de prix
 	
 	private void initDetails() {
-		seasons = new season[12];
+		seasons = new season[nb_month];
 		seasons[0] = seasons[1] = seasons[2] = seasons[10] = seasons[11] = season.low;
 		seasons[3] = seasons[4] = seasons[9] = season.medium;
 		seasons[5] = seasons[6] = seasons[7] = seasons[8] = season.high;
@@ -68,6 +70,10 @@ public class DetailedProduct extends Product {
 		labels.add("label4");
 		labels.add("label5");
 		labels.add("label7");
+		countries_of_manufacture = new ArrayList<String>();
+		countries_of_manufacture.add("country_of_manufacture_4");
+		countries_of_manufacture.add("country_of_manufacture_5");
+		countries_of_manufacture.add("country_of_manufacture_7");
 	}
 	
 	private DetailedProduct(Product product , String short_description) {
@@ -165,18 +171,8 @@ public class DetailedProduct extends Product {
 		return DetailedProductHolder.INSTANCE.production_type;
 	}
 	
-	public String getSeason(Integer month) {
-		return DetailedProductHolder.INSTANCE.seasons[month].name();
-	}
-	
-	public season[] getSeasons() {
-		season[] seasons = new season[12];
-		return getSeasons(seasons);
-	}
-	
-	public season[] getSeasons(season[] seasons) {
-		System.arraycopy(DetailedProductHolder.INSTANCE.seasons, 0, seasons, 0, DetailedProductHolder.INSTANCE.seasons.length);
-		return seasons;
+	public season getSeason(Integer month) {
+		return DetailedProductHolder.INSTANCE.seasons[month];
 	}
 	
 	public ArrayList<String> getCountriesOfManufacture() {
@@ -194,7 +190,7 @@ public class DetailedProduct extends Product {
 	}
 	
 	private static class DetailedProductHolder {
-		private static DetailedProduct INSTANCE = new DetailedProduct(new Product(103, "Agrumes", "Orange", "Orange New Land", "3", "II", 1.58, true), "");
+		private static DetailedProduct INSTANCE = new DetailedProduct(new Product(103, "Agrumes", "Orange", "Orange New Land", "3", "II", 1.58, false), "");
 	}
 	
 }
