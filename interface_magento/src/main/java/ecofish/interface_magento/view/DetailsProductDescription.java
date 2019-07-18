@@ -39,6 +39,11 @@ public class DetailsProductDescription implements DetailsProductInterface {
 	}
 
 	public void setContentComponents() {
+		this.detailedProduct.setNewShortDescription(null);
+		this.detailedProduct.setNewDescription(null);
+		this.detailedProduct.setNewUrlImage(null);
+		this.detailedProduct.setNewLatinName(null);
+		
 		this.shortDescriptionTextArea.setText(detailedProduct.getShortDescription());
 		this.url_image = this.detailedProduct.getUrlImage();
 		if (this.url_image == null) this.imageImage.setImage(null);
@@ -73,10 +78,10 @@ public class DetailsProductDescription implements DetailsProductInterface {
 	}
 	
 	private void saveModification() {
-		this.detailedProduct.setShortDescription(this.shortDescriptionTextArea.getText());
-		this.detailedProduct.setDescription(this.descriptionTextArea.getText());
-		this.detailedProduct.setUrlImage(url_image);
-		this.detailedProduct.setLatinName(this.latinNameTextField.getText());
+		this.detailedProduct.setNewShortDescription(this.shortDescriptionTextArea.getText());
+		this.detailedProduct.setNewDescription(this.descriptionTextArea.getText());
+		this.detailedProduct.setNewUrlImage(url_image);
+		this.detailedProduct.setNewLatinName(this.latinNameTextField.getText());
 	}
 	
 	@Override

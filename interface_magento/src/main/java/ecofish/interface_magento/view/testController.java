@@ -18,15 +18,16 @@ public class testController {
 	@FXML
 	LineChart<String, Number> testLineChart;
 	
-	@FXML
-	NumberAxis testNumberAxis;
+	/*@FXML
+	NumberAxis testNumberAxis;*/
 	
-	@FXML
-	CategoryAxis testCategoryAxis;
+	/*@FXML
+	CategoryAxis testCategoryAxis;*/
 	
 	@FXML
 	private void initialize() {
-		this.testNumberAxis.setLabel("test");
+		//this.testNumberAxis.setLabel("test");
+		
 		XYChart.Series<String, Number> series1 = new XYChart.Series<String, Number>();
 		series1.getData().add(new XYChart.Data<String, Number>("Jan", 23));
         series1.getData().add(new XYChart.Data<String, Number>("Feb", 14));
@@ -40,7 +41,7 @@ public class testController {
         series1.getData().add(new XYChart.Data<String, Number>("Oct", 17));
         series1.getData().add(new XYChart.Data<String, Number>("Nov", 29));
         series1.getData().add(new XYChart.Data<String, Number>("Dec", 25));
-		this.testLineChart.getData().add(series1);
+        this.testLineChart.getData().add(series1);
 		
 		XYChart.Series<String, Number> series2 = new XYChart.Series<String, Number>();
 		series2.getData().add(new XYChart.Data<String, Number>("Jan", 20));
@@ -55,9 +56,12 @@ public class testController {
         series2.getData().add(new XYChart.Data<String, Number>("Oct", 47));
         series2.getData().add(new XYChart.Data<String, Number>("Nov", 48));
         series2.getData().add(new XYChart.Data<String, Number>("Dec", 26));
-		this.testLineChart.getData().add(series2);
+        
+		//this.testLineChart.getData().addAll(series1, series2);
 		
 		addTooltip();
+		
+		//this.testLineChart.getData().clear();
 		
 	}
 	
@@ -76,8 +80,6 @@ public class testController {
 				Integer dataNumber = Integer.parseInt(point.substring(point.indexOf("data") + "data".length(), point.indexOf(" ", point.indexOf("data"))));
 				Tooltip t = new Tooltip(this.testLineChart.getData().get(serieNumber).getData().get(dataNumber).getYValue().toString());
 				Tooltip.install(node, t);
-				//Label l = new Label(this.testLineChart.getData().get(serieNumber).getData().get(dataNumber).getYValue().toString());
-				//l.
 			});
 		});
 	}

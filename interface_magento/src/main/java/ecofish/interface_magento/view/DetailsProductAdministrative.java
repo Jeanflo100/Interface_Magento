@@ -34,6 +34,12 @@ public class DetailsProductAdministrative implements DetailsProductInterface {
 	}
 	
 	private void setContentComponents() {
+		this.detailedProduct.setNewEanCode(null);
+		this.detailedProduct.setNewEcSalesCode(null);
+		this.detailedProduct.setNewAlergens(null);
+		this.detailedProduct.setNewBrands(null);
+		this.detailedProduct.setNewLabels(null);
+		
 		this.eanCodeTextField.setText(detailedProduct.getEanCode());
 		this.ecSalesCodeTextField.setText(detailedProduct.getEcSalesCode());
 		GlobalDetails.setSelectedAlergens(detailedProduct.getAlergens());
@@ -52,11 +58,11 @@ public class DetailsProductAdministrative implements DetailsProductInterface {
 	}
 
 	private void saveModification() {
-		this.detailedProduct.setEanCode(this.eanCodeTextField.getText());
-		this.detailedProduct.setEcSalesCode(this.ecSalesCodeTextField.getText());
-		this.detailedProduct.setAlergens(GlobalDetails.getSelectedAlergens());
-		this.detailedProduct.setBrands(GlobalDetails.getSelectedBrands());
-		this.detailedProduct.setLabels(GlobalDetails.getSelectedLabels());
+		this.detailedProduct.setNewEanCode(this.eanCodeTextField.getText());
+		this.detailedProduct.setNewEcSalesCode(this.ecSalesCodeTextField.getText());
+		this.detailedProduct.setNewAlergens(GlobalDetails.getSelectedAlergens());
+		this.detailedProduct.setNewBrands(GlobalDetails.getSelectedBrands());
+		this.detailedProduct.setNewLabels(GlobalDetails.getSelectedLabels());
 	}
 	
 	@Override

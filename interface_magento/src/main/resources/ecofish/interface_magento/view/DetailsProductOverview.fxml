@@ -476,79 +476,79 @@
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <LineChart fx:id="priceLineChart" layoutX="206.0" layoutY="14.0" prefHeight="192.0" prefWidth="400.0">
+                        <LineChart fx:id="priceLineChart" layoutX="206.0" layoutY="14.0" legendVisible="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="192.0" prefWidth="400.0">
                            <xAxis>
-                              <CategoryAxis side="BOTTOM" />
+                              <CategoryAxis prefHeight="11.0" prefWidth="346.0" side="BOTTOM" />
                            </xAxis>
                            <yAxis>
-                              <NumberAxis side="LEFT" />
+                              <NumberAxis forceZeroInRange="false" lowerBound="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="151.0" prefWidth="24.0" side="LEFT" upperBound="3.0" />
                            </yAxis>
                         </LineChart>
-                        <Text layoutX="89.0" layoutY="292.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pack 2:">
+                        <Text layoutX="89.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pack 2:">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="pack2TextField" alignment="CENTER" editable="false" layoutX="142.0" layoutY="272.0" prefHeight="25.0" prefWidth="183.0">
+                        <TextField fx:id="pack2TextField" alignment="CENTER" editable="false" layoutX="142.0" layoutY="290.0" prefHeight="25.0" prefWidth="183.0">
                            <font>
                               <Font size="15.0" />
                            </font></TextField>
-                        <Text layoutX="350.0" layoutY="291.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price: +">
+                        <Text layoutX="350.0" layoutY="310.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price: +">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="pricePack2TextField" alignment="CENTER" editable="false" layoutX="403.0" layoutY="270.0" prefHeight="25.0" prefWidth="68.0">
+                        <TextField fx:id="pricePack2TextField" alignment="CENTER" editable="false" layoutX="403.0" layoutY="289.0" prefHeight="25.0" prefWidth="68.0">
                            <font>
                               <Font size="15.0" />
                            </font></TextField>
-                        <Text layoutX="475.0" layoutY="292.0" strokeType="OUTSIDE" strokeWidth="0.0" text="£">
+                        <Text layoutX="475.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" text="£">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <Text layoutX="89.0" layoutY="359.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pack 3:">
+                        <Text layoutX="89.0" layoutY="378.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pack 3:">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="pack3TextField" alignment="CENTER" editable="false" layoutX="142.0" layoutY="340.0" prefHeight="25.0" prefWidth="183.0">
+                        <TextField fx:id="pack3TextField" alignment="CENTER" editable="false" layoutX="142.0" layoutY="358.0" prefHeight="25.0" prefWidth="183.0">
                            <font>
                               <Font size="15.0" />
                            </font></TextField>
-                        <Text layoutX="350.0" layoutY="360.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price: +">
+                        <Text layoutX="350.0" layoutY="379.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price: +">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="pricePack3TextField" alignment="CENTER" editable="false" layoutX="403.0" layoutY="340.0" prefHeight="25.0" prefWidth="68.0">
+                        <TextField fx:id="pricePack3TextField" alignment="CENTER" editable="false" layoutX="403.0" layoutY="359.0" prefHeight="25.0" prefWidth="68.0">
                            <font>
                               <Font size="15.0" />
                            </font></TextField>
-                        <Text layoutX="475.0" layoutY="361.0" strokeType="OUTSIDE" strokeWidth="0.0" text="£">
+                        <Text layoutX="475.0" layoutY="380.0" strokeType="OUTSIDE" strokeWidth="0.0" text="£">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <Text layoutX="89.0" layoutY="428.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pack 4:">
+                        <Text layoutX="89.0" layoutY="447.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pack 4:">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="pack4TextField" alignment="CENTER" editable="false" layoutX="142.0" layoutY="408.0" prefHeight="25.0" prefWidth="183.0">
+                        <TextField fx:id="pack4TextField" alignment="CENTER" editable="false" layoutX="142.0" layoutY="426.0" prefHeight="25.0" prefWidth="183.0">
                            <font>
                               <Font size="15.0" />
                            </font></TextField>
-                        <Text layoutX="350.0" layoutY="429.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price: +">
+                        <Text layoutX="350.0" layoutY="448.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Price: +">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Text>
-                        <TextField fx:id="pricePack4TextField" alignment="CENTER" editable="false" layoutX="403.0" layoutY="409.0" prefHeight="25.0" prefWidth="68.0">
+                        <TextField fx:id="pricePack4TextField" alignment="CENTER" editable="false" layoutX="403.0" layoutY="428.0" prefHeight="25.0" prefWidth="68.0">
                            <font>
                               <Font size="15.0" />
                            </font></TextField>
-                        <Text layoutX="475.0" layoutY="430.0" strokeType="OUTSIDE" strokeWidth="0.0" text="£">
+                        <Text layoutX="475.0" layoutY="449.0" strokeType="OUTSIDE" strokeWidth="0.0" text="£">
                            <font>
                               <Font size="16.0" />
                            </font>

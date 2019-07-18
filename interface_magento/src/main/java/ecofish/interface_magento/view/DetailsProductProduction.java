@@ -78,6 +78,11 @@ public class DetailsProductProduction implements DetailsProductInterface {
 	}
 
 	private void setContentComponents() {
+		this.detailedProduct.setNewProductionType(null);
+		this.detailedProduct.setChangeActive(null);
+		this.detailedProduct.setNewSeasons(null);
+		this.detailedProduct.setNewCountriesOfManufacture(null);
+		
 		this.productionTypeLabel.setText(this.detailedProduct.getProductionType());
 		this.statusCheckBox.setSelected(this.detailedProduct.getActive());
 		Integer currentMonth = Calendar.getInstance().get(Calendar.MONTH);
@@ -101,8 +106,8 @@ public class DetailsProductProduction implements DetailsProductInterface {
 	}
 	
 	private void saveModification() {
-		this.detailedProduct.setProductionType(this.productionTypeLabel.getText());
-		this.detailedProduct.setActive(this.statusCheckBox.isSelected());
+		this.detailedProduct.setNewProductionType(this.productionTypeLabel.getText());
+		this.detailedProduct.setChangeActive(this.statusCheckBox.isSelected());
 		season[] seasons = new season[DetailedProduct.nb_month];
 		Integer month = 0;
 		for (Node node : seasonsGridPane.getChildren().subList(0, DetailedProduct.nb_month)) {
@@ -113,8 +118,8 @@ public class DetailsProductProduction implements DetailsProductInterface {
 			}
 			month++;
 		}
-		this.detailedProduct.setSeasons(seasons);
-		this.detailedProduct.setCountriesOfManufacture(GlobalDetails.getSelectedCountriesOfManufacture());
+		this.detailedProduct.setNewSeasons(seasons);
+		this.detailedProduct.setNewCountriesOfManufacture(GlobalDetails.getSelectedCountriesOfManufacture());
 	}
 	
 	private void changeSeason(Node node, season toSeason) {

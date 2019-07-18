@@ -1,9 +1,19 @@
 package ecofish.interface_magento.view;
 
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import ecofish.interface_magento.model.DetailedProduct;
 import ecofish.interface_magento.util.TextFormatterDouble;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 
 public class DetailsProductSale implements DetailsProductInterface {
 
@@ -18,6 +28,8 @@ public class DetailsProductSale implements DetailsProductInterface {
 	private final TextField pricePack3TextField;
 	private final TextField pack4TextField;
 	private final TextField pricePack4TextField;
+	
+	private final SimpleDateFormat formatCalendar = new SimpleDateFormat("dd-MM-yyyy");
 	
 	public DetailsProductSale(DetailedProduct detailedProduct, TextField basicPackTextField, TextField actualPriceTextField, LineChart<String, Double> priceLineChart, TextField pack2TextField, TextField pricePack2TextField, TextField pack3TextField, TextField pricePack3TextField, TextField pack4TextField, TextField pricePack4TextField) {
 		this.detailedProduct = detailedProduct;
@@ -44,9 +56,40 @@ public class DetailsProductSale implements DetailsProductInterface {
 		this.pricePack3TextField.setTextFormatter(pricePack3TextFormatter.getTextFormatterDouble());
 		TextFormatterDouble pricePack4TextFormatter = new TextFormatterDouble();
 		this.pricePack4TextField.setTextFormatter(pricePack4TextFormatter.getTextFormatterDouble());
+		this.priceLineChart.getData().add(new Series<String, Double>());
+		this.priceLineChart.getData().get(0).getData().clear();
+		this.detailedProduct.getPricehistory().forEach((key, value) -> {
+			this.priceLineChart.getData().get(0).getData().add(new Data<String, Double>(formatCalendar.format(key.getTimeInMillis()), value));
+		});
+		addTooltipPriceHistory();
+	}
+	
+	/**
+	 * Add tooltips indicating the exact value at each node of each line in the chart
+	 */
+	private void addTooltipPriceHistory() {
+		Set<Node> nodes = new HashSet<Node>();
+		for (int i=0; i<this.priceLineChart.getData().size(); i++) {
+			nodes.addAll(priceLineChart.lookupAll(".chart-line-symbol.series" + i + "."));
+		}
+		nodes.forEach((node) -> {
+			node.setOnMouseEntered((MouseEvent event) -> {
+				String point = event.getSource().toString();
+				Integer serieNumber = Integer.parseInt(point.substring(point.indexOf("series") + "series".length(), point.indexOf(" ", point.indexOf("series"))));
+				Integer dataNumber = Integer.parseInt(point.substring(point.indexOf("data") + "data".length(), point.indexOf(" ", point.indexOf("data"))));
+				Tooltip t = new Tooltip(this.priceLineChart.getData().get(serieNumber).getData().get(dataNumber).getYValue().toString());
+				Tooltip.install(node, t);
+			});
+		});
 	}
 	
 	private void setContentComponents() {
+		this.detailedProduct.setNewBasicPack(null);
+		this.detailedProduct.setNewPrice(null);
+		this.detailedProduct.setNewSecondPack(null);
+		this.detailedProduct.setNewThirdPack(null);
+		this.detailedProduct.setNewFourthPack(null);
+		
 		this.basicPackTextField.setText(this.detailedProduct.getBasicPack());
 		this.actualPriceTextField.setText(this.detailedProduct.getActualPrice().toString());
 		this.pack2TextField.setText(this.detailedProduct.getNameSecondPack());
@@ -58,11 +101,11 @@ public class DetailsProductSale implements DetailsProductInterface {
 	}
 
 	private void saveModification() {
-		this.detailedProduct.setBasicPack(this.basicPackTextField.getText());
-		this.detailedProduct.setActualPrice(Double.parseDouble(this.actualPriceTextField.getText()));
-		this.detailedProduct.setSecondPack(this.pack2TextField.getText(), Double.parseDouble(this.pricePack2TextField.getText()));
-		this.detailedProduct.setThirdPack(this.pack3TextField.getText(), Double.parseDouble(this.pricePack3TextField.getText()));
-		this.detailedProduct.setFourthPack(this.pack4TextField.getText(), Double.parseDouble(this.pricePack4TextField.getText()));
+		this.detailedProduct.setNewBasicPack(this.basicPackTextField.getText());
+		this.detailedProduct.setNewPrice(Double.parseDouble(this.actualPriceTextField.getText()));
+		this.detailedProduct.setNewSecondPack(Collections.singletonMap(this.pack2TextField.getText(), Double.parseDouble(this.pricePack2TextField.getText())));
+		this.detailedProduct.setNewThirdPack(Collections.singletonMap(this.pack3TextField.getText(), Double.parseDouble(this.pricePack3TextField.getText())));
+		this.detailedProduct.setNewFourthPack(Collections.singletonMap(this.pack4TextField.getText(), Double.parseDouble(this.pricePack4TextField.getText())));
 	}
 
 	@Override
