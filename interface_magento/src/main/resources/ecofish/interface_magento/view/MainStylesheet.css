@@ -1,22 +1,39 @@
 .root {
 	-fx-focus-color: #6DC1F5;
 	-fx-accent: #6DC1F5;
+	
+	high: #76C778;
+	medium: #EAA471;
+	low: #EAE548;
+	unspecified: transparent;
 }
 
-.table-row-cell:selected{
+.table-row-cell:selected, .label:current {
 	-fx-text-background-color: #434A54;
 	-fx-font-weight: bold;
 	-fx-font-style: oblique;
 }
 
-.table-row-cell:high {
-	-fx-background: #76C778;
+.table-row-cell:high, .label:high {
+	-fx-background-color: high;
 }
 
-.table-row-cell:medium {
-	-fx-background: #EAA471;
+.table-row-cell:medium, .label:medium {
+	-fx-background-color: medium;
 }
 
-.table-row-cell:low {
-	-fx-background: #EAE548;
+.table-row-cell:low, .label:low {
+	-fx-background-color: low;
+}
+
+Rectangle:selected {
+	-fx-stroke: -fx-accent;
+}
+
+.tab:selected {
+	-fx-font-weight: bold;
+}
+
+.text-field:unmodifiable, .text-area:unmodifiable {
+	-fx-background-color: transparent;
 }

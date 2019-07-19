@@ -1,47 +1,260 @@
 package ecofish.interface_magento.view;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.net.MalformedURLException;
 
+import ecofish.interface_magento.model.DetailedProduct;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.chart.LineChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 
 public class DetailsProductOverviewController {
 	
+	////////////////// General Components //////////////////
+	
 	@FXML
-	GridPane testGridPane;
+	Label skuLabel;
+	
+	@FXML
+	Label characteristicLabel;
+	
+	@FXML
+	ImageView modificationDetailsImage;
+	
+	@FXML
+	ImageView validationDetailsImage;
+	
+	@FXML
+	ImageView cancelDetailsImage;
+	
+	@FXML
+	Button saveAndQuitButton;
+	
+	@FXML
+	TabPane detailsProductTabPane;
+	
+	////////////////// Administrative Components //////////////////
+	
+	@FXML
+	AnchorPane administrativeModificationAnchorPane;
+	
+	@FXML
+	TextField eanCodeTextField;
+	
+	@FXML
+	TextField ecSalesCodeTextField;
+	
+	@FXML
+	VBox alergenVBox;
+	
+	@FXML
+	VBox brandVBox;
+	
+	@FXML
+	VBox labelVBox;
+	
+	////////////////// Description Components //////////////////
+	
+	@FXML
+	AnchorPane descriptionModificationAnchorPane;
+	
+	@FXML
+	TextArea shortDescriptionTextArea;
+	
+	@FXML
+	ImageView imageImage;
+	
+	@FXML
+	TextArea descriptionTextArea;
+	
+	@FXML
+	TextField latinNameTextField;
+	
+	////////////////// Production Components //////////////////
+	
+	@FXML
+	AnchorPane productionModificationAnchorPane;
+	
+	@FXML
+	Label productionTypeLabel;
+	
+	@FXML
+	CheckBox statusCheckBox;
+	
+	@FXML
+	AnchorPane seasonAnchorPane;
+	
+	@FXML
+	Label actualSeasonLabel;
 	
 	@FXML
 	GridPane seasonGridPane;
 	
-    private final static String highSeason = "-fx-background-color: #76C778";
-    private final static String mediumSeason = "-fx-background-color: #EAA471";
-    private final static String lowSeason = "-fx-background-color: #FFE655";
+	@FXML
+	VBox countryOfManufactureVBox;
 	
-    private String[] seasons_test = new String[12];
-    private Hashtable<String, ArrayList<Integer>> seasons;
-    private String high = "1/2/3/4/11/12";
-    private String med = "5/6/7/10";
-    private String low = "8/9";
-    
+	////////////////// Sale Components //////////////////
+	
+	@FXML
+	TextField basicPackTextField;
+	
+	@FXML
+	TextField actualPriceTextField;
+	
+	@FXML
+	LineChart<String, Double> priceLineChart;
+	
+	@FXML
+	TextField pack2TextField;
+	
+	@FXML
+	TextField pricePack2TextField;
+	
+	@FXML
+	TextField pack3TextField;
+	
+	@FXML
+	TextField pricePack3TextField;
+	
+	@FXML
+	TextField pack4TextField;
+	
+	@FXML
+	TextField pricePack4TextField;
+	
+	////////////////// Variables //////////////////
+	
+	private DetailedProduct detailedProduct;
+	
+	private DetailsProductInterface actualView;
+	
+	private enum section{Administrative, Description, Production, Sale;};
+	
+	private DetailsProductAdministrative administrativeDetails;
+	
+	private DetailsProductDescription descriptionDetails;
+	
+	private DetailsProductProduction productionDetails;
+	
+	private DetailsProductSale saleDetails;
+	
+	private Boolean isModified;
+	
 	@FXML
 	private void initialize() {
-		initSeasons();
+		detailedProduct = DetailedProduct.getInstance();
+		administrativeDetails = new DetailsProductAdministrative(detailedProduct, administrativeModificationAnchorPane, eanCodeTextField, ecSalesCodeTextField, alergenVBox, brandVBox, labelVBox);
+		descriptionDetails = new DetailsProductDescription(detailedProduct, descriptionModificationAnchorPane, shortDescriptionTextArea, imageImage, descriptionTextArea, latinNameTextField);
+		productionDetails = new DetailsProductProduction(detailedProduct, productionModificationAnchorPane, productionTypeLabel, statusCheckBox, seasonAnchorPane, actualSeasonLabel, seasonGridPane, countryOfManufactureVBox);
+		saleDetails = new DetailsProductSale(detailedProduct, basicPackTextField, actualPriceTextField, priceLineChart, pack2TextField, pricePack2TextField, pack3TextField, pricePack3TextField, pack4TextField, pricePack4TextField);
+		isModified = false;
+		
+		initTitleView();
+		initActualView();
 	}
 	
-	/*private void initSeasons() {
-		for (String month : high.split("/")) {
-			
-		}
-	}*/
+	private void initTitleView() {
+		this.skuLabel.setText("Product: " + detailedProduct.getSku().toString());
+		this.characteristicLabel.setText(
+				detailedProduct.getCategory()
+				+ (detailedProduct.getFamily() != null ? " - " + detailedProduct.getFamily() : "")
+				+ " - " + detailedProduct.getName()
+				+ (detailedProduct.getSize() != null ? " - " + detailedProduct.getSize() : "")
+				+ (detailedProduct.getQuality() != null ? " - " + detailedProduct.getQuality() : "")
+				);
+	}
 	
-	private void initSeasons() {
-		Integer nb_month = 1;
-		for (Node node : seasonGridPane.getChildren()) {
-			node.setStyle("-fx-background-color: #EAA471");
-			nb_month++;
+	private void initActualView() {
+		if (detailsProductTabPane.getSelectionModel().getSelectedItem().getText().equals(section.Administrative.name())) actualView = this.administrativeDetails;
+		else if (detailsProductTabPane.getSelectionModel().getSelectedItem().getText().equals(section.Description.name())) actualView = this.descriptionDetails;
+		else if (detailsProductTabPane.getSelectionModel().getSelectedItem().getText().equals(section.Production.name())) actualView = this.productionDetails;
+		else if (detailsProductTabPane.getSelectionModel().getSelectedItem().getText().equals(section.Sale.name())) actualView = this.saleDetails;
+		
+		this.detailsProductTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			if (newValue.getText().equals(section.Administrative.name())) actualView = this.administrativeDetails;
+			else if (newValue.getText().equals(section.Description.name())) actualView = this.descriptionDetails;
+			else if (newValue.getText().equals(section.Production.name())) actualView = this.productionDetails;
+			else if (newValue.getText().equals(section.Sale.name())) actualView = this.saleDetails;
+		});
+	}
+	
+	@FXML
+	private void modificationDetails() {		
+		this.modificationDetailsImage.setVisible(!this.modificationDetailsImage.isVisible());
+		this.validationDetailsImage.setVisible(!this.validationDetailsImage.isVisible());
+		this.cancelDetailsImage.setVisible(!this.cancelDetailsImage.isVisible());
+		
+		this.detailsProductTabPane.requestFocus();
+		
+		Tab selectedTab = this.detailsProductTabPane.getSelectionModel().getSelectedItem();
+		for (Tab tab : this.detailsProductTabPane.getTabs()) {
+			if (tab != selectedTab) tab.setDisable(!tab.isDisable());
 		}
+
+		this.isModified = !this.isModified;
+		if (this.isModified) actualView.modificationDetails(true, null);
+	}
+	
+	@FXML
+	private void validationDetails() {
+		actualView.modificationDetails(false, true);
+		modificationDetails();
+	}
+	
+	@FXML
+	private void cancelDetails() {
+		actualView.modificationDetails(false, false);
+		modificationDetails();
+	}
+	
+	@FXML
+	private void changeImage() throws MalformedURLException {
+		this.descriptionDetails.changeImage();
+	}
+	
+	@FXML
+	private void changeChoices(MouseEvent click) {
+		System.out.println(click.getPickResult().getIntersectedNode().getId());
+	}
+	
+	@FXML
+	private void changeChoicesAlergen() {
+		this.administrativeDetails.changeChoicesAlergen();
+	}
+	
+	@FXML
+	private void changeChoicesBrand() {
+		this.administrativeDetails.changeChoicesBrand();
+	}
+	
+	@FXML
+	private void changeChoicesLabel() {
+		this.administrativeDetails.changeChoicesLabel();
+	}
+	
+	@FXML
+	private void changeChoicesProductionType() {
+		this.productionDetails.changeChoicesProductionType();
+	}
+	
+	@FXML
+	private void changeChoicesCountryOfManufacture() {
+		this.productionDetails.changeChoicesCountryOfManufacture();
+	}
+	
+	@FXML
+	private void selectSeason(MouseEvent click) {
+		productionDetails.selectSeason(click);
 	}
 	
 }

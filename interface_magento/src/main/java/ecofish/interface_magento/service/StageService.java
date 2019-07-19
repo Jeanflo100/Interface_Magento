@@ -158,6 +158,13 @@ public class StageService {
 	}
 	
 	/**
+	 * Clear the choosen view of primary stage
+	 */
+	public static void clearViewPrimaryStage(viewsPrimaryStage view) {
+		StageServiceHolder.INSTANCE.viewPrimaryStage.remove(view);
+	}
+	
+	/**
 	 * Triggers the closing of the application
 	 */
 	public static void closePrimaryStage() {

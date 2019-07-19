@@ -42,6 +42,19 @@ public class Product implements Comparable<Product>{
 		this.changeActive = false;
 	}
 	
+	protected Product(Product product) {
+		this.sku = product.sku;
+		this.category = product.category;
+		this.family = product.family;
+		this.name = product.name;
+		this.size = product.size;
+		this.quality = product.quality;
+		this.actualPrice = product.actualPrice;
+		this.newPrice = null;
+		this.active = product.active;
+		this.changeActive = false;
+	}
+	
 	public void setActualPrice(Double actualPrice) {
 		this.actualPrice = actualPrice;
 	}
