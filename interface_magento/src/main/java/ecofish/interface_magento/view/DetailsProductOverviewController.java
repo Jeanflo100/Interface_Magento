@@ -152,7 +152,7 @@ public class DetailsProductOverviewController {
 	
 	@FXML
 	private void initialize() {
-		detailedProduct = DetailedProduct.getProduct();
+		detailedProduct = DetailedProduct.getInstance();
 		administrativeDetails = new DetailsProductAdministrative(detailedProduct, administrativeModificationAnchorPane, eanCodeTextField, ecSalesCodeTextField, alergenVBox, brandVBox, labelVBox);
 		descriptionDetails = new DetailsProductDescription(detailedProduct, descriptionModificationAnchorPane, shortDescriptionTextArea, imageImage, descriptionTextArea, latinNameTextField);
 		productionDetails = new DetailsProductProduction(detailedProduct, productionModificationAnchorPane, productionTypeLabel, statusCheckBox, seasonAnchorPane, actualSeasonLabel, seasonGridPane, countryOfManufactureVBox);

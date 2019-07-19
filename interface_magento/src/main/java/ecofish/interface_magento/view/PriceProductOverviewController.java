@@ -2,6 +2,7 @@ package ecofish.interface_magento.view;
 
 import java.util.Optional;
 
+import ecofish.interface_magento.model.DetailedProduct;
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.Filters;
 import ecofish.interface_magento.service.ProductService;
@@ -67,6 +68,9 @@ public class PriceProductOverviewController {
 	Text descriptionText;
 	
 	@FXML
+	Button productDetailsButton;
+	
+	@FXML
 	Text actualPriceText;
 	
 	@FXML
@@ -90,6 +94,14 @@ public class PriceProductOverviewController {
 	private Product currentProduct;
 	private Product previousProduct;
 	private Integer lastValidIndexCurrentProduct;
+	
+	/**
+	 * Go to show product details view
+	 */
+	@FXML
+	private void handleProductDetailsButton() {
+		DetailedProduct.newDetailedProduct(this.currentProduct);
+	}
 	
 	/**
 	 * Checking conditions before updating the price
@@ -261,11 +273,13 @@ public class PriceProductOverviewController {
 	private void showProduct(Product product) {
 		if (product == null) {
 			this.descriptionText.setText(null);
+			this.productDetailsButton.setDisable(true);
 			this.actualPriceText.setText(null);
 			this.newPriceTextField.setPromptText(null);
 		}
 		else {
 			this.descriptionText.setText(product.toString());
+			this.productDetailsButton.setDisable(false);
 			this.actualPriceText.setText(product.getActualPrice().toString());
 			if (product.getNewPrice() == null) {
 				this.newPriceTextField.setPromptText(product.getActualPrice().toString());

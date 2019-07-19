@@ -3,6 +3,7 @@ package ecofish.interface_magento.view;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import ecofish.interface_magento.model.DetailedProduct;
 import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.Filters;
 import ecofish.interface_magento.service.ProductService;
@@ -88,6 +89,7 @@ public class StatusProductOverviewController {
 	
 	private Filters filters;
 
+	private Product currentProduct;
 	private Product currentInactiveProduct;
 	private Product currentActiveProduct;
 	private Product previousInactiveProduct;
@@ -111,7 +113,7 @@ public class StatusProductOverviewController {
 	 */
 	@FXML
 	private void handleProductDetailsButton() {
-		//TODO
+		DetailedProduct.newDetailedProduct(this.currentProduct);
 	}
 	
 	/**
@@ -320,10 +322,12 @@ public class StatusProductOverviewController {
 	 */
 	private void showProduct(Product product) {
 		if (product != null) {
+			this.currentProduct = product;
 			this.descriptionText.setText(product.toString());
 			this.productDetailsButton.setDisable(false);
 		}
 		else {
+			this.currentProduct = null;
 			this.descriptionText.setText(null);
 			this.productDetailsButton.setDisable(true);
 		}

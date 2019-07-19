@@ -2,9 +2,14 @@ package ecofish.interface_magento.model;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.TreeMap;
+
+import ecofish.interface_magento.daos.GettingDetailedProductThread;
+import ecofish.interface_magento.service.StageService;
+import ecofish.interface_magento.service.Views;
 
 public class DetailedProduct extends Product {
 	
@@ -47,85 +52,17 @@ public class DetailedProduct extends Product {
 	private Hashtable<String, Double> new_third_pack;
 	private Hashtable<String, Double> new_fourth_pack;
 	
-	private void initDetails() {
-		seasons = new season[nb_month];
-		seasons[0] = seasons[1] = seasons[2] = seasons[10] = seasons[11] = season.low;
-		seasons[3] = seasons[4] = seasons[9] = season.medium;
-		seasons[5] = seasons[6] = seasons[7] = seasons[8] = season.high;
-		production_type = "Sauvage";
-		short_description = "Un concentré d’énergie et de bien-être à croquer ou à boire dans nos oranges Bio !";
-		description = "Descriptif : L'orange, un des fruits préféré des français ! \r\n" + 
-				" \r\n" + 
-				"Avec la pomme et la banane, l’orange fait partie des fruits les plus consommés en France. En effet, c’est le troisième fruit le plus cultivé au monde. \r\n" + 
-				"\r\n" + 
-				"Présente sur notre site tout l’hiver et au printemps, elles vous apporteront les vitamines nécessaires pour lutter contre le froid et la fatigue, ainsi qu’une quantité importante de minéraux (calcium et magnésium), indispensables au bon équilibre de l’organisme. \r\n" + 
-				"\r\n" + 
-				"Gorgée en vitamine C, l’orange est idéale pour couvrir tous vos besoins quotidiens ! Son goût sucré légèrement acidulé excitera vos papilles...\r\n" + 
-				"\r\n" + 
-				"Tout comme le citron, la bergamote et le pamplemousse, l'orange appartient au groupe des agrumes. Elle compte de nombreuses variétés, toutes aussi bonnes les unes que les autres ! \r\n" + 
-				"On retrouve principalement trois grandes variétés d'oranges : les oranges blondes à chair ou à jus, les oranges amères et les oranges sanguines. \r\n" + 
-				"\r\n" + 
-				"*Les oranges blondes à chair possèdent généralement une belle peau orange brillante, rugueuse, avec une petite excroissance plus ou moins prononcée. Les principales variétés d'oranges blondes à chair sont la Navel, la Naveline, la Navelate ou encore la Late Lane. \r\n" + 
-				"On distingue les oranges blondes à jus des blondes à chair car elles sont légèrement aplaties avec une peau fine et grenue. \r\n" + 
-				"*Les oranges sanguines tirent leur nom de la couleur rouge de leur chair. Cette coloration est due à la présence d'anthocyanes, pigment produit chez certaines espèces quand celles-ci sont exposées au froid. Parmi les oranges sanguines, on compte les variétés Moro, Sanguinello et Tarocco, par exemple.\r\n" + 
-				"*Les oranges amères sont plus petites que les oranges douces. Leur peau orange est rugueuse, épaisse et teintée de vert. Sa chair est peu juteuse, acide et contient beaucoup de pépins. Elles sont quant à elles, issus du bigaradier contrairement à l'orange douce.\r\n" + 
-				"\r\n" + 
-				"Bien cuisiner…: Zeste, tranches, jus ou rondelle… Vous avez de multiples possibilités pour l'ajouter à vos plats. Vous pourrez cuisiner du canard à l'orange, assaisonner vos crustacés et poissons ou la rajouter dans une semoule. Sa seule limite est votre imagination ! \r\n" + 
-				"\r\n" + 
-				"Pour une conservation optimale…: L’orange se conserve très facilement et assez longtemps. Vous pouvez la garder à l’air ambiant pendant une semaine. Dans le bac à légumes du réfrigérateur, vous stocker pendant 10 jours, tout en préservant son délicieux jus !\r\n";
-		latin_name = "Muriculous suvitius";
-		url_image = null;
-		ean_code = "41225659535";
-		ec_sales_code = "FR5F5FGG4HH2245D";
-		alergens = new ArrayList<String>();
-		alergens.add("alergen1");
-		alergens.add("alergen4");
-		alergens.add("alergen5");
-		brands = new ArrayList<String>();
-		brands.add("brand3");
-		brands.add("brand7");
-		brands.add("brand9");
-		labels = new ArrayList<String>();
-		labels.add("label4");
-		labels.add("label5");
-		labels.add("label7");
-		countries_of_manufacture = new ArrayList<String>();
-		countries_of_manufacture.add("country_of_manufacture_4");
-		countries_of_manufacture.add("country_of_manufacture_5");
-		countries_of_manufacture.add("country_of_manufacture_7");
-		basicPack = "Cageot - 10kg";
-		second_pack = new Hashtable<String, Double>(1);
-		second_pack.put("Cageot - 5kg", 0.1);
-		third_pack = new Hashtable<String, Double>(1);
-		third_pack.put("1kg", 0.35);
-		fourth_pack = new Hashtable<String, Double>(1);
-		fourth_pack.put("Pièce", 0.5);
-		priceHistory = new TreeMap<Calendar, Double>();
-		Calendar date4 = Calendar.getInstance();
-		date4.set(2019, 3, 12);
-		priceHistory.put(date4, 2.37);
-		Calendar date1 = Calendar.getInstance();
-		date1.set(2018, 9, 20);
-		priceHistory.put(date1, 2.34);
-		Calendar date2 = Calendar.getInstance();
-		date2.set(2018, 11, 4);
-		priceHistory.put(date2, 2.48);
-		Calendar date3 = Calendar.getInstance();
-		date3.set(2019, 0, 27);
-		priceHistory.put(date3, 2.51);
-		Calendar date5 = Calendar.getInstance();
-		date5.set(2019, 6, 7);
-		priceHistory.put(date5, 2.41);
-		/*priceHistory.forEach((key, value) -> {
-			System.out.println(key.getTime() + " " + value);
-		});*/
-	}
-	
-	private DetailedProduct(Product product , String short_description) {
+	private DetailedProduct(Product product) {
 		super(product);
-		this.short_description = short_description;
-		
-		initDetails();
+		alergens = new ArrayList<String>();
+		brands = new ArrayList<String>();
+		labels = new ArrayList<String>();
+		seasons = new season[nb_month];
+		countries_of_manufacture = new ArrayList<String>();
+		second_pack = new Hashtable<String, Double>(1);
+		third_pack = new Hashtable<String, Double>(1);
+		fourth_pack = new Hashtable<String, Double>(1);
+		priceHistory = new TreeMap<Calendar, Double>();
 	}
 	
 	////////////// Set actual details //////////////
@@ -138,17 +75,17 @@ public class DetailedProduct extends Product {
 		DetailedProductHolder.INSTANCE.ec_sales_code = ec_sales_code;
 	}
 	
-	public void setAlergens (ArrayList<String> alergens) {
+	public void setAlergens (Collection<String> alergens) {
 		DetailedProductHolder.INSTANCE.alergens.clear();
 		if (alergens != null) DetailedProductHolder.INSTANCE.alergens.addAll(alergens);
 	}
 	
-	public void setBrands (ArrayList<String> brands) {
+	public void setBrands (Collection<String> brands) {
 		DetailedProductHolder.INSTANCE.brands.clear();
 		if (brands != null) DetailedProductHolder.INSTANCE.brands.addAll(brands);
 	}
 	
-	public void setLabels (ArrayList<String> labels) {
+	public void setLabels (Collection<String> labels) {
 		DetailedProductHolder.INSTANCE.labels.clear();
 		if (labels != null) DetailedProductHolder.INSTANCE.labels.addAll(labels);
 	}
@@ -181,7 +118,7 @@ public class DetailedProduct extends Product {
 		else DetailedProductHolder.INSTANCE.seasons = null;
 	}
 	
-	public void setCountriesOfManufacture(ArrayList<String> countries_of_manufacture) {
+	public void setCountriesOfManufacture(Collection<String> countries_of_manufacture) {
 		DetailedProductHolder.INSTANCE.countries_of_manufacture.clear();
 		if (countries_of_manufacture != null) DetailedProductHolder.INSTANCE.countries_of_manufacture.addAll(countries_of_manufacture);
 	}
@@ -220,17 +157,17 @@ public class DetailedProduct extends Product {
 		DetailedProductHolder.INSTANCE.new_ec_sales_code = ec_sales_code;
 	}
 	
-	public void setNewAlergens (ArrayList<String> alergens) {
+	public void setNewAlergens (Collection<String> alergens) {
 		if (alergens != null && !DetailedProductHolder.INSTANCE.alergens.equals(alergens)) DetailedProductHolder.INSTANCE.new_alergens = new ArrayList<String>(alergens);
 		else DetailedProductHolder.INSTANCE.new_alergens = null;
 	}
 	
-	public void setNewBrands (ArrayList<String> brands) {
+	public void setNewBrands (Collection<String> brands) {
 		if (brands != null && !DetailedProductHolder.INSTANCE.brands.equals(brands)) DetailedProductHolder.INSTANCE.new_brands = new ArrayList<String>(brands);
 		else DetailedProductHolder.INSTANCE.new_brands = null;
 	}
 	
-	public void setNewLabels (ArrayList<String> labels) {
+	public void setNewLabels (Collection<String> labels) {
 		if (labels != null && !DetailedProductHolder.INSTANCE.labels.equals(labels)) DetailedProductHolder.INSTANCE.new_labels = new ArrayList<String>(labels);
 		else DetailedProductHolder.INSTANCE.new_labels = null;
 	}
@@ -263,7 +200,7 @@ public class DetailedProduct extends Product {
 		else DetailedProductHolder.INSTANCE.new_seasons = null;
 	}
 	
-	public void setNewCountriesOfManufacture(ArrayList<String> countries_of_manufacture) {
+	public void setNewCountriesOfManufacture(Collection<String> countries_of_manufacture) {
 		if (countries_of_manufacture != null && !DetailedProductHolder.INSTANCE.countries_of_manufacture.equals(countries_of_manufacture)) DetailedProductHolder.INSTANCE.new_countries_of_manufacture = new ArrayList<String>(countries_of_manufacture);
 		else DetailedProductHolder.INSTANCE.new_countries_of_manufacture = null;
 	}
@@ -447,18 +384,21 @@ public class DetailedProduct extends Product {
 		return DetailedProductHolder.INSTANCE.new_fourth_pack.get(DetailedProductHolder.INSTANCE.new_fourth_pack.keys().nextElement());
 	}
 	
-	public static void change(Product product, String short_description) {
-		Product product_tmp = new Product(103, "Agrumes", "Orange", "Orange New Land", "3", "II", 1.58, true);
-		String short_description_tmp = "";
-		DetailedProductHolder.INSTANCE = new DetailedProduct(product_tmp, short_description_tmp);
+	public static void newDetailedProduct(Product product) {
+		if (DetailedProductHolder.INSTANCE == null || !DetailedProductHolder.INSTANCE.getIdProduct().equals(product.getIdProduct())) {
+			DetailedProductHolder.INSTANCE = new DetailedProduct(product);
+			GettingDetailedProductThread gettingDetailedProductThread = new GettingDetailedProductThread(DetailedProductHolder.INSTANCE);
+			new Thread(gettingDetailedProductThread).start();
+		}
+		else StageService.showView(Views.viewsPrimaryStage.DetailsProductOverview);
 	}
 	
-	public static DetailedProduct getProduct() {
+	public static DetailedProduct getInstance() {
 		return DetailedProductHolder.INSTANCE;
 	}
 	
 	private static class DetailedProductHolder {
-		private static DetailedProduct INSTANCE = new DetailedProduct(new Product(103, "Agrumes", "Orange", "Orange New Land", "3", "II", 1.58, false), "");
+		private static DetailedProduct INSTANCE;// = new DetailedProduct(new Product(103, "Agrumes", "Orange", "Orange New Land", "3", "II", 1.58, false), "");
 	}
 	
 }

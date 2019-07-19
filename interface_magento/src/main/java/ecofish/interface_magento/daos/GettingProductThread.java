@@ -1,12 +1,10 @@
 package ecofish.interface_magento.daos;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -88,9 +86,6 @@ public class GettingProductThread implements Runnable {
 
 			ResultSet resultSet = statement.executeQuery("SELECT * FROM product");
 			while(resultSet.next()) {
-				/*Calendar test = Calendar.getInstance();
-				test.setTimeInMillis(resultSet.getTimestamp("date").getTime());
-				System.out.println(test.getTime());*/
 				Product product = new Product(
 						resultSet.getInt("idproduct"),
 						resultSet.getString("category"),
