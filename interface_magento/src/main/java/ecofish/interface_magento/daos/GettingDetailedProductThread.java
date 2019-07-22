@@ -4,21 +4,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
-import javax.swing.event.ListSelectionEvent;
-
 import ecofish.interface_magento.log.Logging;
 import ecofish.interface_magento.model.DetailedProduct;
-import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.model.DetailedProduct.season;
-import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views;
 import ecofish.interface_magento.view.LoadingProductController;
@@ -61,14 +55,94 @@ public class GettingDetailedProductThread implements Runnable {
     		Connection connection = DataSourceFactory.getConnection();
 			Statement statement = connection.createStatement();
 			
-			ResultSet test = statement.executeQuery("SELECT * FROM product");
-			while (test.next()) {
-				System.out.println();
+			ResultSet comptage = statement.executeQuery("SELECT COUNT(value) AS result FROM mg_catalog_product_entity_text WHERE attribute_id = 155");
+			while (comptage.next()) {
+				System.out.println(comptage.getString("result"));
 			}
 			
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM product");
-			while(resultSet.next()) {
+			/*ResultSet ean_code = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 148");
+			while (ean_code.next()) {
+				System.out.println(ean_code.getString("value"));
+			}*/
+
+			/*ResultSet ec_sales_code = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 147");
+			while (ec_sales_code.next()) {
+				System.out.println(ec_sales_code.getString("value"));
+			}*/
+			
+			/*ResultSet alergens = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_text WHERE attribute_id = 155");
+			while (alergens.next()) {
+				System.out.println(alergens.getString("value"));
+			}*/
+			
+			/*ResultSet brands = statement.executeQuery("SELECT value FROM mg_eav_attribute_option_value WHERE option_id IN (SELECT value FROM mg_catalog_product_entity_int WHERE attribute_id = 146)");
+			while (brands.next()) {
+				System.out.println(brands.getString("value"));
+			}*/
+			
+			/*ResultSet labels = statement.executeQuery("SELECT value FROM mg_eav_attribute_option_value WHERE option_id IN (SELECT value FROM mg_catalog_product_entity_int WHERE attribute_id = 153)");
+			while (labels.next()) {
+				System.out.println(labels.getString("value"));
+			}*/
+			
+			/*ResultSet short_description = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_text WHERE attribute_id = 65");
+			while (short_description.next()) {
+				System.out.println(short_description.getString("value"));
+			}*/
+			
+			/*ResultSet url_image = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 77");
+			while (url_image.next()) {
+				System.out.println(url_image.getString("value"));
+			}*/
+			
+			/*ResultSet description = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_text WHERE attribute_id = 64");
+			while (description.next()) {
+				System.out.println(description.getString("value"));
+			}*/
+			
+			/*ResultSet latin_name = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 150");
+			while (latin_name.next()) {
+				System.out.println(latin_name.getString("value"));
+			}*/
+			
+			/*ResultSet production_type = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 145");
+			while (production_type.next()) {
+				System.out.println(production_type.getString("value"));
+			}*/
+			
+			/*ResultSet high_season = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_text WHERE attribute_id = 157");
+			while (high_season.next()) {
+				System.out.println(high_season.getString("value"));
+			}*/
+			
+			/*ResultSet med_season = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_text WHERE attribute_id = 158");
+			while (med_season.next()) {
+				System.out.println(med_season.getString("value"));
+			}*/
+			
+			/*ResultSet low_season = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_text WHERE attribute_id = 159");
+			while (low_season.next()) {
+				System.out.println(low_season.getString("value"));
+			}*/
+			
+			/*ResultSet country_of_manufacture = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_int WHERE attribute_id = 108");
+			while (country_of_manufacture.next()) {
+				System.out.println(country_of_manufacture.getString("value"));
+			}*/
+			
+			/*ResultSet country_of_manufacture = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_int WHERE attribute_id = 108");
+			while (country_of_manufacture.next()) {
+				System.out.println(country_of_manufacture.getString("value"));
+			}*/
+			
+			ResultSet priceHistory = statement.executeQuery("SELECT * FROM mg_catalogrule_oldprice");
+			while (priceHistory.next()) {
+				System.out.println(priceHistory.getString(1) + " " + priceHistory.getString(2) + " " + priceHistory.getString(3));
 			}
+			
+			/*ResultSet resultSet = statement.executeQuery("SELECT * FROM product");
+			while(resultSet.next()) {
+			}*/
 			
     	}
 		catch (SQLException e){

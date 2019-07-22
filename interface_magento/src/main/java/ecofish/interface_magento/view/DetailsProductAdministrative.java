@@ -27,8 +27,6 @@ public class DetailsProductAdministrative implements DetailsProductInterface {
 		this.alergenVBox = alergenVBox;
 		this.brandVBox = brandVBox;
 		this.labelVBox = labelVBox;
-
-		GlobalDetails.initText();
 		
 		modificationDetails(false, false);
 	}

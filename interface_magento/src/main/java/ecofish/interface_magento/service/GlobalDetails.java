@@ -1,5 +1,6 @@
 package ecofish.interface_magento.service;
 
+import java.awt.Checkbox;
 import java.util.ArrayList;
 
 import ecofish.interface_magento.daos.GettingGlobalDetailsThread;
@@ -9,17 +10,18 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.text.Font;
 
 public class GlobalDetails {
 	
-	private final ObservableList<String> alergensSource;
-	private final ObservableList<String> brandsSource;
-	private final ObservableList<String> labelsSource;
-	private final ObservableList<String> productionTypesSource;
-	private final ObservableList<String> countries_of_manufacture_source;
+	private static ObservableList<String> alergensSource;
+	private static ObservableList<String> brandsSource;
+	private static ObservableList<String> labelsSource;
+	private static ObservableList<String> productionTypesSource;
+	private static ObservableList<String> countries_of_manufacture_source;
 	
 	private final ObservableList<CheckBox> alergens;
 	private final ObservableList<CheckBox> brands;
@@ -56,9 +58,9 @@ public class GlobalDetails {
 		sortedProductionTypes = new SortedList<String>(productionTypesSource, (String o1, String o2) -> o1.compareTo(o2));
 		filtered_countries_of_manufacture = new FilteredList<CheckBox>(new SortedList<CheckBox>(countries_of_manufacture, (CheckBox o1, CheckBox o2) -> o1.getText().compareTo(o2.getText())));
 		
-		// Récupérer les détails au complet
-		/*GettingGlobalDetailsThread gettingGlobalDetailsThread = new GettingGlobalDetailsThread();
-		new Thread(gettingGlobalDetailsThread).start();*/
+		GettingGlobalDetailsThread gettingGlobalDetailsThread = new GettingGlobalDetailsThread();
+		new Thread(gettingGlobalDetailsThread).start();
+    	StageService.showView(Views.viewsSecondaryStage.LoadingProduct, true);
 	}
 	
 	private void changeOnSourceList(Change<? extends String> change, ObservableList<CheckBox> list) {
@@ -72,75 +74,20 @@ public class GlobalDetails {
 		}
 	}
 	
-	public static void initText() {
-		ArrayList<String> test_alergens = new ArrayList<String>();
-		test_alergens.add("alergen1");
-		test_alergens.add("alergen2");
-		test_alergens.add("alergen3");
-		test_alergens.add("alergen4");
-		test_alergens.add("alergen5");
-		test_alergens.add("alergen6");
-		test_alergens.add("alergen7");
-		test_alergens.add("alergen8");
-		test_alergens.add("alergen9");
-		setAlergens(test_alergens);
-		
-		ArrayList<String> test_brands = new ArrayList<String>();
-		test_brands.add("brand1");
-		test_brands.add("brand2");
-		test_brands.add("brand3");
-		test_brands.add("brand4");
-		test_brands.add("brand5");
-		test_brands.add("brand6");
-		test_brands.add("brand7");
-		test_brands.add("brand8");
-		test_brands.add("brand9");
-		setBrands(test_brands);
-		
-		ArrayList<String> test_labels = new ArrayList<String>();
-		test_labels.add("label1");
-		test_labels.add("label2");
-		test_labels.add("label3");
-		test_labels.add("label4");
-		test_labels.add("label5");
-		test_labels.add("label6");
-		test_labels.add("label7");
-		test_labels.add("label8");
-		test_labels.add("label9");
-		setLabels(test_labels);
-		
-		ArrayList<String> test_production_types = new ArrayList<String>();
-		test_production_types.add("Sauvage");
-		test_production_types.add("Elevage");
-		test_production_types.add("Pêche");
-		setProductionTypes(test_production_types);
-		
-		ArrayList<String> test_countries_of_manufacture = new ArrayList<String>();
-		test_countries_of_manufacture.add("country_of_manufacture_1");
-		test_countries_of_manufacture.add("country_of_manufacture_2");
-		test_countries_of_manufacture.add("country_of_manufacture_3");
-		test_countries_of_manufacture.add("country_of_manufacture_4");
-		test_countries_of_manufacture.add("country_of_manufacture_5");
-		test_countries_of_manufacture.add("country_of_manufacture_6");
-		test_countries_of_manufacture.add("country_of_manufacture_7");
-		test_countries_of_manufacture.add("country_of_manufacture_8");
-		test_countries_of_manufacture.add("country_of_manufacture_9");
-		setCountriesOfManufacture(test_countries_of_manufacture);
-	}
-	
 	private static CheckBox createCheckBox(String text) {
 		CheckBox checkBox = new CheckBox(text);
+		checkBox.setAlignment(Pos.TOP_LEFT);
 		checkBox.setFont(new Font(13));
 		checkBox.setCursor(Cursor.HAND);
 		return checkBox;
 	}
 	
 	public static void setAlergens(ArrayList<String> alergens) {
-		GlobalDetailsHolder.INSTANCE.alergensSource.addAll(alergens);
+		alergensSource.addAll(alergens);
 	}
 	
 	public static ObservableList<String> getAlergensSource() {
-		return GlobalDetailsHolder.INSTANCE.alergensSource;
+		return alergensSource;
 	}
 	
 	public static void setSelectedAlergens(ArrayList<String> selectedAlergens) {
@@ -169,11 +116,11 @@ public class GlobalDetails {
 	}
 	
 	public static void setBrands(ArrayList<String> brands) {
-		GlobalDetailsHolder.INSTANCE.brandsSource.addAll(brands);
+		brandsSource.addAll(brands);
 	}
 	
 	public static ObservableList<String> getBrandsSource() {
-		return GlobalDetailsHolder.INSTANCE.brandsSource;
+		return brandsSource;
 	}
 	
 	public static void setSelectedBrands(ArrayList<String> selectedBrands) {
@@ -202,11 +149,11 @@ public class GlobalDetails {
 	}
 	
 	public static void setLabels(ArrayList<String> labels) {
-		GlobalDetailsHolder.INSTANCE.labelsSource.addAll(labels);
+		labelsSource.addAll(labels);
 	}
 	
 	public static ObservableList<String> getLabelsSource() {
-		return GlobalDetailsHolder.INSTANCE.labelsSource;
+		return labelsSource;
 	}
 	
 	public static void setSelectedLabels(ArrayList<String> selectedLabels) {
@@ -235,11 +182,11 @@ public class GlobalDetails {
 	}
 	
 	public static void setProductionTypes(ArrayList<String> productionTypes) {
-		GlobalDetailsHolder.INSTANCE.productionTypesSource.addAll(productionTypes);
+		productionTypesSource.addAll(productionTypes);
 	}
 	
 	public static ObservableList<String> getProductionTypesSource() {
-		return GlobalDetailsHolder.INSTANCE.productionTypesSource;
+		return productionTypesSource;
 	}
 	
 	public static SortedList<String> getProductionTypes() {
@@ -247,11 +194,11 @@ public class GlobalDetails {
 	}
 	
 	public static void setCountriesOfManufacture(ArrayList<String> countries_of_manufacture) {
-		GlobalDetailsHolder.INSTANCE.countries_of_manufacture_source.addAll(countries_of_manufacture);
+		countries_of_manufacture_source.addAll(countries_of_manufacture);
 	}
 	
 	public static ObservableList<String> getCountriesOfManufactureSource() {
-		return GlobalDetailsHolder.INSTANCE.countries_of_manufacture_source;
+		return countries_of_manufacture_source;
 	}
 	
 	public static void setSelectedCountriesOfManufacture(ArrayList<String> selectedCountriesOfManufacture) {

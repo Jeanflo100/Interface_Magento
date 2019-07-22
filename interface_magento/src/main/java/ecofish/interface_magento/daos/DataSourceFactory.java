@@ -135,7 +135,7 @@ public class DataSourceFactory {
 	 * @param username - username of new user
 	 * @param password - password of new user
 	 */
-	protected static void setNewUser(String username, String password) {
+	public static void setNewUser(String username, String password) {							//////////////////////////////////////////// protected (actuellement public pour initier depuis facilement les tests)
 		DataSourceFactoryHolder.INSTANCE.dataSource.setUser(username);
 		DataSourceFactoryHolder.INSTANCE.dataSource.setPassword(password);
     	DataSourceFactoryHolder.INSTANCE.currentUser.set(username);

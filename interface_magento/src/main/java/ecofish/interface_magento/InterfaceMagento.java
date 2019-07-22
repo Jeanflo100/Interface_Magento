@@ -3,6 +3,8 @@ package ecofish.interface_magento;
 import java.io.IOException;
 
 import ecofish.interface_magento.daos.DataSourceFactory;
+import ecofish.interface_magento.model.DetailedProduct;
+import ecofish.interface_magento.model.Product;
 import ecofish.interface_magento.service.ProductService;
 import ecofish.interface_magento.service.StageService;
 import ecofish.interface_magento.service.Views.viewsPrimaryStage;
@@ -21,7 +23,11 @@ public class InterfaceMagento extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		StageService.setStageProvidesByApplication(primaryStage);
-		if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
+		//if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
+		
+		DataSourceFactory.loadConnectionInformation();
+		DataSourceFactory.setNewUser("a941109_ecofishg", "@;B!U0{YOpPK");
+		DetailedProduct.newDetailedProduct(new Product("1", "2", "3", "4", "5", "6", 2.48, false));
 		
 		//StageService.showView(viewsPrimaryStage.DetailsProductOverview);
 		//StageService.showView(viewsPrimaryStage.test);
