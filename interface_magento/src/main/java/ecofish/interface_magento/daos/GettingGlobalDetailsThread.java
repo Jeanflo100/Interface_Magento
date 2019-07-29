@@ -58,6 +58,7 @@ public class GettingGlobalDetailsThread implements Runnable {
 				globalDetailsList.add(globalDetailsResultSet.getString("alergen"));
 			}
 			GlobalDetails.setAlergens(globalDetailsList);
+	    	LoadingProductController.updateLoadingProductProgressBar((double) 1/5);
 			
 			globalDetailsList.clear();
 	    	globalDetailsResultSet = statement.executeQuery("SELECT DISTINCT brandTable.value AS brand FROM mg_eav_attribute_option_value AS brandTable\n"
@@ -70,6 +71,7 @@ public class GettingGlobalDetailsThread implements Runnable {
 				globalDetailsList.add(globalDetailsResultSet.getString("brand"));
 			}
 			GlobalDetails.setBrands(globalDetailsList);
+	    	LoadingProductController.updateLoadingProductProgressBar((double) 2/5);
 			
 			globalDetailsList.clear();
 	    	globalDetailsResultSet = statement.executeQuery("SELECT DISTINCT labelTable.value AS label FROM mg_eav_attribute_option_value AS labelTable\n"
@@ -82,6 +84,7 @@ public class GettingGlobalDetailsThread implements Runnable {
 				globalDetailsList.add(globalDetailsResultSet.getString("label"));
 			}
 			GlobalDetails.setLabels(globalDetailsList);
+	    	LoadingProductController.updateLoadingProductProgressBar((double) 3/5);
 			
 			globalDetailsList.clear();
 	    	globalDetailsResultSet = statement.executeQuery("SELECT DISTINCT productionTypeTable.value AS productionType FROM mg_catalog_product_entity_varchar AS productionTypeTable\n"
@@ -93,6 +96,7 @@ public class GettingGlobalDetailsThread implements Runnable {
 				globalDetailsList.add(productionType);
 			}
 			GlobalDetails.setProductionTypes(globalDetailsList);
+	    	LoadingProductController.updateLoadingProductProgressBar((double) 4/5);
 			
 			globalDetailsList.clear();
 	    	globalDetailsResultSet = statement.executeQuery("SELECT DISTINCT countryOfManufactureTable.value AS countryOfManufacture FROM mg_catalog_product_entity_varchar AS countryOfManufactureTable\n"
@@ -103,6 +107,7 @@ public class GettingGlobalDetailsThread implements Runnable {
 				globalDetailsList.add(globalDetailsResultSet.getString("countryOfManufacture"));
 			}
 			GlobalDetails.setCountriesOfManufacture(globalDetailsList);
+	    	LoadingProductController.updateLoadingProductProgressBar((double) 5/5);
 			
 		} catch (SQLException e) {
 			Logging.getLogger().log(Level.SEVERE, "Error when getting details product:\n" + e.getMessage());

@@ -24,10 +24,11 @@ public class InterfaceMagento extends Application {
 	public void start(Stage primaryStage) {
 		StageService.setStageProvidesByApplication(primaryStage);
 		//if (DataSourceFactory.goAuthentification()) ProductService.loadProduct();
-		
+
 		DataSourceFactory.loadConnectionInformation();
 		DataSourceFactory.setNewUser("a941109_ecofishg", "@;B!U0{YOpPK");
-		DetailedProduct.newDetailedProduct(new Product("1", "2", "3", "4", "5", "6", 2.48, false));
+		//DetailedProduct.newDetailedProduct(new Product("1", "2", "3", "4", "5", "6", 2.48, false));
+		ProductService.loadProduct();
 		
 		//StageService.showView(viewsPrimaryStage.DetailsProductOverview);
 		//StageService.showView(viewsPrimaryStage.test);

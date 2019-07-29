@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -52,58 +53,133 @@ public class GettingDetailedProductThread implements Runnable {
     
     private void retrieveDetailsProduct() {
     	try {
+    		
     		Connection connection = DataSourceFactory.getConnection();
 			Statement statement = connection.createStatement();
+			ResultSet detailProduct;
+			ArrayList<String> detailProductList = new ArrayList<String>();
 			
-			ResultSet comptage = statement.executeQuery("SELECT COUNT(value) AS result FROM mg_catalog_product_entity_text WHERE attribute_id = 155");
-			while (comptage.next()) {
-				System.out.println(comptage.getString("result"));
-			}
+			detailProduct = statement.executeQuery("SELECT eanCodeTable.value AS eanCode\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_varchar AS eanCodeTable USING (entity_id)\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND eanCodeTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "											FROM mg_eav_attribute AS attributeTable\n"
+					+ "											WHERE attributeTable.attribute_code = 'ean_code')\n"
+				);
+			if (detailProduct.next()) this.detailedProduct.setEanCode(detailProduct.getString("eanCode"));
 			
-			/*ResultSet ean_code = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 148");
-			while (ean_code.next()) {
-				System.out.println(ean_code.getString("value"));
-			}*/
+			detailProduct = statement.executeQuery("SELECT ecSalesCodeTable.value AS ecSalesCode\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_varchar AS ecSalesCodeTable USING (entity_id)\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND ecSalesCodeTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "											FROM mg_eav_attribute AS attributeTable\n"
+					+ "											WHERE attributeTable.attribute_code = 'ec_sales_code')\n"
+				);
+			if (detailProduct.next()) this.detailedProduct.setEcSalesCode(detailProduct.getString("ecSalesCode"));
+			
+			detailProduct = statement.executeQuery("SELECT alergenTable.value AS alergen\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_text AS alergenTable USING (entity_id)\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND alergenTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "											FROM mg_eav_attribute AS attributeTable\n"
+					+ "											WHERE attributeTable.attribute_code = 'product_alergen')\n"
+				);
 
-			/*ResultSet ec_sales_code = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 147");
-			while (ec_sales_code.next()) {
-				System.out.println(ec_sales_code.getString("value"));
+			detailProductList.clear();
+			while (detailProduct.next()) {
+				detailProductList.add(detailProduct.getString("alergen"));
+			}
+			this.detailedProduct.setBrands(detailProductList);
+			
+			detailProduct = statement.executeQuery("SELECT brandTable.value AS brand\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_int AS matchProductBrandTable USING (entity_id)\n"
+					+ "LEFT JOIN mg_eav_attribute_option_value AS brandTable ON matchProductBrandTable.value = brandTable.option_id\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND matchProductBrandTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "												FROM mg_eav_attribute AS attributeTable\n" 
+					+ "												WHERE attributeTable.attribute_code = 'product_brand')\n"
+					+ "AND brandTable.store_id = false"
+				);
+
+			detailProductList.clear();
+			while (detailProduct.next()) {
+				detailProductList.add(detailProduct.getString("brand"));
+			}
+			this.detailedProduct.setBrands(detailProductList);
+			
+			detailProduct = statement.executeQuery("SELECT labelTable.value AS label\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_int AS matchProductLabelTable USING (entity_id)\n"
+					+ "LEFT JOIN mg_eav_attribute_option_value AS labelTable ON matchProductLabelTable.value = labelTable.option_id\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND matchProductLabelTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "												FROM mg_eav_attribute AS attributeTable\n" 
+					+ "												WHERE attributeTable.attribute_code = 'product_label')\n"
+					+ "AND labelTable.store_id = false"
+				);
+
+			detailProductList.clear();
+			while (detailProduct.next()) {
+				detailProductList.add(detailProduct.getString("label"));
+			}
+			this.detailedProduct.setLabels(detailProductList);
+			
+			detailProduct = statement.executeQuery("SELECT shortDescriptionTable.value AS shortDescription\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_text AS shortDescriptionTable USING (entity_id)\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND shortDescriptionTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "											FROM mg_eav_attribute AS attributeTable\n"
+					+ "											WHERE attributeTable.attribute_code = 'short_description')\n"
+				);
+			if (detailProduct.next()) this.detailedProduct.setShortDescription(detailProduct.getString("shortDescription"));
+			
+			// Obtenir le début du lien afin d'avoir une url conforme
+			/*detailProduct = statement.executeQuery("SELECT urlImageTable.value AS urlImage\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_varchar AS urlImageTable USING (entity_id)\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND urlImageTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "											FROM mg_eav_attribute AS attributeTable\n"
+					+ "											WHERE attributeTable.attribute_code = 'image' AND attributeTable.frontend_input = 'media_image')\n"
+				);
+			if (detailProduct.next()) {
+				this.detailedProduct.setUrlImage(detailProduct.getString("urlImage"));
 			}*/
 			
-			/*ResultSet alergens = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_text WHERE attribute_id = 155");
-			while (alergens.next()) {
-				System.out.println(alergens.getString("value"));
-			}*/
+			detailProduct = statement.executeQuery("SELECT descriptionTable.value AS description\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_text AS descriptionTable USING (entity_id)\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND descriptionTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "											FROM mg_eav_attribute AS attributeTable\n"
+					+ "											WHERE attributeTable.attribute_code = 'description' AND attributeTable.is_required = true)\n"
+				);
+			if (detailProduct.next()) this.detailedProduct.setDescription(detailProduct.getString("description"));
 			
-			/*ResultSet brands = statement.executeQuery("SELECT value FROM mg_eav_attribute_option_value WHERE option_id IN (SELECT value FROM mg_catalog_product_entity_int WHERE attribute_id = 146)");
-			while (brands.next()) {
-				System.out.println(brands.getString("value"));
-			}*/
+			detailProduct = statement.executeQuery("SELECT latinNameTable.value AS latinName\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_varchar AS latinNameTable USING (entity_id)\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND latinNameTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "											FROM mg_eav_attribute AS attributeTable\n"
+					+ "											WHERE attributeTable.attribute_code = 'latin_name')\n"
+				);
+			if (detailProduct.next()) this.detailedProduct.setLatinName(detailProduct.getString("latinName"));
 			
-			/*ResultSet labels = statement.executeQuery("SELECT value FROM mg_eav_attribute_option_value WHERE option_id IN (SELECT value FROM mg_catalog_product_entity_int WHERE attribute_id = 153)");
-			while (labels.next()) {
-				System.out.println(labels.getString("value"));
-			}*/
-			
-			/*ResultSet short_description = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_text WHERE attribute_id = 65");
-			while (short_description.next()) {
-				System.out.println(short_description.getString("value"));
-			}*/
-			
-			/*ResultSet url_image = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 77");
-			while (url_image.next()) {
-				System.out.println(url_image.getString("value"));
-			}*/
-			
-			/*ResultSet description = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_text WHERE attribute_id = 64");
-			while (description.next()) {
-				System.out.println(description.getString("value"));
-			}*/
-			
-			/*ResultSet latin_name = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 150");
-			while (latin_name.next()) {
-				System.out.println(latin_name.getString("value"));
-			}*/
+			detailProduct = statement.executeQuery("SELECT latinNameTable.value AS latinName\n"
+					+ "FROM mg_catalog_product_entity AS productTable\n"
+					+ "LEFT JOIN mg_catalog_product_entity_varchar AS latinNameTable USING (entity_id)\n"
+					+ "WHERE productTable.sku = '" + this.detailedProduct.getSku() + "'\n"
+					+ "AND latinNameTable.attribute_id = (SELECT attributeTable.attribute_id\n"
+					+ "											FROM mg_eav_attribute AS attributeTable\n"
+					+ "											WHERE attributeTable.attribute_code = 'latin_name')\n"
+				);
+			if (detailProduct.next()) this.detailedProduct.setLatinName(detailProduct.getString("latinName"));
 			
 			/*ResultSet production_type = statement.executeQuery("SELECT value FROM mg_catalog_product_entity_varchar WHERE attribute_id = 145");
 			while (production_type.next()) {
@@ -135,10 +211,10 @@ public class GettingDetailedProductThread implements Runnable {
 				System.out.println(country_of_manufacture.getString("value"));
 			}*/
 			
-			ResultSet priceHistory = statement.executeQuery("SELECT * FROM mg_catalogrule_oldprice");
+			/*ResultSet priceHistory = statement.executeQuery("SELECT * FROM mg_catalogrule_oldprice");
 			while (priceHistory.next()) {
 				System.out.println(priceHistory.getString(1) + " " + priceHistory.getString(2) + " " + priceHistory.getString(3));
-			}
+			}*/
 			
 			/*ResultSet resultSet = statement.executeQuery("SELECT * FROM product");
 			while(resultSet.next()) {
@@ -149,34 +225,6 @@ public class GettingDetailedProductThread implements Runnable {
 			Logging.getLogger().log(Level.SEVERE, "Error when getting details product:\n" + e.getMessage());
 			error = true;
 		}
-    	this.detailedProduct.setEanCode("41225659535");
-    	this.detailedProduct.setEcSalesCode("FR5F5FGG4HH2245D");
-    	this.detailedProduct.setAlergens(Arrays.asList("alerge1", "alergen4", "alergen5"));
-    	this.detailedProduct.setBrands(Arrays.asList("brand3", "brand7", "brand9"));
-    	this.detailedProduct.setLabels(Arrays.asList("label4", "label5", "label7"));
-    	this.detailedProduct.setShortDescription("Un concentré d’énergie et de bien-être à croquer ou à boire dans nos oranges Bio !");
-    	this.detailedProduct.setUrlImage(null);
-    	this.detailedProduct.setDescription("Descriptif : L'orange, un des fruits préféré des français ! \r\n" + 
-				" \r\n" + 
-				"Avec la pomme et la banane, l’orange fait partie des fruits les plus consommés en France. En effet, c’est le troisième fruit le plus cultivé au monde. \r\n" + 
-				"\r\n" + 
-				"Présente sur notre site tout l’hiver et au printemps, elles vous apporteront les vitamines nécessaires pour lutter contre le froid et la fatigue, ainsi qu’une quantité importante de minéraux (calcium et magnésium), indispensables au bon équilibre de l’organisme. \r\n" + 
-				"\r\n" + 
-				"Gorgée en vitamine C, l’orange est idéale pour couvrir tous vos besoins quotidiens ! Son goût sucré légèrement acidulé excitera vos papilles...\r\n" + 
-				"\r\n" + 
-				"Tout comme le citron, la bergamote et le pamplemousse, l'orange appartient au groupe des agrumes. Elle compte de nombreuses variétés, toutes aussi bonnes les unes que les autres ! \r\n" + 
-				"On retrouve principalement trois grandes variétés d'oranges : les oranges blondes à chair ou à jus, les oranges amères et les oranges sanguines. \r\n" + 
-				"\r\n" + 
-				"*Les oranges blondes à chair possèdent généralement une belle peau orange brillante, rugueuse, avec une petite excroissance plus ou moins prononcée. Les principales variétés d'oranges blondes à chair sont la Navel, la Naveline, la Navelate ou encore la Late Lane. \r\n" + 
-				"On distingue les oranges blondes à jus des blondes à chair car elles sont légèrement aplaties avec une peau fine et grenue. \r\n" + 
-				"*Les oranges sanguines tirent leur nom de la couleur rouge de leur chair. Cette coloration est due à la présence d'anthocyanes, pigment produit chez certaines espèces quand celles-ci sont exposées au froid. Parmi les oranges sanguines, on compte les variétés Moro, Sanguinello et Tarocco, par exemple.\r\n" + 
-				"*Les oranges amères sont plus petites que les oranges douces. Leur peau orange est rugueuse, épaisse et teintée de vert. Sa chair est peu juteuse, acide et contient beaucoup de pépins. Elles sont quant à elles, issus du bigaradier contrairement à l'orange douce.\r\n" + 
-				"\r\n" + 
-				"Bien cuisiner…: Zeste, tranches, jus ou rondelle… Vous avez de multiples possibilités pour l'ajouter à vos plats. Vous pourrez cuisiner du canard à l'orange, assaisonner vos crustacés et poissons ou la rajouter dans une semoule. Sa seule limite est votre imagination ! \r\n" + 
-				"\r\n" + 
-				"Pour une conservation optimale…: L’orange se conserve très facilement et assez longtemps. Vous pouvez la garder à l’air ambiant pendant une semaine. Dans le bac à légumes du réfrigérateur, vous stocker pendant 10 jours, tout en préservant son délicieux jus !\r\n");
-    	this.detailedProduct.setLatinName("Muriculous suvitius");
-    	this.detailedProduct.setProductionType("Sauvage");
     	season[] seasons = new season[12];
 		seasons[0] = seasons[1] = seasons[2] = seasons[10] = seasons[11] = season.low;
 		seasons[3] = seasons[4] = seasons[9] = season.medium;
