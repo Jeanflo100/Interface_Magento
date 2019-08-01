@@ -90,9 +90,14 @@ public class GettingDetailedProductThread implements Runnable {
 
 			detailProductList.clear();
 			while (detailProduct.next()) {
+				/*String[] alergens = detailProduct.getString("alergen").split("-");
+				System.out.println(alergens);
+				for (String alergen : alergens) {
+					if (!detailProductList.contains(alergen)) detailProductList.add(alergen);
+				}*/
 				detailProductList.add(detailProduct.getString("alergen"));
 			}
-			this.detailedProduct.setBrands(detailProductList);
+			this.detailedProduct.setAlergens(detailProductList);
 			
 			detailProduct = statement.executeQuery("SELECT brandTable.value AS brand\n"
 					+ "FROM mg_catalog_product_entity AS productTable\n"

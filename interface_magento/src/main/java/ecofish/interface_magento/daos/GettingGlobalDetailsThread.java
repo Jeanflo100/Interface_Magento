@@ -55,6 +55,17 @@ public class GettingGlobalDetailsThread implements Runnable {
 	    													+ "										FROM mg_eav_attribute AS attributeTable\n"
 	    													+ "										WHERE attributeTable.attribute_code = 'product_alergen')");
 			while (globalDetailsResultSet.next()) {
+				/*String[] alergens = globalDetailsResultSet.getString("alergen").split("- ");
+				for (String alergen : alergens) {
+					if (alergen.contains("\n")) {
+						alergen = alergen.substring(0, alergen.indexOf("\n")-1);
+						System.out.println("/// " + alergen);
+					}
+					if (!globalDetailsList.contains(alergen)) {
+						System.out.println(alergen);
+						globalDetailsList.add(alergen);
+					}
+				}*/
 				globalDetailsList.add(globalDetailsResultSet.getString("alergen"));
 			}
 			GlobalDetails.setAlergens(globalDetailsList);
